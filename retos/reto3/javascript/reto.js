@@ -19,7 +19,7 @@ function calcularPropina(){
         const totalPagar = montoPropina + monto;
         propinaSpan.textContent = `$${montoPropina} CLP`;
         totalPagoSpan.textContent = `$${totalPagar} CLP`;
-    }
+    } 
 }
 
 const calcularButton = document.getElementById("calcular");
