@@ -1,11 +1,15 @@
+body {
+    background-image: radial-gradient(circle at 50% -20.71%, #ade5ff 0, #7dcefb 25%, #3cb5f2 50%, #009ce9 75%, #0085e0 100%);
+}
 .container {
+    margin-top: 75px;
     justify-content: center;
     align-items: center;
     display: flex;
     gap:20px;
     flex-direction: column;   
-    background-color:blanchedalmond;
-    height: 100%;
+    background-color:white;
+    height: 70%;
     border: 1px solid black;
     border-radius: 10px;
     width: 50%;
@@ -31,6 +35,7 @@ p, label{
     height: 40px;
     width: 100px;
     font-size: 16px;
+    background-color: rgb(52, 166, 52);
 }
 
 .div-button {
@@ -53,16 +58,31 @@ p, label{
 }
 
 .titulo {
-    margin-top: -300px;
+    margin-top: -200px;
 }
 
-#error-monto {
+#error-monto, #error-monto2 {
     color: red;
-    font-size: 16px;
+    font-size: 22px;
 }
 
 #exito-calcular {
     color: blue;
-    font-size: 16px;
-    align-self: flex-start
+    font-size: 22px;
+    align-self: flex-start;
+}
+
+#resultado {
+    border-radius: 10px;
+    margin-top: 50px;
+    background-color: white;
+}
+
+#resultado-elemento {
+    bottom: 200px;
+    text-align: top;
+}
+
+.container-children {
+    margin-top: 175px;
 }
