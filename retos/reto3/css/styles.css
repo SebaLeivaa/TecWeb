@@ -1,0 +1,68 @@
+.container {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    gap:20px;
+    flex-direction: column;   
+    background-color:blanchedalmond;
+    height: 100%;
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 50%;
+    position: absolute;
+    left: 25%;
+}
+
+.seccion-1 {
+    margin-top: 30px
+}
+
+p, label{
+    font-size: 20px;
+}
+
+.seccion-2 {
+    margin-top: 30px;
+}
+
+#calcular {
+    border: 1px solid;
+    border-radius : 10px;
+    height: 40px;
+    width: 100px;
+    font-size: 16px;
+}
+
+.div-button {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#monto {
+    border: 1px solid;
+    border-radius: 10px;
+    height: 30px;
+    width: 200px;
+}
+
+.resultado-elemento {
+    margin-top: 30px
+}
+
+.titulo {
+    margin-top: -300px;
+}
+
+#error-monto {
+    color: red;
+    font-size: 16px;
+}
+
+#exito-calcular {
+    color: blue;
+    font-size: 16px;
+    align-self: flex-start
+}
