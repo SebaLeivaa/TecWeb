@@ -10,11 +10,11 @@ function calcularPropina(){
     const porcentaje = parseFloat(inputPorcentaje.value);
 
     if(monto < 500 || monto > 500000 || isNaN(monto)){
-        errorMonto.textContent = "Por favor, ingrese un monto valido";
+        errorMonto.textContent = "Por favor, ingrese un monto valido!";
         exitoCalcular.textContent = "";
     }else{
         errorMonto.textContent = "";
-        exitoCalcular.textContent = "Su propina ha sido calculada exitosamente";
+        exitoCalcular.textContent = "Su propina ha sido calculada exitosamente!";
         const montoPropina = monto*porcentaje;
         const totalPagar = montoPropina + monto;
         propinaSpan.textContent = `$${montoPropina} CLP`;

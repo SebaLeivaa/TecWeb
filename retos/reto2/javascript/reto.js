@@ -8,7 +8,7 @@ Si el estudiante obtiene un promedio inferior a 3.95 se debe
 imprimir por pantalla que ha reprobado la asignatura, si obtuvo
 un promedio entre 3.95 a 4.94 el estudiante va a examen. Si la
 nota es igual o superior a 4.95 el alumno se exime de la
-asignatura.. */
+asignatura. */
 
 function ingresarNota(input){
     let nota;

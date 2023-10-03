@@ -1,6 +1,6 @@
 /*Realizar un programa en JavaScript con lo aprendido en clases
 que permita ingresar un número por pantalla y saber si es un
-número par o número impar */
+número par o número impar. */
 
 //Reto corregido, ya que en un principio permitia numeros decimales como entrada, lo corregi solo cambiando el parseInt por parseFloat
 
