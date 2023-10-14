@@ -16,6 +16,7 @@ body {
     border-radius: 100px;
     height: 100vh;
     background-color: #1A237E;
+    overflow: hidden;
 }
 
 .button-calcular {
