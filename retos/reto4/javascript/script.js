@@ -103,3 +103,13 @@ errorInputEdad.addEventListener("input", () => {
         errorEdad.style.display = "none";
     }
 });
+
+//No permitir numeros en el nombre
+
+const errorInputNombre = document.getElementById("nombre");
+
+errorInputNombre.addEventListener("input", () => {
+    const valorNombre = errorInputNombre.value;
+    const validarNombre = valorNombre.replace(/\d/g, "");
+    errorInputNombre.value = validarNombre;
+});
