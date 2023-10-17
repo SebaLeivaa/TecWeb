@@ -1,0 +1,77 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de IMC</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="contenedor">
+        <div class="contenedor-hijo">
+        <div class="titulo">
+            <h1>Calculadora de IMC</h1>
+        </div>
+        <div class="contenedor-info">
+            <form id="info">
+                <div class="info-form">
+                    <label class="info-label" for="nombre">Nombre: </label>
+                    <input id="nombre" class="input-form" type="text" placeholder=" Ingrese su nombre" name="nombre" maxlength="30" required>
+                </div>
+                <div class="info-form">
+                    <label class="info-label" for="peso">Peso (kg): </label>
+                    <input id="peso" class="input-form" type="number" placeholder=" Ingrese su peso" name="peso" min="30" max="150" maxlength="3" required>
+                    <p id="error-peso" class="errores-form">Por favor ingrese un peso entre 30 a 150 kg</p>
+                </div>
+                <div class="info-form">
+                    <label class="info-label" for="altura">Altura (m): </label>
+                    <input id="altura" class="input-form" type="number" placeholder=" Ingrese su altura" name="altura" min="1.30" max="2.30" step="0.01" required>
+                    <p id="error-altura" class="errores-form">Por favor ingrese una altura entre 1.30 a 2.30 m</p>
+                </div>
+                <div class="info-form">
+                    <label class="info-label" for="edad">Edad: </label>
+                    <input id="edad" class="input-form" type="number" placeholder=" Ingrese su edad" name="edad" min="3" max="100" required>
+                    <p id="error-edad" class="errores-form">Por favor ingrese una edad entre 3 a 100 años</p>
+                </div>
+                <div class="info-form">
+                    <label class="info-label" for="genero">Género: </label>
+                    <select id="genero" class="input-form" required>
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                    </select>
+                </div>
+                <div class="info-form">
+                    <label class="info-label" for="actividad-fisica">Actividad fisica: </label>
+                    <select id="actividad" class="input-form" name="actividad" required>
+                        <option value="1.55">Moderado</option>
+                        <option value="1.2">Sedentario</option>
+                        <option value="1.9">Activo</option>
+                    </select>
+                </div>
+                <div class="button-calcular">
+                    <button id="calcular" type="button">Calcular</button>
+                    <p id="resultado-calcular"></p>
+                </div>
+            </form>
+        </div>
+        <div class="contenedor-resultado">
+            <div class="subtitulo">
+                <h2>Resultados para <span id="nombre-resultado"></span></h2>
+            </div>
+            <div class="info-resultado">
+                <p>IMC: <span id="imc-resultado"></span></p>
+            </div>
+            <div class="info-resultado">
+                <p>Clasificación: <span id="clasi-resultado"></span></p>
+            </div>
+            <div class="info-resultado">
+                <p>Gasto Energético Diario: <span id="gasto-resultado"></span></p>
+            </div>
+            <div class="info-resultado">
+                <p>Estado Nutricional: <span id="estado-resultado"></span></p>
+            </div>
+        </div>
+        </div>
+    </div>
+    <script src="../javascript/script.js"></script>
+</body>
+</html>

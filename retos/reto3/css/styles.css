@@ -1,0 +1,99 @@
+body {
+    background-image: radial-gradient(circle at 50% -20.71%, #ade5ff 0, #7dcefb 25%, #3cb5f2 50%, #009ce9 75%, #0085e0 100%);
+}
+.container {
+    margin-top: 75px;
+    display: flex;
+    place-items: center;
+    justify-content: center;
+    align-items: center;
+    gap:20px;
+    flex-direction: column;   
+    background-color:white;
+    height: 60vh;
+    border: 1px solid black;
+    border-radius: 100px;
+    width: 400px;
+    position: absolute;
+    left: 41%;
+    background-color: #e0f3ff;
+    overflow: hidden;
+} 
+
+.seccion-1 {
+    margin-top: 30px
+}
+
+p, label{
+    font-size: 20px;
+}
+
+.seccion-2 {
+    margin-top: 30px;
+}
+
+#calcular {
+    border: 1px solid;
+    border-radius : 20px;
+    height: 40px;
+    width: 100px;
+    font-size: 16px;
+    background-color: rgb(52, 166, 52);
+    margin-top: 20px;
+}   
+
+.div-button {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#monto {
+    border: 1px solid;
+    border-radius: 10px;
+    height: 30px;
+    width: 150px;
+    font-size: 16px;
+}
+
+#porcentaje-propina {
+    border: 1px solid;
+    border-radius: 10px;
+    height: 30px;
+    font-size: 16px;
+}
+
+.resultado-elemento {
+    margin-top: 30px
+}
+
+.titulo {
+    margin-top: -200px;
+}
+
+#error-monto, #error-monto2 {
+    color: #FF0000;
+    font-size: 18px;
+}
+
+#exito-calcular {
+    color: #007BFF;
+    font-size: 18px;
+}
+
+#resultado {
+    border-radius: 10px;
+    margin-top: -20px;
+    background-color: #e0f3ff;
+}
+
+#resultado-elemento {
+    bottom: 200px;
+    text-align: top;
+}
+
+.container-children {
+    margin-top: 175px;
+}

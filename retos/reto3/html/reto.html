@@ -1,0 +1,50 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/styles.css">
+    <title>Calculadora de Propinas</title>
+</head>
+<body> 
+    <div class="container">
+        <div class="container-children">
+            <div class="titulo">
+                <h1>Calculadora de Propinas</h1>
+            </div>
+            <div class="elementos-container">
+                <form id="propina-form">
+                    <div class="seccion-1">
+                        <label for="total-boleta">Total de la boleta: </label>
+                        <input id="monto" type="number">
+                        <p id="error-monto"></p>
+                        <p id="error-monto2"></p>
+                    </div>
+                    <div class="seccion-2">
+                        <label for="porcentaje">Porcentaje de propina: </label>
+                        <select id="porcentaje-propina">
+                            <option value="0.1">10%</option>
+                            <option value="0.15">15%</option>
+                            <option value="0.2">20%</option>
+                            <option value="0.25">25%</option>
+                            <option value="0.3">30%</option>
+                        </select>
+                    </div>
+                    <div class="div-button">
+                        <button id="calcular" type="button">Calcular</button>
+                        <p id="exito-calcular"></p>
+                    </div>
+                </form>
+                <div id="resultado">
+                    <div class="resultado-elemento">
+                        <p>Propina: <span id="monto-propina"></span></p>
+                    </div>
+                    <div class="resultado-elemento">
+                        <p>Total a pagar: <span id="total-pago"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../javascript/reto.js"></script>
+</body>
+</html>    
