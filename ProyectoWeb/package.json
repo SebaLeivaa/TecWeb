@@ -1,11 +1,10 @@
 {
-  "name": "proyectoweb",
+  "name": "proyectoprueba",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "useTailwind": "npx tailwindcss -i ./src/css/config.css -o ./src/css/styles.css --watch"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
