@@ -1,3 +1,4 @@
+
 function loginButton() {
   const loginDialog = document.getElementById("loginDialog");
   const signinDialog = document.getElementById("signinDialog");
@@ -31,14 +32,6 @@ function closeDia() {
   signinDialog.close();
 }
 
-function login() {
-  alert("test login");
-
-  const ident = document.getElementById();
-  const pass = document.getElementById();
-  //Si ident y pass son correctos, se inicia sesion
-}
-
 function reConfirm(form){
     const name = form.paName.value;
     const lastname = form.paLName.value;
@@ -48,8 +41,8 @@ function reConfirm(form){
     const pass = form.paPassword.value;
     const gender = form.paGender.value;
     const phone = form.paPhone.value;
-    console.log('name: '+name+"\nlastname: "+lastname+'\nrut: '+rut+'\nbd: '+bd+'\nemail: '+email+'\npass: '+pass+'\ngender: '+gender+'\nphone: '+phone)
-}
+    console.log('name: '+name+"\nlastname: "+lastname+'\nrut: '+rut+'\nbd: '+bd+'\nemail: '+email+'\npass: '+pass+'\ngender: '+gender+'\nphone: '+phone);
+} 
 
 function loConfirm(form){
     const ident = form.rutEmail.value
@@ -57,12 +50,23 @@ function loConfirm(form){
     console.log('ident: '+ ident+ 'pass: '+pass)
 }
 
+//Test
 function signin() {
-  alert("test signin");
+  alert("test signin"); 
 
-  
-  //Recibe los datos y los guarda
 }
+
+//Test
+function login() {
+  alert("test login");
+
+  const ident = document.getElementById();
+  const pass = document.getElementById();
+  //Si ident y pass son correctos, se inicia sesion
+}
+
+  //Recibe los datos y los guarda
+
 
 /* descarga un archivo de texto
 
@@ -74,20 +78,6 @@ function CreateTextFile() {
  }
 */
 
-/*
-function inicio(){
 
-}
 
-function especialidades(){
 
-}
-
-function profesionales(){
-
-}
-
-function contacto(){
-
-}
-*/

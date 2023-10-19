@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clinica</title>
-    <link rel="stylesheet" href="../dist/output.css">
+    <link rel="stylesheet" href="output.css">
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>    <script src="https://kit.fontawesome.com/8caa7c21dc.js" crossorigin="anonymous"></script>
 </head>
 <body class="bg-secondary">
@@ -184,25 +184,25 @@
             <button class="rounded-md p-1.5 hover:bg-secondary hover:text-text w-max m-auto" onclick="signinButton();">Registrarse</button>
         </section>
         <section class="grid mt-5 p-2">
-            <form id="loginForm" method="get" class="gap-10 grid p-2">
+            <form action="/signIn" method="post" class="gap-10 grid p-2">
                 <div class="">
-                    <label for="rutEmail">Rut o correo electrónico</label>
-                    <input id="rutEmail" type="text" class="m-auto w-full border-border rounded-md border-2">
+                    <label for="rutCorreo">Rut o correo electrónico</label>
+                    <input name="rutCorreo" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20254784-1 o correo@dominio.cl">
                 </div>
                 <div class="">
-                    <label for="loPass">Contraseña</label>
-                    <input id="loPass" type="password" class="m-auto w-full border-border rounded-md border-2">
+                    <label for="loClave">Contraseña</label>
+                    <input name="loClave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********">
+                </div>
+                <div class="p-2 grid grid-cols-2" style="font-size: small;">
+                    <button class="hover:text-primary text-primary w-max m-auto"><ins>Olvide mi contraseña</ins></button>
+                    <div>
+                        <input id="rmPass" type="checkbox" class="m-auto pt-2"> <label for="rmPass">Recordar constraseña</label>
+                    </div>
+                </div>
+                <div class="text-center bg-primary object-cover w-1/2 m-auto rounded-md mt-3">
+                    <button type="submit" class="text-text rounded-md p-1.5 hover:bg-secondary w-full m-auto">Acceder</button>
                 </div>
             </form>
-            <div class="p-2 grid grid-cols-2" style="font-size: small;">
-                <button class="hover:text-primary text-primary w-max m-auto"><ins>Olvide mi contraseña</ins></button>
-                <div>
-                    <input id="rmPass" type="checkbox" class="m-auto pt-2"> <label for="rmPass">Recordar constraseña</label>
-                </div>
-            </div>
-            <div class="text-center mt-10">
-                <button form="loginForm" class="text-text bg-primary rounded-md p-1.5 hover:bg-secondary w-1/2 m-auto" onclick="loConfirm(this.form);return false;">Acceder</button>
-            </div>
         </section>
     </dialog>
 
@@ -217,50 +217,51 @@
             <button class="text-text bg-primary rounded-md p-1.5 hover:bg-secondary w-max m-auto" onclick="signinButton();">Registrarse</button>
         </section>
         <section class="p-2">
-            <form id="registerForm" method="GET" class="grid p-2 gap-2">
+            <form action="/registrar" method="post" class="grid p-2 gap-2">
                 <div class="">
                     <label for="paName">Nombre</label>
-                    <input id="paName" type="text" class="m-auto w-full border-border rounded-md border-2">
+                    <input id="paName" name="nombre" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ingresa tu nombre">
                 </div>
                 <div class="">
                     <label for="paLName">Apellidos</label>
-                    <input id="paLName" type="text" class="m-auto w-full border-border rounded-md border-2">
+                    <input id="paLName" name="apellido" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ingresa tus apellidos">
                 </div>
                 <div class="">
                     <label for="paRut">Rut</label>
-                    <input id="paRut" type="text" class="m-auto w-full border-border rounded-md border-2">
+                    <input id="paRut" name="rut" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20545267-1">
                 </div>
                 <div class="">
                     <label for="DoB">Fecha de nacimiento</label>
-                    <input id="DoB" type="date" class="m-auto w-full border-border rounded-md border-2">
+                    <input id="DoB" name="fecnac" type="date" class="m-auto w-full border-border rounded-md border-2">
                 </div>
                 <div class="">
                     <label for="paEmail">Correo Electronico</label>
-                    <input id="paEmail" type="email" class="m-auto w-full border-border rounded-md border-2">
+                    <input id="paEmail" name="correo" type="email" class="m-auto w-full border-border rounded-md border-2" placeholder="correo@dominio.cl">
                 </div>
                 <div class="">
-                    <label for="paPassword">Constraseña</label>
-                    <input id="paPassword" type="password" class="m-auto w-full border-border rounded-md border-2">
+                    <label for="paPassword">Contraseña</label>
+                    <input id="paPassword" name="clave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********">
                 </div>
                 <div class="grid grid-cols-2">
                     <label for="paGender">Género (opcional)</label>
-                    <select id="paGender" class="m-auto w-full border-border rounded-md border-2">
-                        <option value="0"></option>
-                        <option value="1">Masculino</option>
-                        <option value="2">Femenino</option>
-                        <option value="3">Otro</option>
+                    <select id="paGender" name="genero" class="m-auto w-full border-border rounded-md border-2" aria-placeholder="Seleccione genero">
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                        <option value="0">Otro</option>
                     </select>
                 </div>
                 <div class="">
                     <label for="paPhone">Teléfono</label>
-                    <input id="paPhone" type="tel" class="m-auto w-full border-border rounded-md border-2">
+                    <input id="paPhone" name="telefono" type="tel" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej:958472045">
+                </div>
+                <div class="text-center bg-primary object-cover w-1/2 m-auto rounded-md mt-3">
+                    <button type="submit" class="text-text rounded-md p-1.5 hover:bg-secondary w-full m-auto">Registrarse</button>
                 </div>
             </form>
-            <div class="text-center mt-3">
-                <button form="registerForm" class="text-text bg-primary rounded-md p-1.5 hover:bg-secondary w-1/2 m-auto" onclick="reConfirm(this.form);return false;">Acceder</button>
-            </div>
         </section>
     </dialog>
     <script src="script.js"></script>
+    <script src="testScript.js"></script>
+    <script src="database.js"></script>
 </body>
 </html>
