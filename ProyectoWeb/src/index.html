@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clinica</title>
     <link rel="stylesheet" href="output.css">
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>    <script src="https://kit.fontawesome.com/8caa7c21dc.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>    
+    <script src="https://kit.fontawesome.com/8caa7c21dc.js" crossorigin="anonymous"></script>
 </head>
 <body class="bg-secondary">
     <header class="bg-header h-30 fixed z-20 top-0 left-0 right-0">
@@ -14,7 +15,7 @@
                 <img class="h-20 rounded-md w-1/3 ml-24 max-xl:w-full max-xl:h-full max-xl:ml-0" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQgAAAC/CAMAAAA1kLK0AAAAeFBMVEX0Qjb////0NSb7vrvzMSH0PTD0PzP8z8z91tT//Pz2bGT1Ukf3e3T1WlH0PC70PjLzLh394uD7w7/6sKz+9fX2Y1r0Nyn+6+n7x8P3dG392tj0SDz4k4z5qqX6tLD5o5/3hoD2Z1/5nZf4j4nzJxP1WE32cmr1TkOAdQt7AAAChElEQVR4nO3a23KqMBSAYcAAHoMHjIfaVm27ef833BIirYoOzOyOs7P+78p2ciH/aLJQgwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPwzWdxR9uxn/Duy5bCjpZ8lVD/saKue/Zx/hUq7hugTQkCIQVueh5iPJq2M5p6H6KmsFdXzPUTUbnEkI0RstDbJo8UyQpjlfDZbvMQPFosIocf2cMxHDwZHCSGSl9yNCbf7Rf12kRBC784D0829RFZo90hCCPN6DjHWlyuSYPXmrl1CiPuviHLFe3XxEkLc3SPsEBXu7H8lhLh3aqj3qs++LCEiRPMcEe3rrcNICRHEkTZXk6UZ1nffg4OREuKWnpT33eFibUsstdQQWbAqC6SR3lbbx1RmiCS21z+LksTMykerQEwI/bPI1L4j8uK0fcaFfW1s34SEMJv1926pFm5nKP/QRS7hM0sXIjqNEmvlSqhdfWqW9DIXE6KaGVJtJypTzVe7+r1ihgMhIdxLIOyXJfTBXvbr9Hul2cgIoY7nTWAbx3G1JcwvThM3ZXoeQtW34acDM0jscdm/mjPVh/8hpvaICNNqZ5itq7Hh+iMae6B6HeLT3muf3grRpn5d5F/6erH3I/ai6tA7HZ3mjzscwsNNB/9DVNe+sEeEcQPDvmHs9j6E5T6OcyWOTbcfIkIc6+vTX6vwbdq0WEKIjx+Xpye92/2hJCDE5Y6QmebF/ocYt/s63PsQvcYd4Zb/Ifh9BCHOCOEQwiGE404N3Yr332ukm3Erm9TzEJ0QghBSQrT+RXr1s3RPQyTFqKPi4Y9z/19JZ89+xgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+OQv5igr7hS+m54AAAAASUVORK5CYII=">
             </div>
             <div class="flex items-end gap-x-10 mb-1 text-text max-xl:col-start-1 max-xl:col-end-3 max-xl:ml-12 max-xl:items-start">
-                <a class="hover:text-primary" href="index.html"> <b><ins>Inicio<ins></b> </a> 
+                <a class="hover:text-primary" href="index.html"> <b><ins>Inicio<ins/></b> </a> 
                 <a class="hover:text-primary" href="especialidades.html">Especialidades</a>
                 <a class="hover:text-primary" href="profesionales.html">Profesionales</a>
                 <a class="hover:text-primary" href="contacto.html">Contacto</a>
@@ -28,15 +29,15 @@
     <main>
         <section class="h-screen flex justify-center  items-center">
             <div class="grid grid-cols-2 w-full gap-20">
-                <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 ml-auto hover:bg-text hover:text-primary">
-                    <figure class="w-60 h-56 flex justify-center">
-                        <i class="fa-solid fa-clock text-9xl p-14"></i>
+                <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 ml-auto hover:bg-text hover:text-primary" onclick="reservaUno();">
+                    <figure class="w-60 h-56 grid justify-center">
+                        <i class="fa-solid fa-clock text-9xl p-7"></i>
+                        <figcaption class="h-20 flex items-start m-auto">
+                            <div>
+                                <p class="text-3xl">Reserva de horas</p>
+                            </div>
+                        </figcaption>
                     </figure>
-                    <figcaption class="h-20 flex items-start m-auto">
-                        <div>
-                            <p class="text-3xl">Reserva de horas</p>
-                        </div>
-                    </figcaption>
                 </button>
                 <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary">
                     <figure class="w-60 h-56 flex justify-center">
@@ -62,7 +63,7 @@
         </section>
         <section class="h-screen">
             <h1 class="text-4xl text-center">Nuestras especialidades</h1>
-            <p class="text-justify text-2xl px-36 py-20">
+            <p class="text-justify text-2xl my-20" style="margin-left: 10%; margin-right: 10%">
                 En nuestra clínica, nos enorgullece ofrecer una amplia gama de especialidades médicas para atender de manera
                 integral a nuestros pacientes. Contamos con un equipo de médicos altamente calificados y apasionados que se
                 dedican a proporcionar una atención de primera clase. Con más de 10 especialidades médicas, estamos
@@ -71,37 +72,37 @@
             <div class="grid grid-cols-3 mt-10 w-2/3 m-auto h-32">
                 <button class="bg-primary rounded-3xl relative text-text filter grayscale-0 hover:grayscale hover: z-10 transform hover:scale-110 transition-transform w-full h-full">
                     <figure class="relative object-cover h-full w-full flex flex-col justify-center items-center">
-                      <img class="rounded-3xl object-cover h-full w-full" src="../img/dermatologia.jpg" alt="Dermatología">
+                      <img class="rounded-3xl object-cover h-full w-full" src="./img/dermatologia.jpg" alt="Dermatología">
                       <p class="text-3xl w-full h-full mt-auto flex justify-center items-center absolute text-center opacity-0 hover:opacity-100">Dermatología</p>
                     </figure>
                 </button>
                 <button class="bg-primary rounded-3xl relative text-text filter grayscale-0 hover:grayscale hover:z-10 transform hover:scale-110 transition-transform w-full h-full">
                     <figure class="relative object-cover h-full w-full flex flex-col justify-center items-center">
-                      <img class="rounded-3xl object-cover h-full w-full" src="../img/cirugiaGeneral.webp" alt="Cirugía General">
+                      <img class="rounded-3xl object-cover h-full w-full" src="./img/cirugiaGeneral.webp" alt="Cirugía General">
                       <p class="text-3xl w-full h-full mt-auto flex justify-center items-center absolute text-center opacity-0 hover:opacity-100">Cirugía General</p>
                     </figure>
                 </button>
                 <button class="bg-primary rounded-3xl relative text-text filter grayscale-0 hover:grayscale hover:z-10 transform hover:scale-110 transition-transform w-full h-full">
                     <figure class="relative object-cover h-full w-full flex flex-col justify-center items-center">
-                      <img class="rounded-3xl object-cover h-full w-full" src="../img/pediatria.webp" alt="Pediatría">
+                      <img class="rounded-3xl object-cover h-full w-full" src="./img/pediatria.webp" alt="Pediatría">
                       <p class="text-3xl w-full h-full mt-auto flex justify-center items-center absolute text-center opacity-0 hover:opacity-100">Pediatría</p>
                     </figure>
                 </button>
                 <button class="bg-primary rounded-3xl relative text-text filter grayscale-0 hover:grayscale hover:z-10 transform hover:scale-110 transition-transform w-full h-full">
                     <figure class="relative object-cover h-full w-full flex flex-col justify-center items-center">
-                      <img class="rounded-3xl object-cover h-full w-full" src="../img/hematologia.jpg" alt="Hematología">
+                      <img class="rounded-3xl object-cover h-full w-full" src="./img/hematologia.jpg" alt="Hematología">
                       <p class="text-3xl w-full h-full mt-auto flex justify-center items-center absolute text-center opacity-0 hover:opacity-100">Hematología</p>
                     </figure>
                 </button>
                 <button class="bg-primary rounded-3xl relative text-text filter grayscale-0 hover:grayscale hover:z-10 transform hover:scale-110 transition-transform w-full h-full">
                     <figure class="relative object-cover h-full w-full flex flex-col justify-center items-center">
-                      <img class="rounded-3xl object-cover h-full w-full" src="../img/kinesiologia.jpg" alt="Kinesiología">
+                      <img class="rounded-3xl object-cover h-full w-full" src="./img/kinesiologia.jpg" alt="Kinesiología">
                       <p class="text-3xl w-full h-full mt-auto flex justify-center items-center absolute text-center opacity-0 hover:opacity-100">Kinesiología</p>
                     </figure>
                 </button>
                 <button class="bg-primary rounded-3xl relative text-text filter grayscale-0 hover:grayscale hover:z-10 transform hover:scale-110 transition-transform w-full h-full">
                     <figure class="relative object-cover h-full w-full flex flex-col justify-center items-center">
-                      <img class="rounded-3xl object-cover h-full w-full" src="../img/cardiologia.jpg" alt="Cardiología">
+                      <img class="rounded-3xl object-cover h-full w-full" src="./img/cardiologia.jpg" alt="Cardiología">
                       <p class="text-3xl w-full h-full mt-auto flex justify-center items-center absolute text-center opacity-0 hover:opacity-100">Cardiología</p>
                     </figure>
                 </button>                     
@@ -110,7 +111,7 @@
         </section>
         <section class="h-screen mt-40">
             <h1 class="text-4xl text-center">Nuestros profesionales</h1>
-            <p class="text-justify text-2xl px-36 py-20">
+            <p class="text-justify text-2xl" style="margin-left: 10%; margin-right: 10%">
                 Contamos con un equipo de más de 60 profesionales altamente calificados que se dedican a brindar atención médica de primer nivel. Nuestros  médicos 
                 generales y especialistas están comprometidos con la salud y el  bienestar de nuestros pacientes, ofreciendo una atención excepcional y  personalizada. 
                 Valoramos la relación médico-paciente y estamos a la  vanguardia de la medicina para brindar la mejor atención en cada paso de  su viaje de salud.
@@ -118,19 +119,19 @@
             <div class="grid grid-cols-3 gap-20 m-auto w-2/3">
                 <button class="bg-primary rounded-3xl relative text-text filter grayscale-0 hover:grayscale hover: z-10 transform hover:scale-110 transition-transform w-full h-full">
                     <figure class="relative object-cover h-full w-full flex flex-col justify-center items-center">
-                      <img class="rounded-3xl object-cover h-full w-full" src="../img/default.png" alt="Joaquin Hernández Aguilar">
+                      <img class="rounded-3xl object-cover h-full w-full" src="./img/default.png" alt="Joaquin Hernández Aguilar">
                       <p class="text-3xl w-full h-full mt-auto flex justify-center items-end absolute text-center opacity-0 hover:opacity-100">Joaquin Hernández Aguilar<br>Cirujano</p>
                     </figure>
                 </button>
                 <button class="bg-primary rounded-3xl relative text-text filter grayscale-0 hover:grayscale hover: z-10 transform hover:scale-110 transition-transform w-full h-full">
                     <figure class="relative object-cover h-full w-full flex flex-col justify-center items-center">
-                      <img class="rounded-3xl object-cover h-full w-full" src="../img/default.png" alt="Francisco Picazo Lovera">
+                      <img class="rounded-3xl object-cover h-full w-full" src="./img/default.png" alt="Francisco Picazo Lovera">
                       <p class="text-3xl w-full h-full mt-auto flex justify-center items-end absolute text-center opacity-0 hover:opacity-100">Francisco Picazo Lovera<br>Cardiólogo</p>
                     </figure>
                 </button>
                 <button class="bg-primary rounded-3xl relative text-text filter grayscale-0 hover:grayscale hover: z-10 transform hover:scale-110 transition-transform w-full h-full">
                     <figure class="relative object-cover h-full w-full flex flex-col justify-center items-center">
-                      <img class="rounded-3xl object-cover h-full w-full" src="../img/default.png" alt="Miriam Vargas Rodríguez">
+                      <img class="rounded-3xl object-cover h-full w-full" src="./img/default.png" alt="Miriam Vargas Rodríguez">
                       <p class="text-3xl w-full h-full mt-auto flex justify-center items-end absolute text-center opacity-0 hover:opacity-100">Miriam Vargas Rodríguez<br>Pediatra</p>
                     </figure>
                 </button>
@@ -165,7 +166,7 @@
             <div class="flex flex-col gap-10 text-center justify-center items-center">
                 <h1 class="text-3xl">Nuestra clínica</h1>
                 <div>
-                    <img src="../img/default.png">
+                    <img src="./img/default.png">
                 </div>
             </div>
         </div>
@@ -173,9 +174,9 @@
             <p class="text-center text-3xl m-auto ">© Copyright - 2023. Todos los derechos reservados.</p>
         </div>
     </footer>
-    <dialog id="loginDialog" class="h-1/2" style="border: 2px solid black; width: calc(500px - 10vw);">
+    <dialog id="loginDialog" class="h-max border-2 border-solid border-border w-" style="width: calc(500px - 10vw);">
         <div class="grid">
-            <button class="m-4 w-min" onclick="closeDia();">
+            <button class="ml-72 w-min" onclick="closeDia();">
                 <i class="fa-solid fa-x"></i>
             </button>
         </div>
@@ -195,8 +196,8 @@
                 </div>
                 <div class="p-2 grid grid-cols-2" style="font-size: small;">
                     <button class="hover:text-primary text-primary w-max m-auto"><ins>Olvide mi contraseña</ins></button>
-                    <div>
-                        <input id="rmPass" type="checkbox" class="m-auto pt-2"> <label for="rmPass">Recordar constraseña</label>
+                    <div style="user-select: none">
+                        <input id="rmPass" type="checkbox" class="m-auto pt-2" style="user-select: none"> <label for="rmPass" style="user-select: none">Recordar constraseña</label>
                     </div>
                 </div>
                 <div class="text-center bg-primary object-cover w-1/2 m-auto rounded-md mt-3">
@@ -206,9 +207,9 @@
         </section>
     </dialog>
 
-    <dialog id="signinDialog" class="h-max" style="border: 2px solid black; width: calc(500px - 10vw);">
+    <dialog id="signinDialog" class="h-max border-2 border-solid border-border" style="width: calc(500px - 10vw);">
         <div class="grid">
-            <button class="m-4 w-min" onclick="closeDia();">
+            <button class="ml-72  w-min" onclick="closeDia();">
                 <i class="fa-solid fa-x"></i>
             </button>
         </div>
@@ -242,9 +243,9 @@
                     <label for="paPassword">Contraseña</label>
                     <input id="paPassword" name="clave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********">
                 </div>
-                <div class="grid grid-cols-2">
+                <div class="flex flex-col">
                     <label for="paGender">Género (opcional)</label>
-                    <select id="paGender" name="genero" class="m-auto w-full border-border rounded-md border-2" aria-placeholder="Seleccione genero">
+                    <select id="paGender" name="genero" class="m-auto w-full border-border rounded-md border-2">
                         <option value="M">Masculino</option>
                         <option value="F">Femenino</option>
                         <option value="0">Otro</option>
@@ -260,8 +261,31 @@
             </form>
         </section>
     </dialog>
+    <dialog id="reservaUnoDialog" class="h-1/2 border-2 border-solid border-border w-1/5 p-4">
+        <div class="grid">
+            <button class="ml-80 w-min" onclick="closeDia();">
+                <i class="fa-solid fa-x"></i>
+            </button>
+            <h1 class="m-auto text-3xl">Reserva tu hora</h1>
+        </div>
+        <form action="/reservaUno" id="reserva"method="post" class="grid gap-4 mt-10">
+            <div class="flex flex-col gap-4 h-max">
+                <label for="especialidad">Género (opcional)</label>
+                <select id="especialidad" name="especialidad" class="m-auto w-full border-border rounded-md border-2" aria-placeholder="Seleccione especialidad">
+                    <option value="1">Dermatología</option>
+                    <option value="2">Cirugía General</option>
+                    <option value="3">Pediatría</option>
+                    <option value="4">Hematología</option>
+                    <option value="5">Kinesiología</option>
+                    <option value="6">Cardiología</option>
+                </select>
+            </div>
+            <div class="text-center bg-primary object-cover w-1/2 m-auto rounded-md mt-3">
+                <button form="reserva" type="submit" class="text-text rounded-md p-1.5 hover:bg-secondary w-full m-auto">Buscar disponibilidad</button>
+            </div>
+        </form>
+    </dialog>   
     <script src="script.js"></script>
-    <script src="testScript.js"></script>
     <script src="database.js"></script>
 </body>
 </html>

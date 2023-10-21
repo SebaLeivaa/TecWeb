@@ -9,6 +9,7 @@ module.exports = {
     text: '#FFFFFF',
     border: '#000000',
     grayborder: '#A9A9A9',
+    approve: '#ffff00',
   },
     extend: {
       
@@ -16,4 +17,5 @@ module.exports = {
   },
   plugins: [],
 }
+
 

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="output.css">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>    
+    <script src="https://kit.fontawesome.com/8caa7c21dc.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div>
+        <div class="flex flex-row justify-center gap-x-10 mt-20">
+                <button id="prev-month">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <p class="" id="month-year"></p>
+                <button id="next-month">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+        </div>
+        <div class="grid grid-cols-7 mt-6">
+            <span>Lun</span>
+            <span>Mar</span>
+            <span>Mie</span>
+            <span>Jue</span>
+            <span>Vie</span>
+            <span>Sab</span>
+            <span>Dom</span>
+        </div>
+        <div id="div-calendar" class="grid grid-cols-7">
+        </div>
+    </div>
+    <script src="./calendario.js"></script>
+</body>
+</html>
