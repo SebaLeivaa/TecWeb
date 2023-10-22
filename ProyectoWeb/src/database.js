@@ -21,6 +21,7 @@ client.query('SELECT * FROM PACIENTE', (err, res)=>{
   client.end();
 });*/
 
+
 function validarRut(input) {
   const rutCompleto = input;
   const regex = /^\d{7,8}-[\dkK]$/;
@@ -87,7 +88,7 @@ const browserSync = require('browser-sync').create();
 
 // Configura Browser-Sync para recargar automáticamente los cambios realizados
 browserSync.init({
-  proxy: 'http://localhost:3000', // Apunta a nuestro servidos
+  proxy: 'http://localhost:3000', // Apunta a nuestro servidor
   files: ['views/**/*.ejs', 'public/css/**/*.css'],
 });
 
@@ -126,7 +127,7 @@ app.post('/registrar', (req, res) => {
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
   `;
 
-  pool.query(insertQuery, [nombre, apellido, rut, fecnac, correo, clave, genero, telefono], (error, results) => {
+  pool.query(insertQuery, [nombre, apellido, rut, fecnac, correo, clave, genero, telefono], (error, res) => {
     if (error) {
       console.error('Error al insertar el registro:', error);
       res.status(500).send('Error al insertar el registro');
@@ -175,7 +176,7 @@ app.post('/reservaUno',(req, res) => {
     JOIN PROFESIONAL PR ON CM.CITA_PROF_RUT = PR.PROF_RUT
     WHERE CM.CITA_ESPE_COD = $1
     AND CM.CITA_DISPONIBLE = TRUE
-    ORDER BY PR.PROF_RUT;
+    ORDER BY PR.PROF_RUT, CM.CITA_DIS_FECHA;
   `
 
   pool.query(selectQuery, [especialidad])
@@ -188,14 +189,42 @@ app.post('/reservaUno',(req, res) => {
       console.error(error);
       res.status(500).send('Error interno del servidor');
     });
+
 });
+
+app.post('/reservaUno', (req, res) => {
+  const { 'data-nombre': valorDelBoton } = req.body;
+
+  if (valorDelBoton) {
+    // Utiliza el valor del botón en tu consulta SQL
+    const consultaSQL = `SELECT * FROM tu_tabla WHERE columna = $1`;
+    
+    // Realiza la consulta SQL utilizando el valor del botón
+    pool.query(consultaSQL, [valorDelBoton])
+      .then(resultados => {
+        // Procesa los resultados de la consulta SQL
+        // Resto de tu código...
+      })
+      .catch(error => {
+        // Manejo de errores
+        console.error(error);
+        res.status(500).send('Error interno del servidor');
+      });
+  } else {
+    // Manejar el caso en el que no se haya presionado ningún botón
+    console.log('No se presiono ningun boton');
+  }
+
+  // Resto de tu código...
+});
+
+
 
 const port = 3000;
 app.listen(port, () => {
   console.log(`Servidor en ejecución en http://localhost:${port}`);
 });
 
-const resultado = {
-  cita_dis_fecha: new Date('2023-10-28T12:00:00.000Z'),
-  // Otros campos de resultado
-};
+
+
+

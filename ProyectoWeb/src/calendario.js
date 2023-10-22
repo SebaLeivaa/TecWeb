@@ -1,14 +1,20 @@
+
 const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 
 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 
 'Octubre', 'Noviembre', 'Diciembre'];
 
 const today = new Date();
 const day = today.getDate();
+const currentDay = today.getDate();
 let month = today.getMonth();
 let year = today.getFullYear();
 const currentMonth = month;
 const divCalendar = document.getElementById('div-calendar');
 const pMonthYear = document.getElementById('month-year');
+let horas = document.getElementById('horas-disponibles').textContent;
+let hourAvailable = horas.split(',').map(Number);;
+let firstHour = hourAvailable[0];
+hourAvailable.shift();
 
 function getNextMonth() {
     if(month !== 11){
@@ -64,16 +70,40 @@ function calendar() {
       startDays = 7;
     }
     for(let i = (2-startDays); i <= getTotalDays(month); i++){
-        const newSpan = document.createElement('span');
+        const newButton = document.createElement('button');
+        newButton.classList.add('rounded-full');
+        newButton.classList.add('w-7');
+        newButton.classList.add('h-7');
         if(i < 1){
             const totalDaysPrevMonth = getTotalDays(month-1);
-            newSpan.textContent = totalDaysPrevMonth + i;
-            divCalendar.appendChild(newSpan);
+            newButton.textContent = totalDaysPrevMonth + i;
+            newButton.classList.add('text-teal-800');
+            divCalendar.appendChild(newButton);
+            newButton.disabled = true;
         }else{
-            newSpan.textContent = i; // Establece el contenido del <span>
-            divCalendar.appendChild(newSpan);
+            newButton.textContent = i; // Establece el contenido del <Button>
+            divCalendar.appendChild(newButton);
+            newButton.disabled = true;
+            if(firstHour === i){
+                newButton.classList.add('bg-blue-800');
+                newButton.disabled = true;
+            }else if(hourAvailable.includes(i)){
+                newButton.classList.add('bg-blue-800');
+                newButton.disabled = false;
+                newButton.id = `button-${i}`;
+                newButton.setAttribute('data-date', `${year}-${month+1}-${day}`);
+            }
         }  
     }
 }
 
 calendar();
+
+
+
+
+function horasDisponibles(){
+
+}
+
+
