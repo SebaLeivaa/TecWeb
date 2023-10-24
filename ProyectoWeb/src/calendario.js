@@ -11,8 +11,8 @@ let year = today.getFullYear();
 const currentMonth = month;
 const divCalendar = document.getElementById('div-calendar');
 const pMonthYear = document.getElementById('month-year');
-let horas = document.getElementById('horas-disponibles').textContent;
-let hourAvailable = horas.split(',').map(Number);;
+let horas = document.getElementById('horas-disponibles').textContent.trim();
+let hourAvailable = horas.split(',');
 let firstHour = hourAvailable[0];
 hourAvailable.shift();
 
@@ -84,14 +84,16 @@ function calendar() {
             newButton.textContent = i; // Establece el contenido del <Button>
             divCalendar.appendChild(newButton);
             newButton.disabled = true;
-            if(firstHour === i){
+            if(firstHour == `${year}-${month+1}-${i}`){
                 newButton.classList.add('bg-blue-800');
                 newButton.disabled = true;
-            }else if(hourAvailable.includes(i)){
+            }else if(hourAvailable.includes(`${year}-${month+1}-${i}`)){
                 newButton.classList.add('bg-blue-800');
                 newButton.disabled = false;
                 newButton.id = `button-${i}`;
-                newButton.setAttribute('data-date', `${year}-${month+1}-${day}`);
+                newButton.value = `${year}-${month+1}-${i}`;
+                newButton.type = 'submit';
+                newButton.name = 'action';
             }
         }  
     }
@@ -99,11 +101,5 @@ function calendar() {
 
 calendar();
 
-
-
-
-function horasDisponibles(){
-
-}
 
 

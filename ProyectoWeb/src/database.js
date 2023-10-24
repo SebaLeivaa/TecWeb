@@ -183,6 +183,7 @@ app.post('/reservaUno',(req, res) => {
     .then(resultados => {
       // Renderiza la página HTML con los resultados utilizando un motor de plantillas
       res.render('reservaDos', { resultados });
+
     })
     .catch(error => {
       // Manejo de errores
@@ -192,31 +193,38 @@ app.post('/reservaUno',(req, res) => {
 
 });
 
-app.post('/reservaUno', (req, res) => {
-  const { 'data-nombre': valorDelBoton } = req.body;
+app.post('/actualizarFechas',(req, res) => {
+  const newDates = req.body.action;
 
-  if (valorDelBoton) {
-    // Utiliza el valor del botón en tu consulta SQL
-    const consultaSQL = `SELECT * FROM tu_tabla WHERE columna = $1`;
-    
-    // Realiza la consulta SQL utilizando el valor del botón
-    pool.query(consultaSQL, [valorDelBoton])
-      .then(resultados => {
-        // Procesa los resultados de la consulta SQL
-        // Resto de tu código...
-      })
-      .catch(error => {
-        // Manejo de errores
-        console.error(error);
-        res.status(500).send('Error interno del servidor');
-      });
-  } else {
-    // Manejar el caso en el que no se haya presionado ningún botón
-    console.log('No se presiono ningun boton');
-  }
+  console.log('Datos del formulario:', newDates);
+  const selectQuery = `
+  SELECT CM.CITA_DIS_FECHA, PR.PROF_NOMBRES, PR.PROF_APELLIDOS, PR.PROF_RUT
+    FROM CITA_MEDICA CM
+    JOIN PROFESIONAL PR ON CM.CITA_PROF_RUT = PR.PROF_RUT
+    WHERE CM.CITA_ESPE_COD = 1
+    AND CM.CITA_DISPONIBLE = TRUE
+    ORDER BY
+      CASE
+      WHEN DATE(CM.CITA_DIS_FECHA) = $1 THEN 1
+      ELSE 2
+    END,
+    PR.PROF_RUT,
+    CM.CITA_DIS_FECHA;
+  `
 
-  // Resto de tu código...
+  pool.query(selectQuery, [newDates])
+    .then(resultados => {
+      // Renderiza la página HTML con los resultados utilizando un motor de plantillas
+      res.render('reservaDos', { resultados });
+    })
+    .catch(error => {
+      // Manejo de errores
+      console.error(error);
+      res.status(500).send('Error interno del servidor');
+    });
+
 });
+
 
 
 

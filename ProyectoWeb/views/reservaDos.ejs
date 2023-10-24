@@ -298,10 +298,28 @@
         <div class="flex flex-row">
             <div class="flex flex-col mt-9 space-y-24 w-3/5">
                 <% let actualProf = null; %>
+                <% let timestamp = resultados.rows[0].cita_dis_fecha; %>
+                <% let fechaConsultada = new Date(timestamp); %>
+                <% let dia = fechaConsultada.getDate(); %>
+                <% let mes = fechaConsultada.getMonth() + 1; %>
+                <% let anio = fechaConsultada.getFullYear(); %>
+
+                <% if (dia < 10) { dia = '0' + dia; }
+                if (mes < 10) { mes = '0' + mes; } %>
+
+                <% let fechaFormateada = `${anio}/${mes}/${dia}`; %>
                 <% resultados.rows.forEach(resultado => { %>
-                    <% if (resultado.prof_rut !== actualProf) { %>
+                    <% let timestamp2 = resultado.cita_dis_fecha; %>
+                    <% let fechaConsultada2 = new Date(timestamp2); %>
+                    <% let dia2 = fechaConsultada2.getDate(); %>
+                    <% let mes2 = fechaConsultada2.getMonth() + 1; %>
+                    <% let anio2 = fechaConsultada2.getFullYear(); %>
+                    <% if (dia2 < 10) { dia2 = '0' + dia2; }
+                    if (mes2 < 10) { mes2 = '0' + mes2; } %>
+                    <% let fechaFormateada2 = `${anio2}/${mes2}/${dia2}`; %>
+                    <% if (resultado.prof_rut !== actualProf && fechaFormateada2 === fechaFormateada) { %>
                         <!-- Nuevo especialista, crea un nuevo div -->
-                        <% actualProf = resultado.prof_rut; %>
+                        <% actualProf = resultado.prof_rut; %>  
                         <div class="">
                             <div class="ml-20 text-xl">
                                 <% const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]; %>
@@ -359,16 +377,23 @@
                             <span>Sab</span>
                             <span>Dom</span>
                         </div>
-                        <div id="div-calendar" class="grid grid-cols-7 text-s mt-4 ml-4">
-                        </div>
+                        <form id="div-calendar" action="/actualizarFechas" method="post" class="grid grid-cols-7 text-s mt-4 ml-4">
+                        </form>
                         <div class="text-blue-800 invisible" id="horas-disponibles">
                             <% let horasDisponiblesSet = new Set() %>
                             <% resultados.rows.forEach(horas => { %>
-                              <% let hora = new Date(horas.cita_dis_fecha).getDate(); %>
-                              <% horasDisponiblesSet.add(hora); %>
+                                <% let fechasDisponibles = new Date(horas.cita_dis_fecha); %>
+                                <% let diaDisponible = fechasDisponibles.getDate(); %>
+                                <% let mesDisponible = fechasDisponibles.getMonth() + 1; %>
+                                <% let anioDisponible = fechasDisponibles.getFullYear(); %>
+
+
+                                <% let horasCitasMedicas = `${anioDisponible}-${mesDisponible}-${diaDisponible}`; %>
+                                <% horasDisponiblesSet.add(horasCitasMedicas); %>
+                                <% let horasDisponibles = Array.from(horasDisponiblesSet) %>
                             <%}); %>
                             <% let horasDisponibles = Array.from(horasDisponiblesSet) %>
-                            <%= horasDisponibles %>
+                            <%=horasDisponibles%>
                         </div>
                     </div>
                 </div>
