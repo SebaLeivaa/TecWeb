@@ -169,21 +169,26 @@ app.post('/signIn', (req, res) => {
 //Obtiene los datos del formulario de ReservaUno
 app.post('/reservaUno',(req, res) => {
   const { especialidad } = req.body;
+  req.session.especialidad = especialidad;
 
   const selectQuery = `
-  SELECT CM.CITA_DIS_FECHA, PR.PROF_NOMBRES, PR.PROF_APELLIDOS, PR.PROF_RUT
-    FROM CITA_MEDICA CM
-    JOIN PROFESIONAL PR ON CM.CITA_PROF_RUT = PR.PROF_RUT
-    WHERE CM.CITA_ESPE_COD = $1
+  SELECT CM.CITA_DIS_FECHA, PR.PROF_NOMBRES, PR.PROF_APELLIDOS, PR.PROF_RUT 
+    FROM CITA_MEDICA CM JOIN PROFESIONAL PR 
+    ON CM.CITA_PROF_RUT = PR.PROF_RUT
+    WHERE pr.prof_esp_codigo = $1
     AND CM.CITA_DISPONIBLE = TRUE
     ORDER BY PR.PROF_RUT, CM.CITA_DIS_FECHA;
   `
 
   pool.query(selectQuery, [especialidad])
     .then(resultados => {
-      // Renderiza la página HTML con los resultados utilizando un motor de plantillas
-      res.render('reservaDos', { resultados });
-
+      if (resultados.rows.length === 0) {
+        // No hay resultados, muestra un mensaje
+        res.render('sinResultados');
+      } else {
+        // Hay resultados, renderiza la página HTML con los resultados utilizando un motor de plantillas
+        res.render('reservaDos', { resultados });
+      }
     })
     .catch(error => {
       // Manejo de errores
@@ -194,25 +199,24 @@ app.post('/reservaUno',(req, res) => {
 });
 
 app.post('/actualizarFechas',(req, res) => {
+  const especialidad = req.session.especialidad;
   const newDates = req.body.action;
-
-  console.log('Datos del formulario:', newDates);
   const selectQuery = `
   SELECT CM.CITA_DIS_FECHA, PR.PROF_NOMBRES, PR.PROF_APELLIDOS, PR.PROF_RUT
     FROM CITA_MEDICA CM
     JOIN PROFESIONAL PR ON CM.CITA_PROF_RUT = PR.PROF_RUT
-    WHERE CM.CITA_ESPE_COD = 1
+    WHERE pr.prof_esp_codigo = $1
     AND CM.CITA_DISPONIBLE = TRUE
     ORDER BY
       CASE
-      WHEN DATE(CM.CITA_DIS_FECHA) = $1 THEN 1
+      WHEN DATE(CM.CITA_DIS_FECHA) = $2 THEN 1
       ELSE 2
     END,
     PR.PROF_RUT,
     CM.CITA_DIS_FECHA;
   `
 
-  pool.query(selectQuery, [newDates])
+  pool.query(selectQuery, [especialidad, newDates])
     .then(resultados => {
       // Renderiza la página HTML con los resultados utilizando un motor de plantillas
       res.render('reservaDos', { resultados });
