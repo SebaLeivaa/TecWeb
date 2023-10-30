@@ -38,7 +38,7 @@
                         </div>
                     </figcaption>
                 </button>
-                <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary">
+                <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary" onclick="historialMedUno();">
                     <figure class="w-60 h-56 flex justify-center">
                         <i class="fa-solid fa-notes-medical text-9xl p-14"></i>
                     </figure>
@@ -48,7 +48,7 @@
                         </div>
                     </figcaption>
                 </button>
-                <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary">
+                <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary" onclick="anulaHoraUno();">
                     <figure class="w-60 h-56 flex justify-center">
                         <i class="fa-solid fa-x text-9xl p-14"></i>
                     </figure>
@@ -180,27 +180,32 @@
             </button>
         </div>
         <section class="grid grid-cols-2 text-center">
-            <button class="text-text bg-primary rounded-md p-1.5 hover:bg-secondary w-max m-auto " onclick="loginButton();">Iniciar sesión</button>
-            <button class="rounded-md p-1.5 hover:bg-secondary hover:text-text w-max m-auto" onclick="signinButton();">Registrarse</button>
+            <button class="text-text bg-blue-500 rounded-md p-1.5 hover:bg-blue-600 w-max m-auto " onclick="loginButton();">Iniciar sesión</button>
+            <button class="rounded-md p-1.5 hover:bg-blue-600 hover:text-text w-max m-auto" onclick="signinButton();">Registrarse</button>
         </section>
         <section class="grid mt-5 p-2">
             <form action="/signIn" method="post" class="gap-10 grid p-2">
                 <div class="">
                     <label for="rutCorreo">Rut o correo electrónico</label>
-                    <input name="rutCorreo" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20254784-1 o correo@dominio.cl">
+                    <input name="rutCorreo" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20254784-1 o correo@dominio.cl" required>
                 </div>
-                <div class="">
+                <div class="flex flex-col">
                     <label for="loClave">Contraseña</label>
-                    <input name="loClave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********">
-                </div>
-                <div class="p-2 grid grid-cols-2" style="font-size: small;">
-                    <button class="hover:text-primary text-primary w-max m-auto"><ins>Olvide mi contraseña</ins></button>
-                    <div style="user-select: none">
-                        <input id="rmPass" type="checkbox" class="m-auto pt-2" style="user-select: none"> <label for="rmPass" style="user-select: none">Recordar constraseña</label>
+                    <div class="flex flex-row">
+                        <input id="claveInput4" name="loClave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********" required>
+                        <button id="cambioClave4" class="absolute right-0" type="button" onclick="cambioClaveLogin();">
+                            <i id="iconoClave4" class="fa-solid fa-eye text-xl -translate-x-7 translate-y-1.5"></i>
+                        </button>
                     </div>
                 </div>
-                <div class="text-center bg-primary object-cover w-1/2 m-auto rounded-md mt-3">
-                    <button type="submit" class="text-text rounded-md p-1.5 hover:bg-secondary w-full m-auto">Acceder</button>
+                <div class="p-2 grid grid-cols-2" style="font-size: small;">
+                    <button class="hover:text-blue-600 text-blue-500 w-max m-auto"><ins>Olvide mi contraseña</ins></button>
+                    <div style="user-select: none">
+                        <input id="rmPass" type="checkbox" class="m-auto pt-2" style="user-select: none"> <label for="rmPass" style="user-select: none">Recordar contraseña</label>
+                    </div>
+                </div>
+                <div class="text-center bg-blue-500 object-cover w-1/2 m-auto rounded-md mt-3">
+                    <button type="submit" class="text-text rounded-md p-1.5 hover:bg-blue-600 w-full m-auto">Acceder</button>
                 </div>
             </form>
         </section>
@@ -213,34 +218,39 @@
             </button>
         </div>
         <section class="grid grid-cols-2 text-center">
-            <button class="rounded-md p-1.5 hover:bg-secondary hover:text-text w-max m-auto" onclick="loginButton();">Iniciar sesión</button>
-            <button class="text-text bg-primary rounded-md p-1.5 hover:bg-secondary w-max m-auto" onclick="signinButton();">Registrarse</button>
+            <button class="rounded-md p-1.5 hover:bg-blue-600 hover:text-text w-max m-auto" onclick="loginButton();">Iniciar sesión</button>
+            <button class="text-text bg-blue-500 rounded-md p-1.5 hover:bg-blue-600 w-max m-auto" onclick="signinButton();">Registrarse</button>
         </section>
         <section class="p-2">
             <form action="/registrar" method="post" class="grid p-2 gap-2">
                 <div class="">
                     <label for="paName">Nombre</label>
-                    <input id="paName" name="nombre" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ingresa tu nombre">
+                    <input id="paName" name="nombre" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ingresa tu nombre" required>
                 </div>
                 <div class="">
                     <label for="paLName">Apellidos</label>
-                    <input id="paLName" name="apellido" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ingresa tus apellidos">
+                    <input id="paLName" name="apellido" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ingresa tus apellidos" required>
                 </div>
                 <div class="">
                     <label for="paRut">Rut</label>
-                    <input id="paRut" name="rut" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20545267-1">
+                    <input id="paRut" name="rut" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20545267-1" required>
                 </div>
                 <div class="">
                     <label for="DoB">Fecha de nacimiento</label>
-                    <input id="DoB" name="fecnac" type="date" class="m-auto w-full border-border rounded-md border-2">
+                    <input id="DoB" name="fecnac" type="date" class="m-auto w-full border-border rounded-md border-2" required>
                 </div>
                 <div class="">
                     <label for="paEmail">Correo Electronico</label>
-                    <input id="paEmail" name="correo" type="email" class="m-auto w-full border-border rounded-md border-2" placeholder="correo@dominio.cl">
+                    <input id="paEmail" name="correo" type="email" class="m-auto w-full border-border rounded-md border-2" placeholder="correo@dominio.cl" required>
                 </div>
-                <div class="">
+                <div class="flex flex-col">
                     <label for="paPassword">Contraseña</label>
-                    <input id="paPassword" name="clave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********">
+                    <div class="flex flex-row">
+                        <input id="claveInput3" name="clave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********" required>
+                        <button id="cambioClave3" class="absolute right-0" type="button" onclick="cambioClaveSigIn();">
+                            <i id="iconoClave3" class="fa-solid fa-eye text-xl -translate-x-7 translate-y-1.5"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="flex flex-col">
                     <label for="paGender">Género (opcional)</label>
@@ -252,10 +262,10 @@
                 </div>
                 <div class="">
                     <label for="paPhone">Teléfono</label>
-                    <input id="paPhone" name="telefono" type="tel" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej:958472045">
+                    <input id="paPhone" name="telefono" type="tel" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej:958472045" required>
                 </div>
-                <div class="text-center bg-primary object-cover w-1/2 m-auto rounded-md mt-3">
-                    <button type="submit" class="text-text rounded-md p-1.5 hover:bg-secondary w-full m-auto">Registrarse</button>
+                <div class="text-center bg-blue-500 object-cover w-1/2 m-auto rounded-md mt-3">
+                    <button type="submit" class="text-text rounded-md p-1.5 hover:bg-blue-600 w-full m-auto">Registrarse</button>
                 </div>
             </form>
         </section>
@@ -292,6 +302,34 @@
             </div>
         </form>
     </dialog>
+    <dialog id="anulaHoraUnoDialog" class="h-1/2 border-2 border-solid border-border w-96 p-4">
+        <div class="grid">
+            <button class="ml-[95%] w-min" onclick="closeDia();">
+                <i class="fa-solid fa-x"></i>
+            </button>
+            <h1 class="m-auto text-xl">Anula tu hora</h1>
+        </div>
+        <div class="flex flex-col">
+            <form action="/anularHoraConsulta" method="post" class="gap-10 grid p-2">
+                <div class="">
+                    <label for="rut">Rut</label>
+                    <input name="rut" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20254784-1" required>
+                </div>
+                <div class="flex flex-col">
+                    <label for="clave">Contraseña</label>
+                    <div class="flex flex-row">
+                        <input id="claveInput7" name="clave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********" required>
+                        <button id="cambioClave7" class="absolute right-0" type="button" onclick="cambioClaveAnularHora();">
+                            <i id="iconoClave7" class="fa-solid fa-eye text-xl -translate-x-7 translate-y-1.5"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="text-center bg-blue-500 object-cover w-1/2 m-auto rounded-md mt-3">
+                    <button type="submit" class="text-text rounded-md p-1.5 hover:bg-blue-600 w-full m-auto">Acceder</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
     <dialog id="registroExitoso" class="flex flex-col h-2/3 border-2 border-solid border-border w-1/4 p-4">
         <div class="">
             <button class="ml-72 w-min" onclick="closeDia();">
@@ -305,6 +343,34 @@
             <p class="text-3xl">Se ha registrado exitosamente.</p>
         </div>
     </dialog>   
+    <dialog id="historialMedUnoDialog" class="h-1/2 border-2 border-solid border-border w-96 p-4">
+        <div class="grid">
+            <button class="ml-[95%] w-min" onclick="closeDia();">
+                <i class="fa-solid fa-x"></i>
+            </button>
+            <h1 class="m-auto text-xl">Tu historial médico</h1>
+        </div>
+        <div class="flex flex-col">
+            <form action="/historialMedConsulta" method="post" class="gap-10 grid p-2">
+                <div class="">
+                    <label for="rut">Rut</label>
+                    <input name="rut" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20254784-1" required>
+                </div>
+                <div class="flex flex-col">
+                    <label for="clave">Contraseña</label>
+                    <div class="flex flex-row">
+                        <input id="claveInput8" name="clave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********" required>
+                        <button id="cambioClave8" class="absolute right-0" type="button" onclick="cambioClaveHistorialMedico();">
+                            <i id="iconoClave8" class="fa-solid fa-eye text-xl -translate-x-7 translate-y-1.5"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="text-center bg-blue-500 object-cover w-1/2 m-auto rounded-md mt-3">
+                    <button type="submit" class="text-text rounded-md p-1.5 hover:bg-blue-600 w-full m-auto">Consultar</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
     <script src="script.js"></script>
     <script src="database.js"></script>
 </body>

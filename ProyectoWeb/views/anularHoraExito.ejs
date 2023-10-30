@@ -9,10 +9,10 @@
     <script src="https://kit.fontawesome.com/8caa7c21dc.js" crossorigin="anonymous"></script>
 </head>
 <body class="bg-secondary">
-    <header class="bg-blue-900 fixed z-20 top-0 left-0 right-0">
+    <header class="bg-header fixed z-20 top-0 left-0 right-0">
         <nav class="grid grid-cols-3 h-full max-xl:grid-cols-2 gap-y-1">
-            <div class="flex justify-center items-end mb-1 max-xl:w-max max-xl:h-20">
-                <img class="h-20 mt-3  rounded-md w-64 ml-32 max-xl:w-max max-xl:h-full max-xl:m-2" src="./img/logoClinica.png">
+            <div class="mb-1 max-xl:w-max max-xl:h-20">
+                <img class="h-20 rounded-md w-max ml-24 max-xl:w-max max-xl:h-full max-xl:m-2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQgAAAC/CAMAAAA1kLK0AAAAeFBMVEX0Qjb////0NSb7vrvzMSH0PTD0PzP8z8z91tT//Pz2bGT1Ukf3e3T1WlH0PC70PjLzLh394uD7w7/6sKz+9fX2Y1r0Nyn+6+n7x8P3dG392tj0SDz4k4z5qqX6tLD5o5/3hoD2Z1/5nZf4j4nzJxP1WE32cmr1TkOAdQt7AAAChElEQVR4nO3a23KqMBSAYcAAHoMHjIfaVm27ef833BIirYoOzOyOs7P+78p2ciH/aLJQgwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPwzWdxR9uxn/Duy5bCjpZ8lVD/saKue/Zx/hUq7hugTQkCIQVueh5iPJq2M5p6H6KmsFdXzPUTUbnEkI0RstDbJo8UyQpjlfDZbvMQPFosIocf2cMxHDwZHCSGSl9yNCbf7Rf12kRBC784D0829RFZo90hCCPN6DjHWlyuSYPXmrl1CiPuviHLFe3XxEkLc3SPsEBXu7H8lhLh3aqj3qs++LCEiRPMcEe3rrcNICRHEkTZXk6UZ1nffg4OREuKWnpT33eFibUsstdQQWbAqC6SR3lbbx1RmiCS21z+LksTMykerQEwI/bPI1L4j8uK0fcaFfW1s34SEMJv1926pFm5nKP/QRS7hM0sXIjqNEmvlSqhdfWqW9DIXE6KaGVJtJypTzVe7+r1ihgMhIdxLIOyXJfTBXvbr9Hul2cgIoY7nTWAbx3G1JcwvThM3ZXoeQtW34acDM0jscdm/mjPVh/8hpvaICNNqZ5itq7Hh+iMae6B6HeLT3muf3grRpn5d5F/6erH3I/ai6tA7HZ3mjzscwsNNB/9DVNe+sEeEcQPDvmHs9j6E5T6OcyWOTbcfIkIc6+vTX6vwbdq0WEKIjx+Xpye92/2hJCDE5Y6QmebF/ocYt/s63PsQvcYd4Zb/Ifh9BCHOCOEQwiGE404N3Yr332ukm3Erm9TzEJ0QghBSQrT+RXr1s3RPQyTFqKPi4Y9z/19JZ89+xgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+OQv5igr7hS+m54AAAAASUVORK5CYII=">
             </div>
             <div class="flex flex-row gap-10 items-end mb-1 text-text max-xl:col-start-1 max-xl:col-end-3 text-center m-auto">
                 <a class="hover:text-primary" href="#"> <b><ins>Inicio<ins/></b> </a> 
@@ -21,8 +21,18 @@
                 <a class="hover:text-primary" href="#contacto">Contacto</a>
             </div>
             <div class="flex items-end gap-x-10 justify-end mr-2 text-text mb-1 max-xl:col-start-2 max-xl:col-end-4 max-xl:row-start-1 max-xl:row-end-2 max-md:w-full max-xl:justify-end">
-                <button class="hover:text-primary" onclick="loginButton();"><i class="fa-solid fa-user"></i> Iniciar sesión</button>
-                <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="signinButton();">Registrarse</button>
+                <% if (user) { %>
+                    <button class="" onclick="loginButton();" disabled>
+                      <i class="fa-solid fa-user"></i> <%= user.paci_nombre.toUpperCase() %> <%= user.paci_apellido.toUpperCase() %>
+                    </button>
+                    <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="logout();">Cerrar sesión</button>
+                <% } else { %>
+                    <!-- Botón para usuarios no autenticados -->
+                    <button class="" onclick="loginButton();">
+                      Iniciar Sesión
+                    </button>
+                    <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="signinButton();">Registrarse</button>
+                <% } %>
             </div>
         </nav>
     </header>
@@ -40,6 +50,20 @@
                         </figcaption>
                     </figure>
                     </button>
+                    <% if (user) { %>
+                        <form action="/historialMedConsultaLogin" method="post">
+                            <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-64 max-md:w-72">
+                                <figure class="w-60 h-56 flex justify-center">
+                                    <i class="fa-solid fa-notes-medical text-9xl p-14"></i>
+                                </figure>
+                                <figcaption class="h-20 flex items-start m-auto">
+                                    <div>
+                                        <p class="text-3xl">Tu historial médico</p>
+                                    </div>
+                                </figcaption>
+                            </button>
+                        </form> 
+                    <% } else { %>
                     <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-64 max-md:w-72" onclick="historialMedUno();">
                         <figure class="w-60 h-56 flex justify-center">
                             <i class="fa-solid fa-notes-medical text-9xl p-14"></i>
@@ -50,18 +74,34 @@
                             </div>
                         </figcaption>
                     </button> 
+                    <% } %> 
                 </div>
                 <div>
-                    <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary" onclick="anulaHoraUno();">
-                        <figure class="w-60 h-56 flex justify-center">
-                            <i class="fa-solid fa-x text-9xl p-14"></i>
-                        </figure>
-                        <figcaption class="h-20 flex items-start m-auto">
-                            <div >
-                                <p class="text-3xl">Anulación de horas</p>
-                            </div>
-                        </figcaption>
-                    </button>
+                    <% if (user) { %>
+                        <form action="/anularHoraConsultaLogin" method="post">
+                            <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary">
+                                <figure class="w-60 h-56 flex justify-center">
+                                    <i class="fa-solid fa-x text-9xl p-14"></i>
+                                </figure>
+                                <figcaption class="h-20 flex items-start m-auto">
+                                    <div >
+                                        <p class="text-3xl">Anulación de horas</p>
+                                    </div>
+                                </figcaption>
+                            </button>
+                        </form>
+                    <% } else { %>
+                        <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary" onclick="anulaHoraUno();">
+                            <figure class="w-60 h-56 flex justify-center">
+                                <i class="fa-solid fa-x text-9xl p-14"></i>
+                            </figure>
+                            <figcaption class="h-20 flex items-start m-auto">
+                                <div >
+                                    <p class="text-3xl">Anulación de horas</p>
+                                </div>
+                            </figcaption>
+                        </button>
+                    <% } %>
                 </div>
             </div>
         </section>
@@ -112,7 +152,7 @@
                         </figure>
                     </button>                     
                 </div>
-                <a class="grid m-auto mt-8 col-start-1 col-end-4 hover:text-primary text-blue-900 rounded-md px-10 text-center" href="especialidades.html"><b><ins>Ver todas nuestras especialidades</ins></b></a>
+                <a class="grid m-auto mt-8 col-start-1 col-end-4 hover:text-primary text-text rounded-md px-10 text-center" href="especialidades.html"><b><ins>Ver todas nuestras especialidades</ins></b></a>
             </div>
         </section>
         <section id="profesionales" class="flex flex-col h-max mb-16 gap-10 mx-auto">
@@ -143,7 +183,7 @@
                         </figure>
                     </button>  
                 </div>
-                <a class="m-auto mt-8 col-start-1 col-end-4 hover:text-primary text-blue-900 rounded-md px-10 text-center" href="profesionales.html"><b><ins>Ver todos nuestros profesionales</ins></b></a>
+                <a class="m-auto mt-8 col-start-1 col-end-4 hover:text-primary text-text rounded-md px-10 text-center" href="profesionales.html"><b><ins>Ver todos nuestros profesionales</ins></b></a>
             </div>
         </section>
     </main>
@@ -192,7 +232,7 @@
             <p class="text-center text-3xl m-auto ">© Copyright - 2023. Todos los derechos reservados.</p>
         </div>
     </footer>
-    <dialog id="loginDialog" class="h-max border-2 border-solid border-border bg-blue-100" style="width: calc(500px - 10vw);">
+    <dialog id="loginDialog" class="h-max border-2 border-solid border-border" style="width: calc(500px - 10vw);">
         <div class="grid">
             <button class="ml-72 w-min" onclick="closeDia();">
                 <i class="fa-solid fa-x"></i>
@@ -230,7 +270,7 @@
         </section>
     </dialog>
 
-    <dialog id="signinDialog" class="h-max border-2 border-solid border-border bg-blue-100" style="width: calc(500px - 10vw);">
+    <dialog id="signinDialog" class="h-max border-2 border-solid border-border" style="width: calc(500px - 10vw);">
         <div class="grid">
             <button class="ml-72  w-min" onclick="closeDia();">
                 <i class="fa-solid fa-x"></i>
@@ -289,7 +329,7 @@
             </form>
         </section>
     </dialog>
-    <dialog id="reservaUnoDialog" class="h-1/2 border-2 border-solid border-border w-96 p-4 bg-blue-100">
+    <dialog id="reservaUnoDialog" class="h-1/2 border-2 border-solid border-border w-96 p-4">
         <div class="grid">
             <button class="ml-[95%] w-min" onclick="closeDia();">
                 <i class="fa-solid fa-x"></i>
@@ -313,7 +353,7 @@
             </div>
         </form>
     </dialog>   
-    <dialog id="anulaHoraUnoDialog" class="h-1/2 border-2 border-solid border-border w-96 p-4 bg-blue-100">
+    <dialog id="anulaHoraUnoDialog" class="h-1/2 border-2 border-solid border-border w-96 p-4">
         <div class="grid">
             <button class="ml-[95%] w-min" onclick="closeDia();">
                 <i class="fa-solid fa-x"></i>
@@ -341,7 +381,24 @@
             </form>
         </div>
     </dialog>
-    <dialog id="historialMedUnoDialog" class="h-1/2 border-2 border-solid border-border bg-blue-100 w-96 p-4">
+    <dialog id="anularHoraExitoDialog" class="h-1/2 border-2 border-solid border-border w-[30%] p-4 3xl:w-2/3 3xl:h-3/4">
+        <div class="flex flex-col">
+            <div class="flex justify-end">
+                <button id="cerrarAnularHoraExito">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+        </div>
+        <div class="w-full h-3/4 mt-20">
+            <div class="">
+                <i class="fa-solid fa-circle-check text-9xl mt-20 flex justify-center items-center text-center" style="color: #80ff00;"></i>
+            </div>
+            <div class="flex text-center justify-center mt-20">
+                <p class="text-3xl">Se ha anulado con exito su reserva.</p>
+            </div>
+        </div>
+    </dialog>  
+    <dialog id="historialMedUnoDialog" class="h-1/2 border-2 border-solid border-border w-96 p-4">
         <div class="grid">
             <button class="ml-[95%] w-min" onclick="closeDia();">
                 <i class="fa-solid fa-x"></i>
