@@ -21,8 +21,18 @@
                 <a class="hover:text-primary" href="#contacto">Contacto</a>
             </div>
             <div class="flex items-end gap-x-10 justify-end mr-2 text-text mb-1 max-xl:col-start-2 max-xl:col-end-4 max-xl:row-start-1 max-xl:row-end-2 max-md:w-full max-xl:justify-end">
-                <button class="hover:text-primary" onclick="loginButton();"><i class="fa-solid fa-user"></i> Iniciar sesión</button>
-                <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="signinButton();">Registrarse</button>
+                <% if (user) { %>
+                    <button class="" onclick="loginButton();" disabled>
+                      <i class="fa-solid fa-user"></i> <%= user.paci_nombre.toUpperCase() %> <%= user.paci_apellido.toUpperCase() %>
+                    </button>
+                    <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="logout();">Cerrar sesión</button>
+                <% } else { %>
+                    <!-- Botón para usuarios no autenticados -->
+                    <button class="" onclick="loginButton();">
+                        <i class="fa-solid fa-user"></i> Iniciar Sesión
+                    </button>
+                    <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="signinButton();">Registrarse</button>
+                <% } %>
             </div>
         </nav>
     </header>
@@ -40,6 +50,20 @@
                         </figcaption>
                     </figure>
                     </button>
+                    <% if (user) { %>
+                        <form action="/historialMedConsultaLogin" method="post">
+                            <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-64 max-md:w-72">
+                                <figure class="w-60 h-56 flex justify-center">
+                                    <i class="fa-solid fa-notes-medical text-9xl p-14"></i>
+                                </figure>
+                                <figcaption class="h-20 flex items-start m-auto">
+                                    <div>
+                                        <p class="text-3xl">Tu historial médico</p>
+                                    </div>
+                                </figcaption>
+                            </button>
+                        </form> 
+                    <% } else { %>
                     <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-64 max-md:w-72" onclick="historialMedUno();">
                         <figure class="w-60 h-56 flex justify-center">
                             <i class="fa-solid fa-notes-medical text-9xl p-14"></i>
@@ -50,18 +74,34 @@
                             </div>
                         </figcaption>
                     </button> 
+                    <% } %> 
                 </div>
                 <div>
-                    <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary" onclick="anulaHoraUno();">
-                        <figure class="w-60 h-56 flex justify-center">
-                            <i class="fa-solid fa-x text-9xl p-14"></i>
-                        </figure>
-                        <figcaption class="h-20 flex items-start m-auto">
-                            <div >
-                                <p class="text-3xl">Anulación de horas</p>
-                            </div>
-                        </figcaption>
-                    </button>
+                    <% if (user) { %>
+                        <form action="/anularHoraConsultaLogin" method="post">
+                            <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary">
+                                <figure class="w-60 h-56 flex justify-center">
+                                    <i class="fa-solid fa-x text-9xl p-14"></i>
+                                </figure>
+                                <figcaption class="h-20 flex items-start m-auto">
+                                    <div >
+                                        <p class="text-3xl">Anulación de horas</p>
+                                    </div>
+                                </figcaption>
+                            </button>
+                        </form>
+                    <% } else { %>
+                        <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary" onclick="anulaHoraUno();">
+                            <figure class="w-60 h-56 flex justify-center">
+                                <i class="fa-solid fa-x text-9xl p-14"></i>
+                            </figure>
+                            <figcaption class="h-20 flex items-start m-auto">
+                                <div >
+                                    <p class="text-3xl">Anulación de horas</p>
+                                </div>
+                            </figcaption>
+                        </button>
+                    <% } %>
                 </div>
             </div>
         </section>
@@ -341,7 +381,57 @@
             </form>
         </div>
     </dialog>
-    <dialog id="historialMedUnoDialog" class="h-1/2 border-2 border-solid border-border bg-blue-100 w-96 p-4">
+    <dialog id="anularHoraDosDialog" class="h-1/2 border-2 border-solid border-border w-96 p-4">
+        <div class="grid">
+            <button id="cerrarAnularHoraDos" class="ml-[95%] w-min">
+                <i class="fa-solid fa-x"></i>
+            </button>
+            <h1 class="m-auto text-xl">Anula tu hora</h1>
+        </div>
+        <% if (resultados2.rows.length === 0){ %>
+            <div class="h-96 flex items-center">
+                <p class="text-3xl text-center">No tienes horas medicas agendadas</p>
+            </div>
+        <% } else { %> 
+        <% resultados2.rows.forEach(resultado => {%>
+            <div class="flex flex-row gap-10 mt-10">
+                <div class="w-2/5">
+                    <img class="h-full" src="../img/default.png" alt="<%=resultado.prof_nombres%> <%=resultado.prof_apellidos%>">
+                </div>
+                <div class="flex flex-col space-y-4 w-3/5">
+                <div>
+                        <h1 class="font-semibold"><%=resultado.prof_nombres%> <%=resultado.prof_apellidos%></h1>
+                    </div>
+                    <div>
+                        <h1 class="font-semibold"><%=resultado.espe_nombre%></h1>
+                    </div>
+                    <div>
+                    <% const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]; %>
+                    <% const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]; %>
+                    <% const dia = resultado.cita_dis_fecha.getDate(); %>
+                    <% const nombreDia = resultado.cita_dis_fecha.getDay();%>
+                    <% const mes = resultado.cita_dis_fecha.getMonth(); %>
+                    <% const anio = resultado.cita_dis_fecha.getFullYear();%>
+                        <h1 class="font-semibold">
+                            <%= diasSemana[nombreDia]%> <%= dia%> de <%= meses[mes]%> <%=anio%>
+                        </h1>
+                    </div>
+                    <div class="w-24 h-9">
+                        <p class="text-text rounded-md p-1.5 bg-blue-500 m-auto text-center">
+                            <%=resultado.cita_dis_fecha.getHours().toString().padStart(2, '0') %>:<%= resultado.cita_dis_fecha.getMinutes().toString().padStart(2, '0') %>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-16">
+                <form class="h-full w-full flex justify-center" action="/anularHoraFinal" method="post">
+                    <button class="text-text font-semibold text-lg bg-blue-500 hover:bg-blue-600 m-auto w-1/2 h-full rounded-3xl p-2.5" type="submit" name="hora" value="<%=resultado.cita_id%>">Anular Hora</button>
+                </form>
+            </div>
+        <% });%>
+        <% } %>
+    </dialog>
+    <dialog id="historialMedUnoDialog" class="h-1/2 border-2 border-solid border-border w-96 p-4">
         <div class="grid">
             <button class="ml-[95%] w-min" onclick="closeDia();">
                 <i class="fa-solid fa-x"></i>

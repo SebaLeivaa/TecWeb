@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinica</title>
+    <link rel="stylesheet" href="output.css">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>    
+    <script src="https://kit.fontawesome.com/8caa7c21dc.js" crossorigin="anonymous"></script>
+</head>
+<body class="bg-secondary">
+    <header class="bg-blue-900 fixed z-20 top-0 left-0 right-0">
+        <nav class="grid grid-cols-3 h-full max-xl:grid-cols-2 gap-y-1">
+            <img class="h-20 rounded-md w-64 mx-auto my-1 max-xl:w-max max-xl:m-2" src="./img/logoClinica.png">
+                        <div class="flex flex-row gap-10 items-end mb-1 text-text max-xl:col-start-1 max-xl:col-end-3 text-center m-auto">
+                <a class="hover:text-primary" href="#"> <b><ins>Inicio<ins/></b> </a> 
+            </div>
+            <div class="flex items-end gap-x-10 justify-end mr-2 text-text mb-1 max-xl:col-start-2 max-xl:col-end-4 max-xl:row-start-1 max-xl:row-end-2 max-md:w-full max-xl:justify-end">
+                <button class="" onclick="loginButton();" disabled>
+                    <i class="fa-solid fa-user"></i> <%= user.prof_nombres.toUpperCase() %> <%= user.prof_apellidos.toUpperCase() %>
+                </button>
+                <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="logout();">Cerrar sesión</button>
+            </div>
+        </nav>
+    </header>
+    <main class="gap-10">
+        <section class="h-screen flex flex-col justify-center items-center">
+            <div class="h-20">
+                <h1 class="text-text text-4xl"><b>TUS HORAS AGENDADAS</b></h1>
+            </div>
+            <% if (resultados.rows.length === 0){ %>
+                <div class="h-48 flex items-center text-center justify-center border-2 bg-blue-500 mt-40 w-[50%] rounded-xl ml-[25%]">
+                    <p class="text-3xl text-center text-text font-bold">No tiene citas médicas agendadas</p>
+                </div>
+            <% } else { %> 
+            <div class="flex flex-row">
+                <table class="border-r-0 border-border">
+                    <thead>
+                        <tr class="b">
+                            <th class="px-4 py-2 border border-border bg-blue-700 text-text">Paciente</th>
+                            <th class="px-4 py-2 border border-border bg-blue-700 text-text">Rut</th>
+                            <th class="px-4 py-2 border border-border bg-blue-700 text-text">Especialidad</th>
+                            <th class="px-4 py-2 border border-border bg-blue-700 text-text">Sala</th>
+                            <th class="px-4 py-2 border border-border bg-blue-700 text-text">Fecha</th>
+                            <th class="px-4 py-2 border border-border bg-blue-700 text-text">Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <% resultados.rows.forEach(resultado => {%>
+                        <% const dia = resultado.cita_dis_fecha; %>
+                        <% const mes = resultado.cita_dis_fecha; %>
+                        <tr>
+                            <td class="px-4 py-2 border border-border bg-blue-600 text-text"><%= resultado.paci_nombre %>  <%= resultado.paci_apellido %></td>
+                            <td class="px-4 py-2 border border-border  bg-blue-600 text-text"><%= resultado.paci_rut %></td>
+                            <td class="px-4 py-2 border border-border  bg-blue-600 text-text"><%= resultado.espe_nombre %></td>
+                            <td class="px-4 py-2 border border-border  bg-blue-600 text-text"><%= resultado.cita_sala_numero %></td>
+                            <td class="px-4 py-2 border border-border  bg-blue-600 text-text"><%= resultado.cita_dis_fecha.getDate().toString().padStart(2, '0') %>/<%= (resultado.cita_dis_fecha.getMonth() + 1).toString().padStart(2, '0') %>/<%= resultado.cita_dis_fecha.getFullYear() %></td>
+                            <td class="px-4 py-2 border border-border  bg-blue-600 text-text"><%= resultado.cita_dis_fecha.getHours().toString().padStart(2, '0') %>:<%= resultado.cita_dis_fecha.getMinutes().toString().padStart(2, '0') %></td>
+                            <td class="px-4 py-2 border-0 border-r-0 space-x-5 text-text"><button><i class="fa-solid fa-pen-to-square text-xl"></i></button><button><i class="fa-solid fa-trash text-xl"></i></button></td>
+                        </tr>
+                <% });%>
+                    </tbody>
+                <% } %>
+                </table>
+            </div>
+        </section>
+    </main>
+    <script src="script.js"></script>
+    <script src="database.js"></script>
+</body>
+</html>

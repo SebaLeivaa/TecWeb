@@ -9,10 +9,10 @@
     <script src="https://kit.fontawesome.com/8caa7c21dc.js" crossorigin="anonymous"></script>
 </head>
 <body class="bg-secondary">
-    <header class="bg-blue-900 fixed z-20 top-0 left-0 right-0">
+    <header class="bg-header fixed z-20 top-0 left-0 right-0">
         <nav class="grid grid-cols-3 h-full max-xl:grid-cols-2 gap-y-1">
-            <div class="flex justify-center items-end mb-1 max-xl:w-max max-xl:h-20">
-                <img class="h-20 mt-3  rounded-md w-64 ml-32 max-xl:w-max max-xl:h-full max-xl:m-2" src="./img/logoClinica.png">
+            <div class="mb-1 max-xl:w-max max-xl:h-20">
+                <img class="h-20 rounded-md w-max ml-24 max-xl:w-max max-xl:h-full max-xl:m-2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQgAAAC/CAMAAAA1kLK0AAAAeFBMVEX0Qjb////0NSb7vrvzMSH0PTD0PzP8z8z91tT//Pz2bGT1Ukf3e3T1WlH0PC70PjLzLh394uD7w7/6sKz+9fX2Y1r0Nyn+6+n7x8P3dG392tj0SDz4k4z5qqX6tLD5o5/3hoD2Z1/5nZf4j4nzJxP1WE32cmr1TkOAdQt7AAAChElEQVR4nO3a23KqMBSAYcAAHoMHjIfaVm27ef833BIirYoOzOyOs7P+78p2ciH/aLJQgwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPwzWdxR9uxn/Duy5bCjpZ8lVD/saKue/Zx/hUq7hugTQkCIQVueh5iPJq2M5p6H6KmsFdXzPUTUbnEkI0RstDbJo8UyQpjlfDZbvMQPFosIocf2cMxHDwZHCSGSl9yNCbf7Rf12kRBC784D0829RFZo90hCCPN6DjHWlyuSYPXmrl1CiPuviHLFe3XxEkLc3SPsEBXu7H8lhLh3aqj3qs++LCEiRPMcEe3rrcNICRHEkTZXk6UZ1nffg4OREuKWnpT33eFibUsstdQQWbAqC6SR3lbbx1RmiCS21z+LksTMykerQEwI/bPI1L4j8uK0fcaFfW1s34SEMJv1926pFm5nKP/QRS7hM0sXIjqNEmvlSqhdfWqW9DIXE6KaGVJtJypTzVe7+r1ihgMhIdxLIOyXJfTBXvbr9Hul2cgIoY7nTWAbx3G1JcwvThM3ZXoeQtW34acDM0jscdm/mjPVh/8hpvaICNNqZ5itq7Hh+iMae6B6HeLT3muf3grRpn5d5F/6erH3I/ai6tA7HZ3mjzscwsNNB/9DVNe+sEeEcQPDvmHs9j6E5T6OcyWOTbcfIkIc6+vTX6vwbdq0WEKIjx+Xpye92/2hJCDE5Y6QmebF/ocYt/s63PsQvcYd4Zb/Ifh9BCHOCOEQwiGE404N3Yr332ukm3Erm9TzEJ0QghBSQrT+RXr1s3RPQyTFqKPi4Y9z/19JZ89+xgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+OQv5igr7hS+m54AAAAASUVORK5CYII=">
             </div>
             <div class="flex flex-row gap-10 items-end mb-1 text-text max-xl:col-start-1 max-xl:col-end-3 text-center m-auto">
                 <a class="hover:text-primary" href="#"> <b><ins>Inicio<ins/></b> </a> 
@@ -20,9 +20,11 @@
                 <a class="hover:text-primary" href="#profesionales">Profesionales</a>
                 <a class="hover:text-primary" href="#contacto">Contacto</a>
             </div>
-            <div class="flex items-end gap-x-10 justify-end mr-2 text-text mb-1 max-xl:col-start-2 max-xl:col-end-4 max-xl:row-start-1 max-xl:row-end-2 max-md:w-full max-xl:justify-end">
-                <button class="hover:text-primary" onclick="loginButton();"><i class="fa-solid fa-user"></i> Iniciar sesión</button>
-                <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="signinButton();">Registrarse</button>
+            <div class="flex items-end gap-x-10 justify-end mr-2 text-text mb-1 max-xl:col-start-2 max-xl:col-end-4 max-xl:row-start-1 max-xl:row-end-2 max-md:w-full max-xl:justify-end">                 <!-- Botón para usuarios no autenticados -->
+                    <button class="" onclick="loginButton();">
+                      Iniciar Sesión
+                    </button>
+                    <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="signinButton();">Registrarse</button>
             </div>
         </nav>
     </header>
@@ -52,16 +54,16 @@
                     </button> 
                 </div>
                 <div>
-                    <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary" onclick="anulaHoraUno();">
-                        <figure class="w-60 h-56 flex justify-center">
-                            <i class="fa-solid fa-x text-9xl p-14"></i>
-                        </figure>
-                        <figcaption class="h-20 flex items-start m-auto">
-                            <div >
-                                <p class="text-3xl">Anulación de horas</p>
-                            </div>
-                        </figcaption>
-                    </button>
+                        <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary" onclick="anulaHoraUno();">
+                            <figure class="w-60 h-56 flex justify-center">
+                                <i class="fa-solid fa-x text-9xl p-14"></i>
+                            </figure>
+                            <figcaption class="h-20 flex items-start m-auto">
+                                <div >
+                                    <p class="text-3xl">Anulación de horas</p>
+                                </div>
+                            </figcaption>
+                        </button>
                 </div>
             </div>
         </section>
@@ -112,7 +114,7 @@
                         </figure>
                     </button>                     
                 </div>
-                <a class="grid m-auto mt-8 col-start-1 col-end-4 hover:text-primary text-blue-900 rounded-md px-10 text-center" href="especialidades.html"><b><ins>Ver todas nuestras especialidades</ins></b></a>
+                <a class="grid m-auto mt-8 col-start-1 col-end-4 hover:text-primary text-text rounded-md px-10 text-center" href="especialidades.html"><b><ins>Ver todas nuestras especialidades</ins></b></a>
             </div>
         </section>
         <section id="profesionales" class="flex flex-col h-max mb-16 gap-10 mx-auto">
@@ -143,7 +145,7 @@
                         </figure>
                     </button>  
                 </div>
-                <a class="m-auto mt-8 col-start-1 col-end-4 hover:text-primary text-blue-900 rounded-md px-10 text-center" href="profesionales.html"><b><ins>Ver todos nuestros profesionales</ins></b></a>
+                <a class="m-auto mt-8 col-start-1 col-end-4 hover:text-primary text-text rounded-md px-10 text-center" href="profesionales.html"><b><ins>Ver todos nuestros profesionales</ins></b></a>
             </div>
         </section>
     </main>
@@ -192,9 +194,9 @@
             <p class="text-center text-3xl m-auto ">© Copyright - 2023. Todos los derechos reservados.</p>
         </div>
     </footer>
-    <dialog id="loginDialog" class="h-max border-2 border-solid border-border bg-blue-100" style="width: calc(500px - 10vw);">
+    <dialog id="loginDialog" class="h-max border-2 border-solid border-border w-" style="width: calc(500px - 10vw);">
         <div class="grid">
-            <button class="ml-[95%] w-min" onclick="closeDia();">
+            <button class="ml-72 w-min" onclick="closeDia();">
                 <i class="fa-solid fa-x"></i>
             </button>
         </div>
@@ -208,12 +210,12 @@
                     <label for="rutCorreo">Rut o correo electrónico</label>
                     <input name="rutCorreo" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20254784-1 o correo@dominio.cl" required>
                 </div>
-                <div class="flex flex-col">
+                <div class="">
                     <label for="loClave">Contraseña</label>
-                    <div class="flex flex-row">
-                        <input id="claveInput4" name="loClave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********" required>
-                        <button id="cambioClave4" class="absolute right-0" type="button" onclick="cambioClaveLogin();">
-                            <i id="iconoClave4" class="fa-solid fa-eye text-xl -translate-x-7 translate-y-1.5"></i>
+                    <div>
+                        <input id="claveInput5" name="loClave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********" required>
+                        <button id="cambioClave5" class="absolute right-0" type="button" onclick="cambioClaveLoginError();">
+                            <i id="iconoClave5" class="fa-solid fa-eye text-xl -translate-x-7 translate-y-1.5"></i>
                         </button>
                     </div>
                 </div>
@@ -229,10 +231,9 @@
             </form>
         </section>
     </dialog>
-
-    <dialog id="signinDialog" class="h-max border-2 border-solid border-border bg-blue-100" style="width: calc(500px - 10vw);">
+    <dialog id="signinDialog" class="h-max border-2 border-solid border-border w-1/6" >
         <div class="grid">
-            <button class="ml-[95%]  w-min" onclick="closeDia();">
+            <button class="ml-72  w-min" onclick="closeDia();">
                 <i class="fa-solid fa-x"></i>
             </button>
         </div>
@@ -244,32 +245,47 @@
             <form action="/registrar" method="post" class="grid p-2 gap-2">
                 <div class="">
                     <label for="paName">Nombre</label>
-                    <input id="paName" name="nombre" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ingresa tu nombre" required>
+                    <input id="paName" name="nombre" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ingresa tu nombre" value="<%= valoresValidos.nombre %>" required>
                 </div>
                 <div class="">
                     <label for="paLName">Apellidos</label>
-                    <input id="paLName" name="apellido" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ingresa tus apellidos" required>
+                    <input id="paLName" name="apellido" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ingresa tus apellidos" value="<%= valoresValidos.apellidos %>"required>
                 </div>
                 <div class="">
                     <label for="paRut">Rut</label>
-                    <input id="paRut" name="rut" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20545267-1" required>
+                    <input id="paRut" name="rut" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20545267-1" required value="<%= valoresValidos.rut %>">
+                    <%if(errores.rut){%>
+                        <p id="errorMensajeRut" class="text-red-600 text-sm font-semibold"><%= errores.rut%></p>
+                    <% } else{%>
+                        <p id="errorMensajeRut" class="text-red text-sm hidden"></p>
+                    <% } %>
                 </div>
                 <div class="">
                     <label for="DoB">Fecha de nacimiento</label>
-                    <input id="DoB" name="fecnac" type="date" class="m-auto w-full border-border rounded-md border-2" required>
+                    <input id="DoB" name="fecnac" type="date" class="m-auto w-full border-border rounded-md border-2" value="<%= valoresValidos.fecNac %>" required>
+                    <%if(errores.fecNac){%>
+                        <p id="errorMensajeFecNac" class="text-red-600 text-sm font-semibold"><%= errores.fecNac%></p>
+                    <% } else {%>
+                        <p id="errorMensajeFecNac" class="text-red text-sm hidden"></p>
+                    <% } %>
                 </div>
                 <div class="">
                     <label for="paEmail">Correo Electronico</label>
-                    <input id="paEmail" name="correo" type="email" class="m-auto w-full border-border rounded-md border-2" placeholder="correo@dominio.cl" required>
+                    <input id="paEmail" name="correo" type="email" class="m-auto w-full border-border rounded-md border-2" placeholder="correo@dominio.cl" value="<%= valoresValidos.correo %>" required>
                 </div>
-                <div class="flex flex-col">
+                <div class="">
                     <label for="paPassword">Contraseña</label>
                     <div class="flex flex-row">
-                        <input id="claveInput3" name="clave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********" required>
-                        <button id="cambioClave3" class="absolute right-0" type="button" onclick="cambioClaveSigIn();">
-                            <i id="iconoClave3" class="fa-solid fa-eye text-xl -translate-x-7 translate-y-1.5"></i>
+                        <input id="claveInput6" name="clave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********" value="<%= valoresValidos.clave %>" required>
+                        <button id="cambioClave6" class="absolute right-0" type="button" onclick="cambioClaveSigInError();">
+                            <i id="iconoClave6" class="fa-solid fa-eye text-xl -translate-x-7 translate-y-1.5"></i>
                         </button>
                     </div>
+                    <%if(errores.clave){%>
+                        <p id="errorMensajeClavee" class="text-red-600 text-sm font-semibold flex flex-col"><%= errores.clave %></p>
+                    <% } else {%>
+                        <p id="errorMensajeClavee" class="text-red text-sm hidden"></p>
+                    <% } %>
                 </div>
                 <div class="flex flex-col">
                     <label for="paGender">Género (opcional)</label>
@@ -281,7 +297,12 @@
                 </div>
                 <div class="">
                     <label for="paPhone">Teléfono</label>
-                    <input id="paPhone" name="telefono" type="tel" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej:958472045" required>
+                    <input id="paPhone" name="telefono" type="tel" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej:958472045" value="<%= valoresValidos.telefono %>" required>
+                    <%if(errores.telefono){%>
+                        <p id="errorMensajeTelefono" class="text-red-600 text-sm font-semibold"><%= errores.telefono %></p>
+                    <% } else{%>
+                        <p id="errorMensajeTelefono" class="text-red text-sm hidden"></p>
+                    <% } %>
                 </div>
                 <div class="text-center bg-blue-500 object-cover w-1/2 m-auto rounded-md mt-3">
                     <button type="submit" class="text-text rounded-md p-1.5 hover:bg-blue-600 w-full m-auto">Registrarse</button>
@@ -289,16 +310,16 @@
             </form>
         </section>
     </dialog>
-    <dialog id="reservaUnoDialog" class="h-1/2 border-2 border-solid border-border w-96 p-4 bg-blue-100">
+    <dialog id="reservaUnoDialog" class="h-1/2 border-2 border-solid border-border w-1/5 p-4">
         <div class="grid">
-            <button class="ml-[95%] w-min" onclick="closeDia();">
+            <button class="ml-80 w-min" onclick="closeDia();">
                 <i class="fa-solid fa-x"></i>
             </button>
-            <h1 class="m-auto text-xl">Reserva tu hora</h1>
+            <h1 class="m-auto">Reserva tu hora</h1>
         </div>
         <form action="/reservaUno" id="reserva"method="post" class="grid gap-4 mt-10">
             <div class="flex flex-col gap-4 h-max">
-                <label for="especialidad">Especialidades</label>
+                <label for="especialidad">Género (opcional)</label>
                 <select id="especialidad" name="especialidad" class="m-auto w-full border-border rounded-md border-2" aria-placeholder="Seleccione especialidad" required>
                     <option value="1">Dermatología</option>
                     <option value="2">Cirugía General</option>
@@ -312,8 +333,8 @@
                 <button form="reserva" type="submit" class="text-text rounded-md p-1.5 hover:bg-blue-600 w-full m-auto">Buscar disponibilidad</button>
             </div>
         </form>
-    </dialog>   
-    <dialog id="anulaHoraUnoDialog" class="h-1/2 border-2 border-solid border-border w-96 p-4 bg-blue-100">
+    </dialog>
+    <dialog id="anulaHoraUnoDialog" class="h-1/2 border-2 border-solid border-border w-96 p-4">
         <div class="grid">
             <button class="ml-[95%] w-min" onclick="closeDia();">
                 <i class="fa-solid fa-x"></i>
@@ -340,8 +361,8 @@
                 </div>
             </form>
         </div>
-    </dialog>
-    <dialog id="historialMedUnoDialog" class="h-1/2 border-2 border-solid border-border bg-blue-100 w-96 p-4">
+    </dialog> 
+    <dialog id="historialMedUnoDialog" class="h-1/2 border-2 border-solid border-border w-96 p-4">
         <div class="grid">
             <button class="ml-[95%] w-min" onclick="closeDia();">
                 <i class="fa-solid fa-x"></i>
@@ -371,5 +392,12 @@
     </dialog>
     <script src="script.js"></script>
     <script src="database.js"></script>
+    <script>
+        // Abre el diálogo de inicio de sesión automáticamente
+        document.addEventListener('DOMContentLoaded', function () {
+          const signInDialog = document.getElementById('signinDialog');
+          signInDialog.showModal();
+        });    
+    </script>
 </body>
 </html>
