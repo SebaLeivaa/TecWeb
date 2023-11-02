@@ -286,11 +286,31 @@
     historialMedUnoDialog.addEventListener("click", lightDismiss);
 
     if (errorMensajeCorreoHistorialMed  && errorMensajeClaveHistorialMed ) {
-      errorMensajeCorreoHistorialMed .textContent = "";
-      errorMensajeClaveHistorialMed .textContent = "";
+      errorMensajeCorreoHistorialMed.textContent = "";
+      errorMensajeClaveHistorialMed.textContent = "";
     }
   }
 
+//Abrir dialog historial de pacientes (LADO DEL PROFESIONAL)
+function historialMedProf(){
+  const historialMedProfesionalesDialog = document.getElementById("historialMedProfesionalesDialog");
+  const errorMensajeRutHistorialMedProf = document.getElementById("errorMensajeRutHistorialMedProf");
+  
+  historialMedProfesionalesDialog.showModal();
+
+  const lightDismiss = ({ target: historialMedProfesionalesDialog }) => {
+    if (historialMedProfesionalesDialog.nodeName === "DIALOG") historialMedProfesionalesDialog.close("dismiss");
+  };
+
+  const inputRut = document.getElementById("rutHistorialMedProf");
+  inputRut.value = "";
+
+  historialMedProfesionalesDialog.addEventListener("click", lightDismiss);
+
+  if (errorMensajeRutHistorialMedProf) {
+    errorMensajeRutHistorialMedProf.textContent = "";
+  }
+}
 
 
 //Muestra el dialog en los archivos EJS
@@ -465,7 +485,6 @@
     const anulaHoraUnoDialog = document.getElementById("anulaHoraUnoDialog");
     const historialMedUnoDialog = document.getElementById("historialMedUnoDialog");
     const reservaDosDialog = document.getElementById("reservaDosDialog");
-
     const registroExitosoDialog = document.getElementById("registroExitoso");
 
     loginDialog.close();
@@ -476,6 +495,11 @@
     reservaDosDialog.close();
     registroExitosoDialog.close();
 
+  }
+
+  function closeDialogHistorialMedProf() {
+    const historialMedProfesionalesDialog = document.getElementById("historialMedProfesionalesDialog");
+    historialMedProfesionalesDialog.close();
   }
 //Carga de datos preexistentes 
   let listaPacientes = []

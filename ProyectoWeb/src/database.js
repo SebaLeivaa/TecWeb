@@ -1,4 +1,4 @@
-/*const { Client } = require('pg');
+2/*const { Client } = require('pg');
 
 const connectionData = {
   user: 'postgres',
@@ -98,7 +98,6 @@ browserSync.init({
   proxy: 'http://localhost:3000', // Apunta a nuestro servidor
   files: ['views/**/*.ejs', 'public/css/**/*.css'],
 });
-
 // Configuración de express-session
 app.use(session({
   secret: 'tu_secreto', 
@@ -109,10 +108,6 @@ app.use(session({
     maxAge: 1800000 // Tiempo de expiración de la sesión en milisegundos
   },
 }));
-
-
-
-
 
 
 //Se conecta con la base de datos
@@ -148,7 +143,7 @@ app.post('/registrar', (req, res) => {
     valoresValidos.clave = clave;
   }
 
-  if(!validarFecha(fecnac)){
+  if(validarFecha(fecnac)){
     errores.fecNac = 'Ingrese una fecha de nacimiento válida';
   }else{
     valoresValidos.fecNac = fecnac;
@@ -186,17 +181,35 @@ app.post('/signIn',(req, res) => {
 
   const correoRutValido = { correoRut: rutCorreo };
 
-  const selectQuery = `
+  const selectQueryPaciente = `
     SELECT * FROM PACIENTE WHERE paci_rut = $1 OR paci_correo = $1
   `;
 
-  pool.query(selectQuery, [rutCorreo])
-  .then(resultados => {
+  const selectQueryProfesional = `
+    SELECT * FROM PROFESIONAL WHERE prof_correo = $1
+  `;
 
-    if(resultados.rows.length === 0){
-      res.render('errorSignIn', { error: 'Esta cuenta no existe', correoRutValido});
-    }else if (resultados.rows.length === 1) {
-      const usuario = resultados.rows[0];
+  pool.query(selectQueryPaciente, [rutCorreo])
+  .then(resultadosPaciente => {
+
+    if(resultadosPaciente.rows.length === 0){
+      pool.query(selectQueryProfesional, [rutCorreo])
+      .then(resultadosProfesional => {
+        if(resultadosProfesional.rows.length === 0){
+          res.render('errorSignIn', { error: 'Esta cuenta no existe', correoRutValido});
+        }else if (resultadosProfesional.rows.length === 1){
+          const profesional = resultadosProfesional.rows[0];
+          if(profesional.prof_clave === loClave){
+            req.session.user = profesional;
+
+            res.render('inicioSesionProfesional', { user: profesional});
+          }else {
+            res.render('errorSignIn', { error: 'Contraseña incorrecta', correoRutValido});
+          }
+        }
+      })
+    }else if (resultadosPaciente.rows.length === 1) {
+      const usuario = resultadosPaciente.rows[0];
       if(usuario.paci_clave === loClave){
         req.session.user = usuario; // Almacena la información del usuario en la sesión
 
@@ -273,6 +286,7 @@ app.post('/reservaUno',(req, res) => {
 	  ON PR.PROF_ESP_CODIGO = ES.ESPE_CODIGO
     WHERE PR.prof_esp_codigo = $1
     AND CM.CITA_DISPONIBLE = TRUE
+    AND CM.CITA_DIS_FECHA >= CURRENT_DATE
     ORDER BY PR.PROF_RUT, CM.CITA_DIS_FECHA;
   `
 
@@ -307,6 +321,7 @@ app.post('/actualizarFechas',(req, res) => {
 	  ON PR.PROF_ESP_CODIGO = ES.ESPE_CODIGO
     WHERE PR.prof_esp_codigo = $1
     AND CM.CITA_DISPONIBLE = TRUE
+    AND CM.CITA_DIS_FECHA >= CURRENT_DATE
     ORDER BY
       CASE
       WHEN DATE(CM.CITA_DIS_FECHA) = $2 THEN 1
@@ -616,6 +631,54 @@ app.post('/historialMedConsultaLogin', (req, res) => {
       });
 });
 
+app.post('/historialMedConsultaProfesionales', (req, res) => {
+  const { rut } = req.body;
+
+  const rutValido = { rut: rut };
+  
+  const selectQuery = `
+    SELECT * FROM PACIENTE WHERE paci_rut = $1
+  `;
+
+  const selectQuery2 = `
+  SELECT CM.CITA_DETALLE, PR.PROF_NOMBRES, PR.PROF_APELLIDOS, ES.ESPE_NOMBRE, CM.CITA_DIS_FECHA  
+	  FROM CITA_MEDICA CM JOIN PROFESIONAL PR
+	  ON CM.CITA_PROF_RUT = PR.PROF_RUT
+		  JOIN ESPECIALIDAD ES
+		  ON PR.PROF_ESP_CODIGO = ES.ESPE_CODIGO
+	  WHERE CM.CITA_PACI_RUT = $1 AND CM.CITA_DIS_FECHA < NOW()
+	  ORDER BY CM.CITA_DIS_FECHA;
+  `;
+
+  pool.query(selectQuery, [rut])
+  .then(resultados => {
+    if(resultados.rows.length === 0){
+      if(!validarRut(rut)){
+        res.render('errorHistorialMedProf', { error: 'Este rut no es valido', rutValido});
+      } else {
+        res.render('errorHistorialMedProf', { error: 'Este rut no esta registrado en nuestra base de datos', rutValido});
+      }
+    }else if(resultados.rows.length === 1){
+      pool.query(selectQuery2, [rut])
+            .then(resultados2 => {
+              res.render('historialMedProfDos', { resultados, resultados2 });
+            })
+            .catch(error2 => {
+              console.error(error2);
+              res.status(500).send('Error en la segunda consulta');
+            });
+    }
+  })
+  .catch(error => {
+    console.error(error);
+    res.status(500).send('Error interno del servidor');
+  });
+});
+
+//Redirige a la pagina principal de los profesionales
+app.get('/inicioSesionProfesional', (req, res) => {
+  res.render('inicioSesionProfesional'); // Renderiza la plantilla EJS
+});
 const port = 3000;
 app.listen(port, () => {
   console.log(`Servidor en ejecución en http://localhost:${port}`);
