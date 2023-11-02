@@ -804,7 +804,10 @@ function historialMedProf(){
     }
   }
 
+<<<<<<< HEAD
   function editarHorasProfesionales(){
 
   };
 
+=======
+>>>>>>> 805a964b5e51fb259182afcd3a22a97b1ca0eee7

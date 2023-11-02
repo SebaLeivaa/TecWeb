@@ -123,6 +123,7 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
+<<<<<<< HEAD
 //Se establece para que todos los archivos ejs tengan acceso a user
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
@@ -133,6 +134,8 @@ app.use((req, res, next) => {
   next();
 });
 
+=======
+>>>>>>> 805a964b5e51fb259182afcd3a22a97b1ca0eee7
 
 
 // Obtiene los datos del formulario REGISTRO
@@ -235,6 +238,18 @@ app.post('/signIn',(req, res) => {
   });
 });
 
+<<<<<<< HEAD
+=======
+//Se establece para que todos los archivos ejs tengan acceso a user
+app.use((req, res, next) => {
+  res.locals.user = req.session.user || null;
+  next();
+});
+
+app.use((req, res, next) => {
+  next();
+});
+>>>>>>> 805a964b5e51fb259182afcd3a22a97b1ca0eee7
 
 /*
 app.use((req, res, next) => {
@@ -685,6 +700,7 @@ app.listen(port, () => {
   console.log(`Servidor en ejecución en http://localhost:${port}`);
 });
 
+<<<<<<< HEAD
 app.post('/administrarHoraProfesional', (req, res) => {
   const user = req.session.user;
   const rut = user.prof_rut;
@@ -710,6 +726,8 @@ app.post('/administrarHoraProfesional', (req, res) => {
     res.status(500).send('Error interno del servidor');
   });
 })
+=======
+>>>>>>> 805a964b5e51fb259182afcd3a22a97b1ca0eee7
 
 
 
