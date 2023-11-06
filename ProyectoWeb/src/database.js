@@ -123,6 +123,10 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 104dcdd4636f1f1f599ecd126dd9a95c67b66a16
 //Se establece para que todos los archivos ejs tengan acceso a user
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
@@ -133,6 +137,11 @@ app.use((req, res, next) => {
   next();
 });
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 805a964b5e51fb259182afcd3a22a97b1ca0eee7
+>>>>>>> 104dcdd4636f1f1f599ecd126dd9a95c67b66a16
 
 
 // Obtiene los datos del formulario REGISTRO
@@ -235,6 +244,21 @@ app.post('/signIn',(req, res) => {
   });
 });
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+//Se establece para que todos los archivos ejs tengan acceso a user
+app.use((req, res, next) => {
+  res.locals.user = req.session.user || null;
+  next();
+});
+
+app.use((req, res, next) => {
+  next();
+});
+>>>>>>> 805a964b5e51fb259182afcd3a22a97b1ca0eee7
+>>>>>>> 104dcdd4636f1f1f599ecd126dd9a95c67b66a16
 
 /*
 app.use((req, res, next) => {
@@ -685,12 +709,20 @@ app.listen(port, () => {
   console.log(`Servidor en ejecución en http://localhost:${port}`);
 });
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 104dcdd4636f1f1f599ecd126dd9a95c67b66a16
 app.post('/administrarHoraProfesional', (req, res) => {
   const user = req.session.user;
   const rut = user.prof_rut;
 
   const selectQuery = `
+<<<<<<< HEAD
     SELECT PA.PACI_NOMBRE, PA.PACI_APELLIDO, PA.PACI_RUT, ES.ESPE_NOMBRE, CM.CITA_SALA_NUM, CM.CITA_DIS_FECHA, CM.CITA_ID
+=======
+    SELECT PA.PACI_NOMBRE, PA.PACI_APELLIDO, ES.ESPE_NOMBRE, CM.CITA_SALA_NUM, CM.CITA_DIS_FECHA
+>>>>>>> 104dcdd4636f1f1f599ecd126dd9a95c67b66a16
 	  FROM PACIENTE PA RIGHT JOIN CITA_MEDICA CM
 	ON PA.PACI_RUT = CM.CITA_PACI_RUT 
 		JOIN PROFESIONAL PR 
@@ -701,6 +733,7 @@ app.post('/administrarHoraProfesional', (req, res) => {
 		ORDER BY CM.CITA_DIS_FECHA;
   `;
 
+<<<<<<< HEAD
   const selectQuery2 = `
     SELECT ESPE_NOMBRE FROM ESPECIALIDAD ES JOIN PROFESIONAL PR
 	    ON ES.ESPE_CODIGO = PR.PROF_ESP_CODIGO
@@ -907,6 +940,19 @@ app.post('/guardarCambiosCitaFinal', (req, res) => {
       res.status(500).send('Error interno del servidor');
     });
 })
+=======
+  pool.query(selectQuery, [rut])
+  .then(resultados => {
+      res.render('administrarHorasProf', { resultados });
+    }
+  ).catch(error => {
+    console.error(error);
+    res.status(500).send('Error interno del servidor');
+  });
+})
+=======
+>>>>>>> 805a964b5e51fb259182afcd3a22a97b1ca0eee7
+>>>>>>> 104dcdd4636f1f1f599ecd126dd9a95c67b66a16
 
 
 

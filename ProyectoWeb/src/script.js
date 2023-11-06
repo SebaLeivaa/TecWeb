@@ -862,5 +862,15 @@ function agregarCitaMedica(){
     }
   }
 
+<<<<<<< HEAD
   
 
+=======
+<<<<<<< HEAD
+  function editarHorasProfesionales(){
+
+  };
+
+=======
+>>>>>>> 805a964b5e51fb259182afcd3a22a97b1ca0eee7
+>>>>>>> 104dcdd4636f1f1f599ecd126dd9a95c67b66a16
