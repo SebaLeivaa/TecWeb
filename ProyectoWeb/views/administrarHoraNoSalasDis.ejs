@@ -1,0 +1,282 @@
+<% 
+        let fechaActual = new Date();
+        let fechaMaxima = new Date();
+        fechaMaxima.setMonth(fechaMaxima.getMonth() + 2);
+        let diaMin = fechaActual.getDate().toString().padStart(2, '0');
+        let mesMin = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+        let anioMin = fechaActual.getFullYear();
+        let diaMax = fechaMaxima.getDate().toString().padStart(2, '0');
+        let mesMax = (fechaMaxima.getMonth() + 1).toString().padStart(2, '0');
+        let anioMax = fechaMaxima.getFullYear();
+    %>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinica</title>
+    <link rel="stylesheet" href="output.css">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>    
+    <script src="https://kit.fontawesome.com/8caa7c21dc.js" crossorigin="anonymous"></script>
+</head>
+<body class="bg-secondary">
+    <header class="bg-blue-900 fixed z-20 top-0 left-0 right-0">
+        <nav class="grid grid-cols-3 h-full max-xl:grid-cols-2 gap-y-1">
+            <img class="h-20 rounded-md w-64 mx-auto my-1 max-xl:w-max max-xl:m-2 max-sm:h-16" src="./img/logoClinica.png">
+                        <div class="flex flex-row gap-10 items-end mb-1 text-text max-xl:col-start-1 max-xl:col-end-3 text-center m-auto max-sm:gap-4">
+                <a class="hover:text-primary" href="#"> <b><ins>Inicio<ins/></b> </a> 
+            </div>
+            <div class="flex items-end gap-x-10 justify-end mr-2 text-text mb-1 max-xl:col-start-2 max-xl:col-end-4 max-xl:row-start-1 max-xl:row-end-2 max-md:w-full max-xl:justify-end max-sm:pr-2">
+                <button class="hover:text-primary" onclick="loginButton();" disabled>
+                    <i class="fa-solid fa-user"></i> <%= user.prof_nombres.toUpperCase() %> <%= user.prof_apellidos.toUpperCase() %>
+                </button>
+                <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="logout();">Cerrar sesión</button>
+            </div>
+        </nav>
+    </header>
+    <main class="gap-10">
+        <section class="h-screen flex flex-col justify-center items-center max-sm:mt-24 max-sm:w-full">
+            <h1 class="text-text text-4xl h-20"><b>TUS HORAS AGENDADAS</b></h1>
+            <% if (resultados.rows.length === 0){ %>
+                <div class="h-48 flex items-center text-center justify-center border-2 bg-blue-500 mt-40 w-[50%] rounded-xl ml-[25%]">
+                    <p class="text-3xl text-center text-text font-bold">No tiene citas médicas agendadas</p>
+                </div>
+            <% } else { %> 
+            <div class="flex flex-row w-full justify-center max-sm:justify-normal max-sm:px-2 max-sm:overflow-x-auto">
+                <table class="border-r-0 border-border">
+                    <thead>
+                        <tr class="b">
+                            <th class="px-4 py-2 border border-border bg-blue-700 text-text">Id Cita</th>
+                            <th class="px-4 py-2 border border-border bg-blue-700 text-text">Paciente</th>
+                            <th class="px-4 py-2 border border-border bg-blue-700 text-text">Rut</th>
+                            <th class="px-4 py-2 border border-border bg-blue-700 text-text">Especialidad</th>
+                            <th class="px-4 py-2 border border-border bg-blue-700 text-text">Sala</th>
+                            <th class="px-4 py-2 border border-border bg-blue-700 text-text">Fecha</th>
+                            <th class="px-4 py-2 border border-border bg-blue-700 text-text">Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <% resultados.rows.forEach((resultado, index) => {%>
+                        <tr id="fila_<%= index%>">
+                            <td class="px-4 py-2 border border-border bg-blue-600 text-text"><span id="id_cita_<%= index %>"><%= resultado.cita_id %></span></td>
+                            <td class="px-4 py-2 border border-border bg-blue-600 text-text"><span id="nombre_paciente_<%= index %>"><%= resultado.paci_nombre %>  <%= resultado.paci_apellido %></span></td>
+                            <td class="px-4 py-2 border border-border  bg-blue-600 text-text"><span id="paciente_rut_<%= index %>"><%= resultado.paci_rut %></span></td>
+                            <td class="px-4 py-2 border border-border  bg-blue-600 text-text"><span id="especialidad_cita_<%= index %>"><%= resultado.espe_nombre %></span></td>
+                            <td class="px-4 py-2 border border-border  bg-blue-600 text-text"><span id="cita_sala_<%= index %>"><%= resultado.cita_sala_num %></span></td>
+                            <td class="px-4 py-2 border border-border  bg-blue-600 text-text"><span id="cita_fecha_<%= index %>"><%= resultado.cita_dis_fecha.getDate().toString().padStart(2, '0') %>/<%= (resultado.cita_dis_fecha.getMonth() + 1).toString().padStart(2, '0') %>/<%= resultado.cita_dis_fecha.getFullYear() %></span></td>
+                            <td class="px-4 py-2 border border-border  bg-blue-600 text-text"><span id="cita_hora_<%= index %>"><%= resultado.cita_dis_fecha.getHours().toString().padStart(2, '0') %>:<%= resultado.cita_dis_fecha.getMinutes().toString().padStart(2, '0') %></span></td>
+                            <td class="px-4 py-2 border-0 border-r-0 space-x-5 text-text max-sm:flex max-sm:flex-row max-sm:gap-0"><button onclick="editarCitaMedica(<%= index %>);" type="button"><i class="fa-solid fa-pen-to-square text-xl"></i></button><button id="eliminarBoton<%= index %>" onclick="eliminarCitaMedica(<%= index %>);"><i class="fa-solid fa-trash text-xl"></i></button></td>
+                        </tr>
+                        <dialog id="editarCitaMedicaDialog<%= index %>" class="h-max border-2 border-solid border-border bg-blue-100 w-[34.5rem]" >
+                            <div class="grid">
+                                <button class="ml-[96%] w-min" onclick="closeDialogEditarCitaMedica(<%= index %>);">
+                                    <i class="fa-solid fa-x"></i>
+                                </button>
+                                <h1 class="m-auto text-xl">Cita medica</h1>
+                            </div>
+                            <form class="grid p-2 gap-2" action="/guardarCambiosCita" method="post">
+                                <div class="w-[100%] p-10 pt-0">
+                                    <div class="flex flex-col select-none">
+                                        <label>Id cita</label>
+                                        <div class="flex flex-row select-none">
+                                            <input value="<%= resultado.cita_id %>" name="citaMedicaId" class="m-auto w-full border-border rounded-md border-2 select-none" readonly><i class="fa-solid fa-lock text-xl -translate-x-7 translate-y-1.5"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col select-none">
+                                        <label>Paciente</label>
+                                        <div class="flex flex-row select-none">
+                                            <input value="<%=resultado.paci_nombre %> <%= resultado.paci_apellido %>" class="m-auto w-full border-border rounded-md border-2 select-none" disabled><i class="fa-solid fa-lock text-xl -translate-x-7 translate-y-1.5"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col select-none">
+                                        <label>Rut</label>
+                                        <div class="flex flex-row select-none">
+                                            <input value="<%= resultado.paci_rut %>" class="m-auto w-full border-border rounded-md border-2 select-none" disabled><i class="fa-solid fa-lock text-xl -translate-x-7 translate-y-1.5"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col select-none">
+                                        <label>Especialidad</label>
+                                        <div class="flex flex-row select-none">
+                                            <input value="<%= resultado.espe_nombre %>" class="m-auto w-full border-border rounded-md border-2 select-none" disabled><i class="fa-solid fa-lock text-xl -translate-x-7 translate-y-1.5"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <label>Sala</label>
+                                        <div class="flex flex-row">
+                                            <select class="m-auto w-full border-border rounded-md border-2" name="numSala" required>
+                                                <option value="1" <% if (resultado.cita_sala_num == 1) { %>selected<% } %>>1</option>
+                                                <option value="2" <% if (resultado.cita_sala_num == 2) { %>selected<% } %>>2</option>
+                                                <option value="3" <% if (resultado.cita_sala_num == 3) { %>selected<% } %>>3</option>
+                                                <option value="4" <% if (resultado.cita_sala_num == 4) { %>selected<% } %>>4</option>
+                                                <option value="5" <% if (resultado.cita_sala_num == 5) { %>selected<% } %>>5</option>
+                                                <option value="6" <% if (resultado.cita_sala_num == 6) { %>selected<% } %>>6</option>
+                                                <option value="7" <% if (resultado.cita_sala_num == 7) { %>selected<% } %>>7</option>
+                                                <option value="8" <% if (resultado.cita_sala_num == 8) { %>selected<% } %>>8</option>
+                                                <option value="9" <% if (resultado.cita_sala_num == 9) { %>selected<% } %>>9</option>
+                                                <option value="10" <% if (resultado.cita_sala_num == 10) { %>selected<% } %>>10</option>
+                                              </select>                                              
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <label>Fecha</label>
+                                        <div class="flex flex-row">
+                                            <input type="date" name="fechaCita" class="m-auto w-full border-border rounded-md border-2" min="<%=anioMin%>-<%=mesMin%>-<%=diaMin%>" max="<%=anioMax%>-<%=mesMax%>-<%=diaMax%>" required>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <label>Hora</label>
+                                        <div class="flex flex-row">
+                                            <select class="m-auto w-full border-border rounded-md border-2" name="horaCita" required>
+                                                <option value="08:30" <%= resultado.cita_dis_fecha.getHours() === 8 && resultado.cita_dis_fecha.getMinutes() === 30 ? 'selected' : '' %>>08:30</option>
+                                                <option value="09:00" <%= resultado.cita_dis_fecha.getHours() === 9 && resultado.cita_dis_fecha.getMinutes() === 0 ? 'selected' : '' %>>09:00</option>
+                                                <option value="09:30" <%= resultado.cita_dis_fecha.getHours() === 9 && resultado.cita_dis_fecha.getMinutes() === 30 ? 'selected' : '' %>>09:30</option>
+                                                <option value="10:00" <%= resultado.cita_dis_fecha.getHours() === 10 && resultado.cita_dis_fecha.getMinutes() === 0 ? 'selected' : '' %>>10:00</option>
+                                                <option value="10:30" <%= resultado.cita_dis_fecha.getHours() === 10 && resultado.cita_dis_fecha.getMinutes() === 30 ? 'selected' : '' %>>10:30</option>
+                                                <option value="11:00" <%= resultado.cita_dis_fecha.getHours() === 11 && resultado.cita_dis_fecha.getMinutes() === 0 ? 'selected' : '' %>>11:00</option>
+                                                <option value="11:30" <%= resultado.cita_dis_fecha.getHours() === 11 && resultado.cita_dis_fecha.getMinutes() === 30 ? 'selected' : '' %>>11:30</option>
+                                                <option value="12:00" <%= resultado.cita_dis_fecha.getHours() === 12 && resultado.cita_dis_fecha.getMinutes() === 0 ? 'selected' : '' %>>12:00</option>
+                                                <option value="12:30" <%= resultado.cita_dis_fecha.getHours() === 12 && resultado.cita_dis_fecha.getMinutes() === 30 ? 'selected' : '' %>>12:30</option>
+                                                <option value="13:00" <%= resultado.cita_dis_fecha.getHours() === 13 && resultado.cita_dis_fecha.getMinutes() === 0 ? 'selected' : '' %>>13:00</option>
+                                                <option value="13:30" <%= resultado.cita_dis_fecha.getHours() === 13 && resultado.cita_dis_fecha.getMinutes() === 30 ? 'selected' : '' %>>13:30</option>
+                                                <option value="14:00" <%= resultado.cita_dis_fecha.getHours() === 14 && resultado.cita_dis_fecha.getMinutes() === 0 ? 'selected' : '' %>>14:00</option>
+                                                <option value="14:30" <%= resultado.cita_dis_fecha.getHours() === 14 && resultado.cita_dis_fecha.getMinutes() === 30 ? 'selected' : '' %>>14:30</option>
+                                                <option value="15:00" <%= resultado.cita_dis_fecha.getHours() === 15 && resultado.cita_dis_fecha.getMinutes() === 0 ? 'selected' : '' %>>15:00</option>
+                                                <option value="15:30" <%= resultado.cita_dis_fecha.getHours() === 15 && resultado.cita_dis_fecha.getMinutes() === 30 ? 'selected' : '' %>>15:30</option>
+                                                <option value="16:00" <%= resultado.cita_dis_fecha.getHours() === 16 && resultado.cita_dis_fecha.getMinutes() === 0 ? 'selected' : '' %>>16:00</option>
+                                                <option value="16:30" <%= resultado.cita_dis_fecha.getHours() === 16 && resultado.cita_dis_fecha.getMinutes() === 30 ? 'selected' : '' %>>16:30</option>
+                                                <option value="17:00" <%= resultado.cita_dis_fecha.getHours() === 17 && resultado.cita_dis_fecha.getMinutes() === 0 ? 'selected' : '' %>>17:00</option>
+                                                <option value="17:30" <%= resultado.cita_dis_fecha.getHours() === 17 && resultado.cita_dis_fecha.getMinutes() === 30 ? 'selected' : '' %>>17:30</option>
+                                                <option value="18:00" <%= resultado.cita_dis_fecha.getHours() === 18 && resultado.cita_dis_fecha.getMinutes() === 0 ? 'selected' : '' %>>18:00</option>
+                                                <option value="18:30" <%= resultado.cita_dis_fecha.getHours() === 18 && resultado.cita_dis_fecha.getMinutes() === 30 ? 'selected' : '' %>>18:30</option>
+                                              </select>   
+                                        </div>
+                                    </div>
+                                    <div class="border-2 border-green-800 bg-green-300 mt-4 flex flex-row">
+                                        <i class="fa-solid fa-triangle-exclamation text-lg ml-1"></i><p class="ml-1.5 mt-0.5">RECUERDA que puedes agendar citas medicas con una antelación máxima de 2 meses</p>
+                                    </div>
+                                    <div class="text-center bg-blue-500 object-cover w-[60%] m-auto rounded-md mt-10">
+                                        <button type="submit" class="text-text rounded-md p-1.5 hover:bg-blue-600 w-full m-auto ">Consultar disponibilidad de salas</button>
+                                    </div>>
+                                </div>
+                            </form>
+                        </dialog>
+                        <dialog id="eliminarCitaMedicaDialog<%= index %>" class="max-h-64 border-2 border-solid border-border bg-blue-100 w-[38rem] overflow-hidden">
+                            <div class="grid">
+                                <button class="ml-[96%] w-min" onclick="closeDialogEliminarCitaMedica(<%= index %>);">
+                                    <i class="fa-solid fa-x"></i>
+                                </button>
+                                <h1 class="m-auto text-2xl">Eliminar cita médica</h1>
+                            </div>
+                            <div class="p-10">
+                                <form action="/eliminarHoraMedica" method="post">
+                                    <div class="">
+                                        <h1 class="text-xl">Esta seguro que quiere eliminar la cita medica con el ID: <%= resultado.cita_id %></h1>
+                                    </div>
+                                    <div class="flex flex-row mt-10 gap-20 justify-center">
+                                        <button class="text-text rounded-md p-1.5 bg-blue-500 hover:bg-blue-600 w-1/2 m-auto " type="submit" name="eliminarCitaId" value="<%= resultado.cita_id %>">Si <i class="fa-solid fa-check"></i></button>
+                                        <button class="text-text rounded-md p-1.5 bg-blue-500 hover:bg-blue-600 w-1/2 m-auto "  type="button" onclick="closeDialogEliminarCitaMedica(<%= index %>);">No <i class="fa-solid fa-x"></i></button>
+                                    </div>
+                                </form>
+                            </div>
+                        </dialog>
+                <% });%>
+                    </tbody>
+                <% } %>
+                </table>
+            </div>
+            <div class="mt-20 w-1/2">
+                <button class="text-text text-xl rounded-full p-5 bg-blue-600 hover:bg-blue-700 w-[21rem] m-auto flex justify-center" onclick="agregarCitaMedica();">Agregar cita médica</button>
+            </div>
+            <dialog id="agregarCitaMedicaDialog" class="h-max border-2 border-solid border-border bg-blue-100 w-[30%] max-sm:w-96">
+                <div class="grid">
+                    <button class="ml-[96%] w-min" onclick="closeDialogAgregarCitaMedica();">
+                        <i class="fa-solid fa-x"></i>
+                    </button>
+                    <h1 class="m-auto text-xl">Agregar Cita medica</h1>
+                </div>
+                <form action="/agendarCitaMedica" method="post">
+                    <div class="w-[100%] p-10 pt-0">
+                        <div class="flex flex-col">
+                            <label>Paciente</label>
+                            <div class="flex flex-row">
+                                <input class="m-auto w-full border-border rounded-md border-2" readonly><i class="fa-solid fa-lock text-xl -translate-x-7 translate-y-1.5"></i>
+                            </div>
+                        </div>
+                        <div class="flex flex-col">
+                            <label>Rut</label>
+                            <div class="flex flex-row">
+                                <input class="m-auto w-full border-border rounded-md border-2" readonly><i class="fa-solid fa-lock text-xl -translate-x-7 translate-y-1.5"></i>
+                            </div>
+                        </div>
+                        <div class="flex flex-col">
+                            <label>Especialidad</label>
+                            <div class="flex flex-row">
+                                <input value="<%= resultados2.rows[0].espe_nombre %>" class="m-auto w-full border-border rounded-md border-2" readonly><i class="fa-solid fa-lock text-xl -translate-x-7 translate-y-1.5"></i>
+                            </div>
+                        </div>
+                        <div class="flex flex-col">
+                            <label>Fecha</label>
+                            <div class="flex flex-row">
+                                <input type="date" name="fechaCita" class="m-auto w-full border-border rounded-md border-2" min="<%=anioMin%>-<%=mesMin%>-<%=diaMin%>" max="<%=anioMax%>-<%=mesMax%>-<%=diaMax%>" required>
+                            </div>
+                        </div>
+                        <div class="flex flex-col">
+                            <label>Hora</label>
+                            <div class="flex flex-row">
+                                <select class="m-auto w-full border-border rounded-md border-2" name="horaCita" required>
+                                    <option value="08:30">08:30</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="09:30">09:30</option>
+                                    <option value="10:00">10:00</option>
+                                    <option value="10:30">10:30</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="11:30">11:30</option>
+                                    <option value="12:00">12:00</option>
+                                    <option value="12:30">12:30</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="13:30">13:30</option>
+                                    <option value="14:00">14:00</option>
+                                    <option value="14:30">14:30</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="15:30">15:30</option>
+                                    <option value="16:00">16:00</option>
+                                    <option value="16:30">16:30</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="17:30">17:30</option>
+                                    <option value="18:00">18:00</option>
+                                    <option value="18:30">18:30</option>
+                                  </select>                              
+                            </div>
+                        </div>
+                        <div class="border-2 border-green-800 bg-green-300 mt-4 flex flex-row">
+                            <i class="fa-solid fa-triangle-exclamation text-lg ml-1"></i><p class="ml-1.5 mt-0.5">RECUERDA que puedes agendar citas medicas con una antelación máxima de 2 meses</p>
+                        </div>
+                        <div class="text-center object-cover w-1/2 m-auto rounded-md mt-10">
+                            <button type="submit" class="text-text rounded-md p-1.5 bg-blue-500 hover:bg-blue-600 w-full m-auto">Consultar disponibilidad de salas</button>
+                        </div>
+                    </div>
+                </form>
+            </dialog>
+            <dialog id="disponibilidadSalasCitaDialog" class="h-max border-2 border-solid border-border bg-blue-100 w-[30%] max-sm:w-96">
+                <div class="grid">
+                    <button id="cerrarDialogDisponibilidadSalas" class="ml-[96%] w-min">
+                        <i class="fa-solid fa-x"></i>
+                    </button>
+                    <h1 class="m-auto text-xl">Disponibilidad de salas</h1>
+                </div>
+                <div class="flex flex-col mt-10 p-10">
+                    <div class="text-3xl">NO HAY SALAS DISPONIBLES</div>
+                </div>
+            </dialog>
+        </section>
+    </main>
+    <script src="script.js"></script>
+    <script src="database.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const disponibilidadSalasCitaDialog = document.getElementById('disponibilidadSalasCitaDialog');
+          disponibilidadSalasCitaDialog.showModal();
+        });    
+    </script>
+</body>
+</html>

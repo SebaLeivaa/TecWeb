@@ -123,6 +123,16 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
+//Se establece para que todos los archivos ejs tengan acceso a user
+app.use((req, res, next) => {
+  res.locals.user = req.session.user || null;
+  next();
+});
+
+app.use((req, res, next) => {
+  next();
+});
+
 
 
 // Obtiene los datos del formulario REGISTRO
@@ -225,15 +235,6 @@ app.post('/signIn',(req, res) => {
   });
 });
 
-//Se establece para que todos los archivos ejs tengan acceso a user
-app.use((req, res, next) => {
-  res.locals.user = req.session.user || null;
-  next();
-});
-
-app.use((req, res, next) => {
-  next();
-});
 
 /*
 app.use((req, res, next) => {
@@ -684,6 +685,483 @@ app.listen(port, () => {
   console.log(`Servidor en ejecución en http://localhost:${port}`);
 });
 
+app.post('/administrarHoraProfesional', (req, res) => {
+  const user = req.session.user;
+  const rut = user.prof_rut;
 
+  const selectQuery = `
+    SELECT PA.PACI_NOMBRE, PA.PACI_APELLIDO, PA.PACI_RUT, ES.ESPE_NOMBRE, CM.CITA_SALA_NUM, CM.CITA_DIS_FECHA, CM.CITA_ID
+	  FROM PACIENTE PA RIGHT JOIN CITA_MEDICA CM
+	ON PA.PACI_RUT = CM.CITA_PACI_RUT 
+		JOIN PROFESIONAL PR 
+		ON CM.CITA_PROF_RUT = PR.PROF_RUT
+		JOIN ESPECIALIDAD ES
+		ON PR.PROF_ESP_CODIGO = ES.ESPE_CODIGO
+		WHERE CITA_PROF_RUT = $1 AND CM.CITA_DIS_FECHA > NOW()
+		ORDER BY CM.CITA_DIS_FECHA;
+  `;
+
+  const selectQuery2 = `
+    SELECT ESPE_NOMBRE FROM ESPECIALIDAD ES JOIN PROFESIONAL PR
+	    ON ES.ESPE_CODIGO = PR.PROF_ESP_CODIGO
+	    WHERE PR.PROF_RUT = $1;
+  `;
+
+  const selectQuery3 = `
+    SELECT * FROM SALA
+  `;
+
+  Promise.all([
+    pool.query(selectQuery, [rut]),
+    pool.query(selectQuery2, [rut]),
+    pool.query(selectQuery3),
+  ])
+    .then(([resultados, resultados2, resultados3]) => {
+      res.render('administrarHorasProf', { resultados, resultados2, resultados3} );
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).send('Error interno del servidor');
+    });
+})
+
+app.post('/guardarCambiosCita', (req, res) => {
+  const { citaMedicaId, fechaCita, horaCita, index} = req.body;
+  const user = req.session.user;
+  const rut = user.prof_rut;
+  const fechaFinal = `${fechaCita} ${horaCita}`;
+
+  const selectQuery = `
+    SELECT PA.PACI_NOMBRE, PA.PACI_APELLIDO, PA.PACI_RUT, ES.ESPE_NOMBRE, CM.CITA_SALA_NUM, CM.CITA_DIS_FECHA, CM.CITA_ID
+	  FROM PACIENTE PA RIGHT JOIN CITA_MEDICA CM
+	ON PA.PACI_RUT = CM.CITA_PACI_RUT 
+		JOIN PROFESIONAL PR 
+		ON CM.CITA_PROF_RUT = PR.PROF_RUT
+		JOIN ESPECIALIDAD ES
+		ON PR.PROF_ESP_CODIGO = ES.ESPE_CODIGO
+		WHERE CITA_PROF_RUT = $1 AND CM.CITA_DIS_FECHA > NOW()
+		ORDER BY CM.CITA_DIS_FECHA;
+  `;
+
+  const selectQuery2 = `
+    SELECT ESPE_NOMBRE FROM ESPECIALIDAD ES JOIN PROFESIONAL PR
+	    ON ES.ESPE_CODIGO = PR.PROF_ESP_CODIGO
+	    WHERE PR.PROF_RUT = $1;
+  `;
+
+  const selectQuery3 = `
+    SELECT * FROM SALA
+  `;
+
+  const disponilidadSalasQuery = `
+    SELECT SALA.SALA_NUMERO
+    FROM SALA
+    WHERE SALA.SALA_NUMERO NOT IN (
+      SELECT CITA_SALA_NUM
+      FROM CITA_MEDICA
+      WHERE CITA_DIS_FECHA = $1
+    )
+  `;
+
+  const disponibilidadProfesionalQuery = `
+    SELECT * FROM CITA_MEDICA
+    WHERE CITA_PROF_RUT = $1 AND CITA_DIS_FECHA = $2
+  `;
+
+  pool.query(disponibilidadProfesionalQuery, [ rut, fechaFinal])
+  .then(resultadosDisProf => {
+    if(resultadosDisProf.rowCount === 0){
+      pool.query(disponilidadSalasQuery, [fechaFinal])
+    .then(resultados4 =>{
+      if(resultados4.rowCount > 0){
+        pool.query(selectQuery3)
+            .then(resultados3 => {
+              // Ejecutar la segunda consulta para obtener resultados2
+              pool.query(selectQuery2, [rut])
+                .then(resultados2 => {
+                  // Obtener los resultados de la primera consulta
+                  pool.query(selectQuery, [rut])
+                    .then(resultados => {
+                      res.render('administrarHoraEditarHora', { resultados, resultados2, resultados3, resultados4, fechaCita, horaCita, citaMedicaId});
+                    })
+                    .catch(error => {
+                      console.error(error);
+                      res.status(500).send('Error interno del servidor');
+                    });
+                })
+                .catch(error => {
+                  console.error(error);
+                  res.status(500).send('Error interno del servidor');
+                });
+            })
+            .catch(error => {
+              console.error(error);
+              res.status(500).send('Error interno del servidor');
+            });
+      }
+  }).catch(error => {
+    console.error("No hay salas disponibles");
+    pool.query(selectQuery3)
+            .then(resultados3 => {
+              // Ejecutar la segunda consulta para obtener resultados2
+              pool.query(selectQuery2, [rut])
+                .then(resultados2 => {
+                  // Obtener los resultados de la primera consulta
+                  pool.query(selectQuery, [rut])
+                    .then(resultados => {
+                      res.render('editarHoraNoSalasDis', { resultados, resultados2, resultados3, fechaCita, horaCita});
+                    })
+                    .catch(error => {
+                      console.error(error);
+                      res.status(500).send('Error interno del servidor');
+                    });
+                })
+                .catch(error => {
+                  console.error(error);
+                  res.status(500).send('Error interno del servidor');
+                });
+            })
+            .catch(error => {
+              console.error(error);
+              res.status(500).send('Error interno del servidor');
+            });
+  });
+    } else{
+        pool.query(selectQuery3)
+            .then(resultados3 => {
+              // Ejecutar la segunda consulta para obtener resultados2
+              pool.query(selectQuery2, [rut])
+                .then(resultados2 => {
+                  // Obtener los resultados de la primera consulta
+                  pool.query(selectQuery, [rut])
+                    .then(resultados => {
+                      res.render('editarHoraErrorDisProfDos', { resultados, resultados2, resultados3, fechaCita, horaCita, index});
+                    })
+                    .catch(error => {
+                      console.error(error);
+                      res.status(500).send('Error interno del servidor');
+                    });
+                })
+                .catch(error => {
+                  console.error(error);
+                  res.status(500).send('Error interno del servidor');
+                });
+            })
+            .catch(error => {
+              console.error(error);
+              res.status(500).send('Error interno del servidor');
+            });
+    }
+  })
+});
+
+app.post('/guardarCambiosCitaFinal', (req, res) => {
+  const { fechaCita, horaCita, salaCita } = req.body;
+  const user = req.session.user;
+  const rut = user.prof_rut;
+  const fechaFinal = `${fechaCita} ${horaCita}`;
+
+
+  const updateQuery = `
+    UPDATE CITA_MEDICA
+    SET CITA_SALA_NUM = $1, CITA_DIS_FECHA = $2
+    WHERE CITA_ID = $3;
+  `;
+
+  const selectQuery = `
+    SELECT PA.PACI_NOMBRE, PA.PACI_APELLIDO, PA.PACI_RUT, ES.ESPE_NOMBRE, CM.CITA_SALA_NUM, CM.CITA_DIS_FECHA, CM.CITA_ID
+	  FROM PACIENTE PA RIGHT JOIN CITA_MEDICA CM
+	ON PA.PACI_RUT = CM.CITA_PACI_RUT 
+		JOIN PROFESIONAL PR 
+		ON CM.CITA_PROF_RUT = PR.PROF_RUT
+		JOIN ESPECIALIDAD ES
+		ON PR.PROF_ESP_CODIGO = ES.ESPE_CODIGO
+		WHERE CITA_PROF_RUT = $1 AND CM.CITA_DIS_FECHA > NOW()
+		ORDER BY CM.CITA_DIS_FECHA;
+  `;
+
+  const selectQuery2 = `
+    SELECT ESPE_NOMBRE FROM ESPECIALIDAD ES JOIN PROFESIONAL PR
+	    ON ES.ESPE_CODIGO = PR.PROF_ESP_CODIGO
+	    WHERE PR.PROF_RUT = $1;
+  `;
+
+  const selectQuery3 = `
+    SELECT * FROM SALA
+  `;
+
+  Promise.all([
+    pool.query(updateQuery, [rut, salaCita, fechaFinal]),
+    pool.query(selectQuery, [rut]),
+    pool.query(selectQuery2, [rut]),
+    pool.query(selectQuery3)
+  ])
+    .then(([resultadosUpdate, resultados, resultados2, resultados3]) => {
+      if (resultadosUpdate.rowCount === 1) {
+        console.log('Se ha actualizado correctamente la cita medica');
+        res.render('administrarHorasProf', { resultados, resultados2, resultados3 });
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).send('Error interno del servidor');
+    });
+})
+
+
+
+app.post('/eliminarHoraMedica', (req, res) => {
+  const { eliminarCitaId } = req.body;
+  const user = req.session.user;
+  const rut = user.prof_rut;
+
+  const selectQuery = `
+    SELECT PA.PACI_NOMBRE, PA.PACI_APELLIDO, PA.PACI_RUT, ES.ESPE_NOMBRE, CM.CITA_SALA_NUM, CM.CITA_DIS_FECHA, CM.CITA_ID
+	  FROM PACIENTE PA RIGHT JOIN CITA_MEDICA CM
+	ON PA.PACI_RUT = CM.CITA_PACI_RUT 
+		JOIN PROFESIONAL PR 
+		ON CM.CITA_PROF_RUT = PR.PROF_RUT
+		JOIN ESPECIALIDAD ES
+		ON PR.PROF_ESP_CODIGO = ES.ESPE_CODIGO
+		WHERE CITA_PROF_RUT = $1 AND CM.CITA_DIS_FECHA > NOW()
+		ORDER BY CM.CITA_DIS_FECHA;
+  `;
+
+  const selectQuery2 = `
+    SELECT ESPE_NOMBRE FROM ESPECIALIDAD ES JOIN PROFESIONAL PR
+	    ON ES.ESPE_CODIGO = PR.PROF_ESP_CODIGO
+	    WHERE PR.PROF_RUT = $1;
+  `;
+
+  const selectQuery3 = `
+    SELECT * FROM SALA
+  `;
+
+  const deleteQuery = `
+    DELETE FROM CITA_MEDICA
+    WHERE CITA_ID = $1;
+  `;
+
+  pool.query(deleteQuery, [eliminarCitaId])
+  .then(resultados2 =>{
+    if(resultados2.rowCount === 0){
+      console.log('No se ha podido eliminar la cita medica');
+    }else {
+      pool.query(selectQuery3)
+      .then(resultados3 => {
+        // Ejecutar la segunda consulta para obtener resultados2
+        pool.query(selectQuery2, [rut])
+          .then(resultados2 => {
+            // Obtener los resultados de la primera consulta
+            pool.query(selectQuery, [rut])
+              .then(resultados => {
+                res.render('administrarHorasProf', { resultados, resultados2, resultados3 });
+              })
+              .catch(error => {
+                console.error(error);
+                res.status(500).send('Error interno del servidor');
+              });
+          })
+          .catch(error => {
+            console.error(error);
+            res.status(500).send('Error interno del servidor');
+          });
+      })
+      .catch(error => {
+        console.error(error);
+        res.status(500).send('Error interno del servidor');
+      });
+    }
+  }).catch(error => {
+    console.error(error);
+    res.status(500).send('Error interno del servidor');
+  });
+});
+
+app.post('/agendarCitaMedica', (req, res) => {
+  const { fechaCita, horaCita } = req.body;
+  const user = req.session.user;
+  const rut = user.prof_rut;
+
+
+  const selectQuery = `
+    SELECT PA.PACI_NOMBRE, PA.PACI_APELLIDO, PA.PACI_RUT, ES.ESPE_NOMBRE, CM.CITA_SALA_NUM, CM.CITA_DIS_FECHA, CM.CITA_ID
+	  FROM PACIENTE PA RIGHT JOIN CITA_MEDICA CM
+	ON PA.PACI_RUT = CM.CITA_PACI_RUT 
+		JOIN PROFESIONAL PR 
+		ON CM.CITA_PROF_RUT = PR.PROF_RUT
+		JOIN ESPECIALIDAD ES
+		ON PR.PROF_ESP_CODIGO = ES.ESPE_CODIGO
+		WHERE CITA_PROF_RUT = $1 AND CM.CITA_DIS_FECHA > NOW()
+		ORDER BY CM.CITA_DIS_FECHA;
+  `;
+
+  const selectQuery2 = `
+    SELECT ESPE_NOMBRE FROM ESPECIALIDAD ES JOIN PROFESIONAL PR
+	    ON ES.ESPE_CODIGO = PR.PROF_ESP_CODIGO
+	    WHERE PR.PROF_RUT = $1;
+  `;
+
+  const selectQuery3 = `
+    SELECT * FROM SALA
+  `;
+  
+  const disponilidadSalasQuery = `
+    SELECT SALA.SALA_NUMERO
+    FROM SALA
+    WHERE SALA.SALA_NUMERO NOT IN (
+      SELECT CITA_SALA_NUM
+      FROM CITA_MEDICA
+      WHERE CITA_DIS_FECHA = $1
+    )
+  `;
+
+  const disponibilidadProfesionalQuery = `
+    SELECT * FROM CITA_MEDICA
+    WHERE CITA_PROF_RUT = $1 AND CITA_DIS_FECHA = $2
+  `;
+
+
+
+  const fechaFinal = `${fechaCita} ${horaCita}`;
+
+  pool.query(disponibilidadProfesionalQuery, [ rut, fechaFinal])
+  .then(resultadosDisProf => {
+    if(resultadosDisProf.rowCount === 0){
+      pool.query(disponilidadSalasQuery, [fechaFinal])
+    .then(resultados4 =>{
+      if(resultados4.rowCount > 0){
+        pool.query(selectQuery3)
+            .then(resultados3 => {
+              // Ejecutar la segunda consulta para obtener resultados2
+              pool.query(selectQuery2, [rut])
+                .then(resultados2 => {
+                  // Obtener los resultados de la primera consulta
+                  pool.query(selectQuery, [rut])
+                    .then(resultados => {
+                      res.render('administrarHorasProfDos', { resultados, resultados2, resultados3, resultados4, fechaCita, horaCita });
+                    })
+                    .catch(error => {
+                      console.error(error);
+                      res.status(500).send('Error interno del servidor');
+                    });
+                })
+                .catch(error => {
+                  console.error(error);
+                  res.status(500).send('Error interno del servidor');
+                });
+            })
+            .catch(error => {
+              console.error(error);
+              res.status(500).send('Error interno del servidor');
+            });
+      }
+  }).catch(error => {
+    console.error("No hay salas disponibles");
+    pool.query(selectQuery3)
+            .then(resultados3 => {
+              // Ejecutar la segunda consulta para obtener resultados2
+              pool.query(selectQuery2, [rut])
+                .then(resultados2 => {
+                  // Obtener los resultados de la primera consulta
+                  pool.query(selectQuery, [rut])
+                    .then(resultados => {
+                      res.render('administrarHoraNoSalasDis', { resultados, resultados2, resultados3, fechaCita, horaCita});
+                    })
+                    .catch(error => {
+                      console.error(error);
+                      res.status(500).send('Error interno del servidor');
+                    });
+                })
+                .catch(error => {
+                  console.error(error);
+                  res.status(500).send('Error interno del servidor');
+                });
+            })
+            .catch(error => {
+              console.error(error);
+              res.status(500).send('Error interno del servidor');
+            });
+  });
+    } else{
+        pool.query(selectQuery3)
+            .then(resultados3 => {
+              // Ejecutar la segunda consulta para obtener resultados2
+              pool.query(selectQuery2, [rut])
+                .then(resultados2 => {
+                  // Obtener los resultados de la primera consulta
+                  pool.query(selectQuery, [rut])
+                    .then(resultados => {
+                      res.render('administrarHoraErrorDisProf', { resultados, resultados2, resultados3, fechaCita, horaCita});
+                    })
+                    .catch(error => {
+                      console.error(error);
+                      res.status(500).send('Error interno del servidor');
+                    });
+                })
+                .catch(error => {
+                  console.error(error);
+                  res.status(500).send('Error interno del servidor');
+                });
+            })
+            .catch(error => {
+              console.error(error);
+              res.status(500).send('Error interno del servidor');
+            });
+    }
+  })
+});
+
+app.post('/confirmarNuevaCitaMedica', (req, res) => {
+  const { fechaCita, horaCita, salaCita } = req.body;
+  const user = req.session.user;
+  const rut = user.prof_rut;
+  const fechaFinal = `${fechaCita} ${horaCita}`;
+
+
+  const insertQuery = `
+  INSERT INTO CITA_MEDICA (CITA_DETALLE, CITA_PACI_RUT, CITA_PROF_RUT, CITA_SALA_NUM, CITA_DIS_FECHA, CITA_DISPONIBLE)
+  VALUES(null, null, $1, $2, $3, true);	
+  `;
+
+  const selectQuery = `
+    SELECT PA.PACI_NOMBRE, PA.PACI_APELLIDO, PA.PACI_RUT, ES.ESPE_NOMBRE, CM.CITA_SALA_NUM, CM.CITA_DIS_FECHA, CM.CITA_ID
+	  FROM PACIENTE PA RIGHT JOIN CITA_MEDICA CM
+	ON PA.PACI_RUT = CM.CITA_PACI_RUT 
+		JOIN PROFESIONAL PR 
+		ON CM.CITA_PROF_RUT = PR.PROF_RUT
+		JOIN ESPECIALIDAD ES
+		ON PR.PROF_ESP_CODIGO = ES.ESPE_CODIGO
+		WHERE CITA_PROF_RUT = $1 AND CM.CITA_DIS_FECHA > NOW()
+		ORDER BY CM.CITA_DIS_FECHA;
+  `;
+
+  const selectQuery2 = `
+    SELECT ESPE_NOMBRE FROM ESPECIALIDAD ES JOIN PROFESIONAL PR
+	    ON ES.ESPE_CODIGO = PR.PROF_ESP_CODIGO
+	    WHERE PR.PROF_RUT = $1;
+  `;
+
+  const selectQuery3 = `
+    SELECT * FROM SALA
+  `;
+
+  Promise.all([
+    pool.query(insertQuery, [rut, salaCita, fechaFinal]),
+    pool.query(selectQuery, [rut]),
+    pool.query(selectQuery2, [rut]),
+    pool.query(selectQuery3)
+  ])
+    .then(([resultadosInsert, resultados, resultados2, resultados3]) => {
+      if (resultadosInsert.rowCount === 1) {
+        console.log('Se ha agendado correctamente la cita medica');
+        res.render('administrarHorasProf', { resultados, resultados2, resultados3 });
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).send('Error interno del servidor');
+    });
+})
 
 

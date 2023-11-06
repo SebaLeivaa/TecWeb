@@ -312,6 +312,39 @@ function historialMedProf(){
   }
 }
 
+//Abrir dialog de editar, eliminar y agregar horas medicas 
+function editarCitaMedica(index){
+  const editarCitaMedicaDialog = document.getElementById("editarCitaMedicaDialog" + index);
+   editarCitaMedicaDialog.showModal();
+  const lightDismiss = ({ target: editarCitaMedicaDialog }) => {
+    if (editarCitaMedicaDialog.nodeName === "DIALOG") editarCitaMedicaDialog.close("dismiss");
+  };
+
+  editarCitaMedicaDialog.addEventListener("click", lightDismiss);
+
+}
+
+function eliminarCitaMedica(index){
+  const eliminarCitaMedicaDialog = document.getElementById("eliminarCitaMedicaDialog" + index);
+   eliminarCitaMedicaDialog.showModal();
+
+   const lightDismiss = ({ target: eliminarCitaMedicaDialog }) => {
+    if (eliminarCitaMedicaDialog.nodeName === "DIALOG") eliminarCitaMedicaDialog.close("dismiss");
+  };
+
+  eliminarCitaMedicaDialog.addEventListener("click", lightDismiss);
+}
+
+function agregarCitaMedica(){
+  const agregarCitaMedicaDialog = document.getElementById("agregarCitaMedicaDialog");
+   agregarCitaMedicaDialog.showModal();
+
+   const lightDismiss = ({ target: agregarCitaMedicaDialog }) => {
+    if (agregarCitaMedicaDialog.nodeName === "DIALOG") agregarCitaMedicaDialog.close("dismiss");
+  };
+
+  agregarCitaMedicaDialog.addEventListener("click", lightDismiss);
+}
 
 //Muestra el dialog en los archivos EJS
   document.addEventListener('DOMContentLoaded', function() {
@@ -475,6 +508,15 @@ function historialMedProf(){
     });
   });
 
+  document.addEventListener('DOMContentLoaded', function () {
+    const disponibilidadSalasCitaDialog = document.getElementById('disponibilidadSalasCitaDialog');
+    const cerrarDialogDisponibilidadSalas = document.getElementById('cerrarDialogDisponibilidadSalas');
+
+    cerrarDialogDisponibilidadSalas.addEventListener('click', () => {
+      disponibilidadSalasCitaDialog.close();
+    });
+  });
+
 
 
 //Cerrar ventana de dialogo sesion
@@ -501,6 +543,22 @@ function historialMedProf(){
     const historialMedProfesionalesDialog = document.getElementById("historialMedProfesionalesDialog");
     historialMedProfesionalesDialog.close();
   }
+
+  function closeDialogEditarCitaMedica(index){
+    const editarCitaMedicaDialog = document.getElementById("editarCitaMedicaDialog"+ index)
+    editarCitaMedicaDialog.close();
+  };
+
+  function closeDialogEliminarCitaMedica(index){
+    const eliminarCitaMedicaDialog = document.getElementById("eliminarCitaMedicaDialog"+ index)
+    eliminarCitaMedicaDialog.close();
+  }
+
+  function closeDialogAgregarCitaMedica(index){
+    const agregarCitaMedicaDialog = document.getElementById("agregarCitaMedicaDialog")
+    agregarCitaMedicaDialog.close();
+  }
+
 //Carga de datos preexistentes 
   let listaPacientes = []
   let listaProfesionales = []
@@ -803,4 +861,6 @@ function historialMedProf(){
       iconoClave8.classList.add('fa-eye');
     }
   }
+
+  
 

@@ -11,23 +11,23 @@
 <body class="bg-secondary">
     <header class="bg-blue-900 fixed z-20 top-0 left-0 right-0">
         <nav class="grid grid-cols-3 h-full max-xl:grid-cols-2 gap-y-1">
-            <img class="h-20 rounded-md w-64 mx-aut my-1 max-xl:w-max max-xl:m-2" src="./img/logoClinica.png">
-            <div class="flex flex-row gap-10 items-end mb-1 text-text max-xl:col-start-1 max-xl:col-end-3 text-center m-auto">
+            <img class="h-20 rounded-md w-64 mx-auto my-1 max-xl:w-max max-xl:m-2 max-sm:h-16" src="./img/logoClinica.png">
+            <div class="flex flex-row gap-10 items-end mb-1 text-text max-xl:col-start-1 max-xl:col-end-3 text-center m-auto max-sm:gap-4">
                 <a class="hover:text-primary" href="#"> <b><ins>Inicio<ins/></b> </a> 
                 <a class="hover:text-primary" href="especialidades.html">Especialidades</a>
                 <a class="hover:text-primary" href="#profesionales">Profesionales</a>
                 <a class="hover:text-primary" href="#contacto">Contacto</a>
             </div>
-            <div class="flex items-end gap-x-10 justify-end mr-2 text-text mb-1 max-xl:col-start-2 max-xl:col-end-4 max-xl:row-start-1 max-xl:row-end-2 max-md:w-full max-xl:justify-end">
-                <% if (user) { %>
-                    <button class="" onclick="loginButton();" disabled>
+            <div class="flex items-end gap-x-10 justify-end mr-2 text-text mb-1 max-xl:col-start-2 max-xl:col-end-4 max-xl:row-start-1 max-xl:row-end-2 max-md:w-full max-xl:justify-end max-sm:gap-2">
+                <% if (user && user.paci_nombre && user.paci_apellido) { %>
+                    <button class="hover:text-primary" onclick="loginButton();" disabled>
                       <i class="fa-solid fa-user"></i> <%= user.paci_nombre.toUpperCase() %> <%= user.paci_apellido.toUpperCase() %>
                     </button>
                     <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="logout();">Cerrar sesión</button>
                 <% } else { %>
                     <!-- Botón para usuarios no autenticados -->
-                    <button class="" onclick="loginButton();">
-                      Iniciar Sesión
+                    <button class="hover:text-primary" onclick="loginButton();">
+                        <i class="fa-solid fa-user"></i> Iniciar sesión
                     </button>
                     <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="signinButton();">Registrarse</button>
                 <% } %>
@@ -35,39 +35,39 @@
         </nav>
     </header>
     <main class="grid gap-10">
-        <section class="h-screen flex justify-center  items-center">
-            <div class="grid w-full gap-20">
-                <div class="grid grid-cols-2 gap-20 max-sm:gap-4 max-md:gap-8">
-                   <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 ml-auto hover:bg-text hover:text-primary max-sm:w-64 max-md:w-72 " onclick="reservaUno();">
-                    <figure class="w-60 h-56 grid justify-center">
-                        <i class="fa-solid fa-clock text-9xl p-7"></i>
-                        <figcaption class="h-20 flex items-start m-auto">
-                            <div>
+        <section class="h-screen flex justify-center items-center max-sm:mt-24">
+            <div class="grid w-full gap-20 max-sm:gap-2">
+                <div class="grid grid-cols-2 gap-20 max-sm:gap-2 max-md:gap-8 max-sm:grid-cols-1 max-sm:m-auto">
+                    <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 ml-auto hover:bg-text hover:text-primary max-sm:w-80 max-md:w-72" onclick="reservaUno();">
+                    <figure class="w-60 h-56 flex justify-center max-sm:h-36">
+                        <i class="fa-solid fa-clock text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
+                        </figure>
+                        <figcaption class="h-20 flex">
+                            <div class="mt-1">
                                 <p class="text-3xl">Reserva de horas</p>
                             </div>
                         </figcaption>
-                    </figure>
                     </button>
                     <% if (user) { %>
                         <form action="/historialMedConsultaLogin" method="post">
-                            <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-64 max-md:w-72">
-                                <figure class="w-60 h-56 flex justify-center">
-                                    <i class="fa-solid fa-notes-medical text-9xl p-14"></i>
+                            <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80 max-md:w-72">
+                                <figure class="w-60 h-56 flex justify-center max-sm:h-36">
+                                    <i class="fa-solid fa-notes-medical text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
                                 </figure>
-                                <figcaption class="h-20 flex items-start m-auto">
-                                    <div>
+                                <figcaption class="h-20 flex">
+                                    <div class="mt-1">
                                         <p class="text-3xl">Tu historial médico</p>
                                     </div>
                                 </figcaption>
                             </button>
                         </form> 
                     <% } else { %>
-                    <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-64 max-md:w-72" onclick="historialMedUno();">
-                        <figure class="w-60 h-56 flex justify-center">
-                            <i class="fa-solid fa-notes-medical text-9xl p-14"></i>
+                    <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80 max-md:w-72" onclick="historialMedUno();">
+                        <figure class="w-60 h-56 flex justify-center max-sm:h-36">
+                            <i class="fa-solid fa-notes-medical text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
                         </figure>
-                        <figcaption class="h-20 flex items-start m-auto">
-                            <div>
+                        <figcaption class="h-20 flex">
+                            <div class="mt-1">
                                 <p class="text-3xl">Tu historial médico</p>
                             </div>
                         </figcaption>
@@ -77,9 +77,9 @@
                 <div>
                     <% if (user) { %>
                         <form action="/anularHoraConsultaLogin" method="post">
-                            <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary">
+                            <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80">
                                 <figure class="w-60 h-56 flex justify-center">
-                                    <i class="fa-solid fa-x text-9xl p-14"></i>
+                                    <i class="fa-solid fa-x text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
                                 </figure>
                                 <figcaption class="h-20 flex items-start m-auto">
                                     <div >
@@ -89,12 +89,12 @@
                             </button>
                         </form>
                     <% } else { %>
-                        <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary" onclick="anulaHoraUno();">
-                            <figure class="w-60 h-56 flex justify-center">
-                                <i class="fa-solid fa-x text-9xl p-14"></i>
+                        <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80" onclick="anulaHoraUno();">
+                            <figure class="w-60 h-56 flex justify-center max-sm:h-36">
+                                <i class="fa-solid fa-x text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
                             </figure>
-                            <figcaption class="h-20 flex items-start m-auto">
-                                <div >
+                            <figcaption class="h-20 flex">
+                                <div class="mt-1">
                                     <p class="text-3xl">Anulación de horas</p>
                                 </div>
                             </figcaption>
@@ -189,8 +189,8 @@
         <div class="grid grid-cols-3 text-center">
             <section class="border-dashed border-r-2 w-full border-border">
                 <div class="flex flex-col gap-10 text-center justify-center items-center ">
-                    <h1 class="text-3xl">Redes sociales</h1>
-                    <div class="grid grid-cols-3 gap-10 max-md:gap-7">
+                    <h1 class="text-3xl max-sm:xl">Redes sociales</h1>
+                    <div class="grid grid-cols-3 gap-10 max-md:gap-7 max-sm:gap-2">
                         <i class="fa-brands fa-instagram text-4xl"></i>
                         <i class="fa-brands fa-facebook text-4xl"></i>
                         <i class="fa-brands fa-square-x-twitter text-4xl"></i>
@@ -202,15 +202,16 @@
             </section>
             <section class="border-dashed border-r-2 w-full border-border">
                 <div class="flex flex-col gap-10 text-center justify-center items-center">
-                    <h1 class="text-3xl">Contáctenos</h1>
+                    <h1 class="text-3xl max-sm:hidden">Contáctenos</h1>
+<h1 class="text-3xl hidden max-sm:block">Contact.</h1>
                     <div class="text-start">
-                        <p class="text-2xl">Call Center</p>
+                        <p class="text-2xl max-sm:lg">Call Center</p>
                         <i class="fa-solid fa-phone flex gap-x-1 mt-2">
                             <p>600 511 5670</p>
                         </i>
                     </div>
                     <div class="text-start">
-                        <p class="text-2xl">Soporte Web</p>
+                        <p class="text-2xl max-sm:lg">Soporte Web</p>
                         <i class="fa-solid fa-phone flex gap-x-1 mt-2">
                             <p>512 687 9152</p>
                         </i>
@@ -219,7 +220,7 @@
             </section>
             <section>
                 <div class="flex flex-col gap-10 text-center justify-center items-center">
-                    <h1 class="text-3xl">Nuestra clínica</h1>
+                    <h1 class="text-3xl max-sm:xl">Nuestra clínica</h1>
                     <div>
                         <img src="./img/default.png" style="user-select: none;">
                     </div>
@@ -230,7 +231,7 @@
             <p class="text-center text-3xl m-auto ">© Copyright - 2023. Todos los derechos reservados.</p>
         </div>
     </footer>
-    <dialog id="loginDialog" class="h-max border-2 border-solid border-border bg-blue-100" style="width: calc(500px - 10vw);">
+    <dialog id="loginDialog" class="h-[31.5rem] border-2 border-solid border-border bg-blue-100" style="width: calc(500px - 10vw);">
         <div class="grid">
             <button class="ml-[95%] w-min" onclick="closeDia();">
                 <i class="fa-solid fa-x"></i>
@@ -327,7 +328,7 @@
             </form>
         </section>
     </dialog>
-    <dialog id="reservaUnoDialog" class="h-1/2 border-2 border-solid border-border w-96 p-4 bg-blue-100">
+    <dialog id="reservaUnoDialog" class="h-[31.5rem] border-2 border-solid border-border w-96 p-4 bg-blue-100">
         <div class="grid">
             <button class="ml-[95%] w-min" onclick="closeDia();">
                 <i class="fa-solid fa-x"></i>
@@ -351,7 +352,7 @@
             </div>
         </form>
     </dialog>   
-    <dialog id="anulaHoraUnoDialog" class="h-1/2 border-2 border-solid border-border w-96 p-4 bg-blue-100">
+    <dialog id="anulaHoraUnoDialog" class="h-[31.5rem] border-2 border-solid border-border w-96 p-4 bg-blue-100">
         <div class="grid">
             <button class="ml-[95%] w-min" onclick="closeDia();">
                 <i class="fa-solid fa-x"></i>
@@ -379,7 +380,7 @@
             </form>
         </div>
     </dialog>
-    <dialog id="historialMedUnoDialog" class="h-1/2 border-2 border-solid border-border bg-blue-100 w-96 p-4">
+    <dialog id="historialMedUnoDialog" class="h-[31.5rem] border-2 border-solid border-border w-96 p-4 bg-blue-100 max-sm:w-[90%]">
         <div class="grid">
             <button class="ml-[95%] w-min" onclick="closeDia();">
                 <i class="fa-solid fa-x"></i>
@@ -407,7 +408,7 @@
             </form>
         </div>
     </dialog>
-    <dialog id="historialMedDosDialog" class="h-[75%] border-2 border-solid border-border w-[50%] p-4 max-lg:w-4/5">
+    <dialog id="historialMedDosDialog" class="h-[47.25rem] border-2 border-solid border-border w-[50%] p-4 max-lg:w-4/5">
         <% const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]; %>
         <% const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]; %>
             <button id="cerrarHistorialMedDos" class="ml-[95%] w-min">
@@ -416,7 +417,7 @@
             <h1 class="m-auto text-center text-3xl font-bold">Tu historial médico</h1>
         <div class="flex flex-col mt-10 ">
             <% if (resultados2.rows.length === 0){ %>
-                <div class="h-48 flex items-center text-center justify-center border-2 bg-blue-500 mt-40 w-[50%] rounded-xl ml-[25%]">
+                <div class="h-48 flex items-center justify-center text-center border-2 bg-blue-500 mt-40 w-48 rounded-xl mx-auto">
                     <p class="text-3xl text-center text-text font-bold">No tiene historial médico</p>
                 </div>
             <% } else { %> 
