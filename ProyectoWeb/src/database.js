@@ -134,6 +134,8 @@ app.use((req, res, next) => {
 });
 
 
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//CONSULTADOS LADO DEL PACIENTE
 
 // Obtiene los datos del formulario REGISTRO
 app.post('/registrar', (req, res) => {
@@ -165,24 +167,56 @@ app.post('/registrar', (req, res) => {
     valoresValidos.telefono = telefono;
   }
 
-  if(Object.keys(errores).length > 0){
-    res.render('errorLogin', { errores, valoresValidos });
-  }else{
-    const insertQuery = `
-    INSERT INTO PACIENTE (paci_nombre, paci_apellido, paci_rut, paci_fechanac, paci_correo, paci_clave, paci_genero, paci_telefono)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-    `;
-    pool.query(insertQuery, [nombre, apellido, rut, fecnac, correo, clave, genero, telefono], (error, resultado) => {
+  // Verificar si el RUT ya está registrado
+  pool.query("SELECT * FROM PACIENTE WHERE paci_rut = $1", [rut], (error, resultado) => {
+    if (error) {
+      console.error('Error al buscar el RUT en la base de datos:', error);
+      res.status(500).send('Error al buscar el RUT en la base de datos');
+    } else if (resultado.rows.length > 0) {
+      errores.rut = 'El RUT ya está registrado en la base de datos';
+    }
+
+    // Verificar si el teléfono ya está registrado
+    pool.query("SELECT * FROM PACIENTE WHERE paci_telefono = $1", [telefono], (error, resultado) => {
       if (error) {
-        console.error('Error al insertar el registro:', error);
-        res.status(500).send('Error al insertar el registro');
-      } else {
-        console.log('Registro insertado con éxito');
-        res.redirect('./signInExitoso.html');
+        console.error('Error al buscar el teléfono en la base de datos:', error);
+        res.status(500).send('Error al buscar el teléfono en la base de datos');
+      } else if (resultado.rows.length > 0) {
+        errores.telefono = 'El teléfono ya está registrado en la base de datos';
       }
+
+      // Verificar si el correo ya está registrado
+      pool.query("SELECT * FROM PACIENTE WHERE paci_correo = $1", [correo], (error, resultado) => {
+        if (error) {
+          console.error('Error al buscar el correo en la base de datos:', error);
+          res.status(500).send('Error al buscar el correo en la base de datos');
+        } else if (resultado.rows.length > 0) {
+          errores.correo = 'El correo ya está registrado en la base de datos';
+        }
+
+        if (Object.keys(errores).length > 0) {
+          res.render('viewsPaciente/errorLogin', { errores, valoresValidos });
+        } else {
+          // Si no hay errores, insertar el nuevo registro
+          const insertQuery = `
+            INSERT INTO PACIENTE (paci_nombre, paci_apellido, paci_rut, paci_fechanac, paci_correo, paci_clave, paci_genero, paci_telefono)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+          `;
+          pool.query(insertQuery, [nombre, apellido, rut, fecnac, correo, clave, genero, telefono], (error, resultado) => {
+            if (error) {
+              console.error('Error al insertar el registro:', error);
+              res.status(500).send('Error al insertar el registro');
+            } else {
+              console.log('Registro insertado con éxito');
+              res.redirect('./signInExitoso.html');
+            }
+          });
+        }
+      });
     });
-  }
+  });
 });
+
 
 //Obtiene los datos del formulario de login e inicia sesion
 
@@ -206,15 +240,15 @@ app.post('/signIn',(req, res) => {
       pool.query(selectQueryProfesional, [rutCorreo])
       .then(resultadosProfesional => {
         if(resultadosProfesional.rows.length === 0){
-          res.render('errorSignIn', { error: 'Esta cuenta no existe', correoRutValido});
+          res.render('viewsPaciente/errorSignIn', { error: 'Esta cuenta no existe', correoRutValido});
         }else if (resultadosProfesional.rows.length === 1){
           const profesional = resultadosProfesional.rows[0];
           if(profesional.prof_clave === loClave){
             req.session.user = profesional;
 
-            res.render('inicioSesionProfesional', { user: profesional});
+            res.render('viewsProfesional/inicioSesionProfesional', { user: profesional});
           }else {
-            res.render('errorSignIn', { error: 'Contraseña incorrecta', correoRutValido});
+            res.render('viewsPaciente/errorSignIn', { error: 'Contraseña incorrecta', correoRutValido});
           }
         }
       })
@@ -223,9 +257,9 @@ app.post('/signIn',(req, res) => {
       if(usuario.paci_clave === loClave){
         req.session.user = usuario; // Almacena la información del usuario en la sesión
 
-        res.render('inicioSesionUsuario', { user: usuario });
+        res.render('viewsPaciente/inicioSesionUsuario', { user: usuario });
       } else {
-        res.render('errorSignIn', { error: 'Contraseña incorrecta', correoRutValido});
+        res.render('viewsPaciente/errorSignIn', { error: 'Contraseña incorrecta', correoRutValido});
       }
     }
   })
@@ -295,10 +329,10 @@ app.post('/reservaUno',(req, res) => {
     .then(resultados => {
       if (resultados.rows.length === 0) {
         // No hay resultados, muestra un mensaje
-        res.render('sinResultados');
+        res.render('viewsPaciente/sinResultados');
       } else {
         // Hay resultados, renderiza la página HTML con los resultados utilizando un motor de plantillas
-        res.render('reservaDos', { resultados });
+        res.render('viewsPaciente/reservaDos', { resultados });
       }
     })
     .catch(error => {
@@ -335,7 +369,7 @@ app.post('/actualizarFechas',(req, res) => {
   pool.query(selectQuery, [especialidad, newDates])
     .then(resultados => {
       // Renderiza la página HTML con los resultados utilizando un motor de plantillas
-      res.render('reservaDos', { resultados });
+      res.render('viewsPaciente/reservaDos', { resultados });
     })
     .catch(error => {
       // Manejo de errores
@@ -367,9 +401,11 @@ app.post('/seleccionarHora', (req, res) => {
       // Renderiza la página HTML con los resultados utilizando un motor de plantillas
       const citaId = resultados.rows[0].cita_id;
       req.session.citaId = citaId;
+      const citaData = resultados.rows; // Guarda todos los datos en una variable citaData
+      req.session.citaData = citaData;
 
 
-      res.render('reservaTres', { resultados });
+      res.render('viewsPaciente/reservaTres', { resultados });
     })
     .catch(error => {
       // Manejo de errores
@@ -382,9 +418,16 @@ app.post('/seleccionarHora', (req, res) => {
 app.post('/confirmarHoraUsuario', (req, res) => {
   const { correoRut, claveUsuario } = req.body;
   const citaId = req.session.citaId;
+  const resultados = req.session.citaData;
+
+  const correoRutValido = { correoRut: correoRut };
 
   const selectQuery = `
-    SELECT PACI_RUT FROM PACIENTE WHERE (PACI_RUT = $1 OR PACI_CORREO = $1) AND PACI_CLAVE = $2
+    SELECT PACI_RUT FROM PACIENTE WHERE (PACI_RUT = $1 OR PACI_CORREO = $1)
+  `;
+
+  const selectQuery2 = `
+    SELECT * FROM PACIENTE WHERE PACI_CLAVE = $1  
   `;
 
   const updateQuery = `
@@ -395,41 +438,70 @@ app.post('/confirmarHoraUsuario', (req, res) => {
     AND CITA_DISPONIBLE = TRUE
   `;
 
-  pool.query(selectQuery, [correoRut, claveUsuario])
-    .then(resultados => {
-      if(resultados.rows.length === 1){
-        const paciRut = resultados.rows[0].paci_rut;
-
-        return pool.query(updateQuery, [paciRut, citaId]);
+  pool.query(selectQuery, [correoRut])
+    .then(resultadosSelect1 => {
+      if(resultadosSelect1.rows.length === 1){
+        pool.query(selectQuery2, [claveUsuario])
+        .then(resultadosSelect2 =>{
+          if(resultadosSelect2.rows.length === 1){
+            const paciRut = resultadosSelect1.rows[0].paci_rut;
+            pool.query(updateQuery, [paciRut, citaId])
+            .then(updateResultados => {
+              if(updateResultados.rowCount === 1){
+                console.log('Se agendo la cita correctamente')
+                res.render('viewsPaciente/reservaFinal');
+              }else {
+                console.log('Ha ocurrido un error, no se pudo agendar la cita');
+                throw new Error("Error, no se ha podido agendar la cita");
+              }
+            })
+            .catch(error => {
+              console.error(error);
+            });
+          }else {
+            console.log("Clave incorrecta");
+            res.render('viewsPaciente/errorReservaFinalUsuario', { error: 'Contraseña incorrecta', correoRutValido, resultados, claveUsuario});
+          }
+        })
       }else{
-        throw new Error('Paciente no encontrado');
+        console.log("Esta cuenta no existe");
+        res.render('viewsPaciente/errorReservaFinalUsuario', { error: 'Esta cuenta no existe', correoRutValido, resultados, claveUsuario});
       }
     })
-    .then(updateResultados => {
-      if(updateResultados.rowCount === 1){
-        console.log('Se agendo la cita correctamente')
-        res.render('reservaFinal');
-      }else {
-        console.log('Ha ocurrido un error, no se pudo agendar la cita');
-        throw new Error("Error, no se ha podido agendar la cita");
-      }
-    })
-    .catch(error => {
-      console.error(error);
-    });
 });
 
 //Usuario confirma su hora como invitado, y se registra el nuevo paciente a la base de datos
 app.post('/confirmarHoraInvitado', (req, res) => {
   const { nombre, apellidos, rut, fechaNac, correo, clave, genero, telefono } = req.body;
   const citaId = req.session.citaId;
+  const resultados = req.session.citaData;
+  const errores = {};
+  const valoresValidos = { nombre: nombre, apellidos: apellidos, correo: correo, genero: genero};
 
-  if (validarRut(rut) && validarClave(clave)) {
-    const insertQuery = `
-      INSERT INTO PACIENTE (paci_nombre, paci_apellido, paci_rut, paci_fechanac, paci_correo, paci_clave, paci_genero, paci_telefono)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-      RETURNING PACI_RUT;
-    `;
+
+    if(!validarRut(rut)){
+      errores.rut = 'Ingrese un rut válido';
+    }else{
+      valoresValidos.rut = rut;
+    }
+
+    if(!validarClave(clave)){
+      errores.clave = 'Ingrese una clave válida:\n-Debe tener al menos 8 caracteres.\n-Debe incluir al menos una letra mayúscula.\n-Debe contener al menos un número.';;
+    }else{
+      valoresValidos.clave = clave;
+    }
+
+    if(validarFecha(fechaNac)){
+      errores.fecNac = 'Ingrese una fecha de nacimiento válida';
+    }else{
+      valoresValidos.fecNac = fechaNac;
+    }
+
+    if(!validarFormatoTel(telefono)){
+      errores.telefono = 'Ingrese un formato de telefono válido';
+    }else{
+      valoresValidos.telefono = telefono;
+    }
 
     const updateQuery = `
       UPDATE CITA_MEDICA 
@@ -439,32 +511,64 @@ app.post('/confirmarHoraInvitado', (req, res) => {
       AND CITA_DISPONIBLE = TRUE;
     `;
 
-    pool.query(insertQuery, [nombre, apellidos, rut, fechaNac, correo, clave, genero, telefono])
-      .then(resultados => {
-        if (resultados.rows.length === 1) {
-          const paciRut = resultados.rows[0].paci_rut;
-
-          return pool.query(updateQuery, [paciRut, citaId]);
-        } else {
-          console.log('Error al insertar el paciente');
-          throw new Error('Error al insertar el paciente');
+    pool.query("SELECT * FROM PACIENTE WHERE paci_rut = $1", [rut], (error, resultado) => {
+      if (error) {
+        console.error('Error al buscar el RUT en la base de datos:', error);
+        res.status(500).send('Error al buscar el RUT en la base de datos');
+      } else if (resultado.rows.length > 0) {
+        errores.rut = 'El RUT ya está registrado en la base de datos';
+      }
+  
+      // Verificar si el teléfono ya está registrado
+      pool.query("SELECT * FROM PACIENTE WHERE paci_telefono = $1", [telefono], (error, resultado) => {
+        if (error) {
+          console.error('Error al buscar el teléfono en la base de datos:', error);
+          res.status(500).send('Error al buscar el teléfono en la base de datos');
+        } else if (resultado.rows.length > 0) {
+          errores.telefono = 'El teléfono ya está registrado en la base de datos';
         }
-      })
-      .then(updateResultados => {
-        if (updateResultados.rowCount === 1) {
-          console.log('Se agendó la cita correctamente');
-          res.render('reservaFinal');
-        } else {
-          console.log('Error, no se ha podido agendar la cita');
-          throw new Error('Error, no se ha podido agendar la cita');
-        }
-      })
-      .catch(error => {
-        console.error(error);
+  
+        // Verificar si el correo ya está registrado
+        pool.query("SELECT * FROM PACIENTE WHERE paci_correo = $1", [correo], (error, resultado) => {
+          if (error) {
+            console.error('Error al buscar el correo en la base de datos:', error);
+            res.status(500).send('Error al buscar el correo en la base de datos');
+          } else if (resultado.rows.length > 0) {
+            errores.correo = 'El correo ya está registrado en la base de datos';
+          }
+  
+          if (Object.keys(errores).length > 0) {
+            res.render('viewsPaciente/errorReservaFinalInvitado', { errores, valoresValidos, resultados });
+          } else {
+            // Si no hay errores, insertar el nuevo registro
+            const insertQuery = `
+              INSERT INTO PACIENTE (paci_nombre, paci_apellido, paci_rut, paci_fechanac, paci_correo, paci_clave, paci_genero, paci_telefono)
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            `;
+            pool.query(insertQuery, [nombre, apellidos, rut, fechaNac, correo, clave, genero, telefono], (error, resultado) => {
+              if (error) {
+                console.error('Error al insertar el registro:', error);
+                res.status(500).send('Error al insertar el registro');
+              } else {
+                pool.query(updateQuery, [rut, citaId])
+                .then(updateResultados => {
+                if(updateResultados.rowCount === 1){
+                  console.log('Se agendo la cita correctamente')
+                  res.render('viewsPaciente/reservaFinal');
+                }else {
+                  console.log('Ha ocurrido un error, no se pudo agendar la cita');
+                  throw new Error("Error, no se ha podido agendar la cita");
+                }
+            })
+            .catch(error => {
+              console.error(error);
+            });
+              }
+            });
+          }
+        });
       });
-  } else {
-    console.log('Ha ocurrido un error, no se pudo agendar la cita');
-  }
+    });
 });
 
 //Usuario hace consulta para anular hora
@@ -480,12 +584,12 @@ app.post('/anularHoraConsulta', (req, res) => {
 
   const selectQuery2 = `
     SELECT CM.CITA_ID, CM.CITA_DIS_FECHA, PR.PROF_NOMBRES, PR.PROF_APELLIDOS, PR.PROF_RUT, ES.ESPE_NOMBRE   
-      FROM CITA_MEDICA CM JOIN PROFESIONAL PR 
-      ON CM.CITA_PROF_RUT = PR.PROF_RUT
-      JOIN ESPECIALIDAD ES 
-      ON PR.PROF_ESP_CODIGO = ES.ESPE_CODIGO
-      WHERE CM.CITA_PACI_RUT = $1 AND CM.CITA_DIS_FECHA > NOW()
-      ORDER BY CM.CITA_DIS_FECHA;
+    FROM CITA_MEDICA CM JOIN PROFESIONAL PR 
+    ON CM.CITA_PROF_RUT = PR.PROF_RUT
+    JOIN ESPECIALIDAD ES 
+    ON PR.PROF_ESP_CODIGO = ES.ESPE_CODIGO
+    WHERE CM.CITA_PACI_RUT = $1 AND CM.CITA_DIS_FECHA >= NOW() + INTERVAL '2 DAY'
+    ORDER BY CM.CITA_DIS_FECHA;
   `;
 
   pool.query(selectQuery, [rut])
@@ -498,7 +602,7 @@ app.post('/anularHoraConsulta', (req, res) => {
       if(usuario.paci_clave === clave){
         pool.query(selectQuery2, [rut])
             .then(resultados2 => {
-              res.render('anularHoraDos', { resultados2 });
+              res.render('viewsPaciente/anularHoraDos', { resultados2 });
             })
             .catch(error2 => {
               console.error(error2);
@@ -506,7 +610,7 @@ app.post('/anularHoraConsulta', (req, res) => {
             });
 
       } else {
-        res.render('errorAnularHora', { error: 'Contraseña incorrecta', rutValido});
+        res.render('viewsPaciente/errorAnularHora', { error: 'Contraseña incorrecta', rutValido});
       }
     }
   })
@@ -526,13 +630,13 @@ app.post('/anularHoraConsultaLogin', (req, res) => {
       ON CM.CITA_PROF_RUT = PR.PROF_RUT
       JOIN ESPECIALIDAD ES 
       ON PR.PROF_ESP_CODIGO = ES.ESPE_CODIGO
-      WHERE CM.CITA_PACI_RUT = $1 AND CM.CITA_DIS_FECHA > NOW()
+      WHERE CM.CITA_PACI_RUT = $1 AND CM.CITA_DIS_FECHA >= NOW() + INTERVAL '2 DAY'
       ORDER BY CM.CITA_DIS_FECHA;
     `;
 
     pool.query(selectQuery2, [rut])
       .then(resultados2 => {
-        res.render('anularHoraDos', { resultados2 });
+        res.render('viewsPaciente/anularHoraDos', { resultados2 });
       })
       .catch(error2 => {
         console.error(error2);
@@ -553,7 +657,7 @@ app.post('/anularHoraFinal', (req, res) => {
 
   pool.query(updateQuery, [horaAnular])
   .then(resultado => {
-    res.render('anularHoraExito');
+    res.render('viewsPaciente/anularHoraExito');
   })
   .catch(error => {
     res.status(500).send('Error al anular la cita');
@@ -584,13 +688,13 @@ app.post('/historialMedConsulta', (req, res) => {
   .then(resultados => {
 
     if(resultados.rows.length === 0){
-      res.render('errorHistorialMed', { error: 'Esta cuenta no existe', rutValido});
+      res.render('viewsPaciente/errorHistorialMed', { error: 'Esta cuenta no existe', rutValido});
     }else if (resultados.rows.length === 1) {
       const usuario = resultados.rows[0];
       if(usuario.paci_clave === clave){
         pool.query(selectQuery2, [rut])
             .then(resultados2 => {
-              res.render('historialMedDos', { resultados2 });
+              res.render('viewsPaciente/historialMedDos', { resultados2 });
             })
             .catch(error2 => {
               console.error(error2);
@@ -598,7 +702,7 @@ app.post('/historialMedConsulta', (req, res) => {
             });
 
       } else {
-        res.render('errorHistorialMed', { error: 'Contraseña incorrecta', rutValido});
+        res.render('viewsPaciente/errorHistorialMed', { error: 'Contraseña incorrecta', rutValido});
       }
     }
   })
@@ -624,7 +728,7 @@ app.post('/historialMedConsultaLogin', (req, res) => {
 
     pool.query(selectQuery2, [rut])
       .then(resultados2 => {
-        res.render('historialMedDos', { resultados2 });
+        res.render('viewsPaciente/historialMedDos', { resultados2 });
       })
       .catch(error2 => {
         console.error(error2);
@@ -632,6 +736,8 @@ app.post('/historialMedConsultaLogin', (req, res) => {
       });
 });
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//CONSULTAS LADO DEL PROFESIONAL
 app.post('/historialMedConsultaProfesionales', (req, res) => {
   const { rut } = req.body;
 
@@ -655,14 +761,14 @@ app.post('/historialMedConsultaProfesionales', (req, res) => {
   .then(resultados => {
     if(resultados.rows.length === 0){
       if(!validarRut(rut)){
-        res.render('errorHistorialMedProf', { error: 'Este rut no es valido', rutValido});
+        res.render('viewsProfesional/errorHistorialMedProf', { error: 'Este rut no es valido', rutValido});
       } else {
-        res.render('errorHistorialMedProf', { error: 'Este rut no esta registrado en nuestra base de datos', rutValido});
+        res.render('viewsProfesional/errorHistorialMedProf', { error: 'Este rut no esta registrado en nuestra base de datos', rutValido});
       }
     }else if(resultados.rows.length === 1){
       pool.query(selectQuery2, [rut])
             .then(resultados2 => {
-              res.render('historialMedProfDos', { resultados, resultados2 });
+              res.render('viewsProfesional/historialMedProfDos', { resultados, resultados2 });
             })
             .catch(error2 => {
               console.error(error2);
@@ -678,12 +784,14 @@ app.post('/historialMedConsultaProfesionales', (req, res) => {
 
 //Redirige a la pagina principal de los profesionales
 app.get('/inicioSesionProfesional', (req, res) => {
-  res.render('inicioSesionProfesional'); // Renderiza la plantilla EJS
+  res.render('viewsProfesional/inicioSesionProfesional'); // Renderiza la plantilla EJS
 });
+
 const port = 3000;
 app.listen(port, () => {
   console.log(`Servidor en ejecución en http://localhost:${port}`);
 });
+
 
 app.post('/administrarHoraProfesional', (req, res) => {
   const user = req.session.user;
@@ -717,7 +825,7 @@ app.post('/administrarHoraProfesional', (req, res) => {
     pool.query(selectQuery3),
   ])
     .then(([resultados, resultados2, resultados3]) => {
-      res.render('administrarHorasProf', { resultados, resultados2, resultados3} );
+      res.render('viewsProfesional/administrarHorasProf', { resultados, resultados2, resultados3} );
     })
     .catch(error => {
       console.error(error);
@@ -782,7 +890,7 @@ app.post('/guardarCambiosCita', (req, res) => {
                   // Obtener los resultados de la primera consulta
                   pool.query(selectQuery, [rut])
                     .then(resultados => {
-                      res.render('administrarHoraEditarHora', { resultados, resultados2, resultados3, resultados4, fechaCita, horaCita, citaMedicaId});
+                      res.render('viewsProfesional/administrarHoraEditarHora', { resultados, resultados2, resultados3, resultados4, fechaCita, horaCita, citaMedicaId});
                     })
                     .catch(error => {
                       console.error(error);
@@ -809,7 +917,7 @@ app.post('/guardarCambiosCita', (req, res) => {
                   // Obtener los resultados de la primera consulta
                   pool.query(selectQuery, [rut])
                     .then(resultados => {
-                      res.render('editarHoraNoSalasDis', { resultados, resultados2, resultados3, fechaCita, horaCita});
+                      res.render('viewsProfesional/editarHoraNoSalasDis', { resultados, resultados2, resultados3, fechaCita, horaCita});
                     })
                     .catch(error => {
                       console.error(error);
@@ -835,7 +943,7 @@ app.post('/guardarCambiosCita', (req, res) => {
                   // Obtener los resultados de la primera consulta
                   pool.query(selectQuery, [rut])
                     .then(resultados => {
-                      res.render('editarHoraErrorDisProfDos', { resultados, resultados2, resultados3, fechaCita, horaCita, index});
+                      res.render('viewsProfesional/editarHoraErrorDisProfDos', { resultados, resultados2, resultados3, fechaCita, horaCita, index});
                     })
                     .catch(error => {
                       console.error(error);
@@ -899,7 +1007,7 @@ app.post('/guardarCambiosCitaFinal', (req, res) => {
     .then(([resultadosUpdate, resultados, resultados2, resultados3]) => {
       if (resultadosUpdate.rowCount === 1) {
         console.log('Se ha actualizado correctamente la cita medica');
-        res.render('administrarHorasProf', { resultados, resultados2, resultados3 });
+        res.render('viewsProfesional/administrarHorasProf', { resultados, resultados2, resultados3 });
       }
     })
     .catch(error => {
@@ -955,7 +1063,7 @@ app.post('/eliminarHoraMedica', (req, res) => {
             // Obtener los resultados de la primera consulta
             pool.query(selectQuery, [rut])
               .then(resultados => {
-                res.render('administrarHorasProf', { resultados, resultados2, resultados3 });
+                res.render('viewsProfesional/administrarHorasProf', { resultados, resultados2, resultados3 });
               })
               .catch(error => {
                 console.error(error);
@@ -1039,7 +1147,7 @@ app.post('/agendarCitaMedica', (req, res) => {
                   // Obtener los resultados de la primera consulta
                   pool.query(selectQuery, [rut])
                     .then(resultados => {
-                      res.render('administrarHorasProfDos', { resultados, resultados2, resultados3, resultados4, fechaCita, horaCita });
+                      res.render('viewsProfesional/administrarHorasProfDos', { resultados, resultados2, resultados3, resultados4, fechaCita, horaCita });
                     })
                     .catch(error => {
                       console.error(error);
@@ -1066,7 +1174,7 @@ app.post('/agendarCitaMedica', (req, res) => {
                   // Obtener los resultados de la primera consulta
                   pool.query(selectQuery, [rut])
                     .then(resultados => {
-                      res.render('administrarHoraNoSalasDis', { resultados, resultados2, resultados3, fechaCita, horaCita});
+                      res.render('viewsProfesional/administrarHoraNoSalasDis', { resultados, resultados2, resultados3, fechaCita, horaCita});
                     })
                     .catch(error => {
                       console.error(error);
@@ -1092,7 +1200,7 @@ app.post('/agendarCitaMedica', (req, res) => {
                   // Obtener los resultados de la primera consulta
                   pool.query(selectQuery, [rut])
                     .then(resultados => {
-                      res.render('administrarHoraErrorDisProf', { resultados, resultados2, resultados3, fechaCita, horaCita});
+                      res.render('viewsProfesional/administrarHoraErrorDisProf', { resultados, resultados2, resultados3, fechaCita, horaCita});
                     })
                     .catch(error => {
                       console.error(error);
@@ -1155,7 +1263,7 @@ app.post('/confirmarNuevaCitaMedica', (req, res) => {
     .then(([resultadosInsert, resultados, resultados2, resultados3]) => {
       if (resultadosInsert.rowCount === 1) {
         console.log('Se ha agendado correctamente la cita medica');
-        res.render('administrarHorasProf', { resultados, resultados2, resultados3 });
+        res.render('viewsProfesional/administrarHorasProf', { resultados, resultados2, resultados3 });
       }
     })
     .catch(error => {

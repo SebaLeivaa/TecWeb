@@ -19,10 +19,18 @@
                 <a class="hover:text-primary" href="#contacto">Contacto</a>
             </div>
             <div class="flex items-end gap-x-10 justify-end mr-2 text-text mb-1 max-xl:col-start-2 max-xl:col-end-4 max-xl:row-start-1 max-xl:row-end-2 max-md:w-full max-xl:justify-end max-sm:gap-2">
+                <% if (user && user.paci_nombre && user.paci_apellido) { %>
+                    <button class="" onclick="loginButton();" disabled>
+                      <i class="fa-solid fa-user"></i> <%= user.paci_nombre.toUpperCase() %> <%= user.paci_apellido.toUpperCase() %>
+                    </button>
+                    <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="logout();">Cerrar sesión</button>
+                <% } else { %>
+                    <!-- Botón para usuarios no autenticados -->
                     <button class="hover:text-primary" onclick="loginButton();">
                         <i class="fa-solid fa-user"></i> Iniciar sesión
                     </button>
                     <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="signinButton();">Registrarse</button>
+                <% } %>
             </div>
         </nav>
     </header>
@@ -30,7 +38,7 @@
         <section class="h-screen flex justify-center items-center max-sm:mt-24">
             <div class="grid w-full gap-20 max-sm:gap-2">
                 <div class="grid grid-cols-2 gap-20 max-sm:gap-2 max-md:gap-8 max-sm:grid-cols-1 max-sm:m-auto">
-                   <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 ml-auto hover:bg-text hover:text-primary max-sm:w-80 max-md:w-72" onclick="reservaUno();">
+                    <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 ml-auto hover:bg-text hover:text-primary max-sm:w-80 max-md:w-72" onclick="reservaUno();">
                     <figure class="w-60 h-56 flex justify-center max-sm:h-36">
                         <i class="fa-solid fa-clock text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
                         </figure>
@@ -39,7 +47,21 @@
                                 <p class="text-3xl">Reserva de horas</p>
                             </div>
                         </figcaption>
-                                        </button>
+                    </button>
+                    <% if (user) { %>
+                        <form action="/historialMedConsultaLogin" method="post">
+                            <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80 max-md:w-72">
+                                <figure class="w-60 h-56 flex justify-center max-sm:h-36">
+                                    <i class="fa-solid fa-notes-medical text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
+                                </figure>
+                                <figcaption class="h-20 flex">
+                                    <div class="mt-1">
+                                        <p class="text-3xl">Tu historial médico</p>
+                                    </div>
+                                </figcaption>
+                            </button>
+                        </form> 
+                    <% } else { %>
                     <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80 max-md:w-72" onclick="historialMedUno();">
                         <figure class="w-60 h-56 flex justify-center max-sm:h-36">
                             <i class="fa-solid fa-notes-medical text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
@@ -50,8 +72,23 @@
                             </div>
                         </figcaption>
                     </button> 
+                    <% } %> 
                 </div>
                 <div>
+                    <% if (user) { %>
+                        <form action="/anularHoraConsultaLogin" method="post">
+                            <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80">
+                                <figure class="w-60 h-56 flex justify-center max-sm:h-36">
+                                    <i class="fa-solid fa-x text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
+                                </figure>
+                                <figcaption class="h-20 flex">
+                                    <div class="mt-1">
+                                        <p class="text-3xl">Anulación de horas</p>
+                                    </div>
+                                </figcaption>
+                            </button>
+                        </form>
+                    <% } else { %>
                         <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80" onclick="anulaHoraUno();">
                             <figure class="w-60 h-56 flex justify-center max-sm:h-36">
                                 <i class="fa-solid fa-x text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
@@ -62,6 +99,7 @@
                                 </div>
                             </figcaption>
                         </button>
+                    <% } %>
                 </div>
             </div>
         </section>
@@ -207,14 +245,14 @@
             <form action="/signIn" method="post" class="gap-10 grid p-2">
                 <div class="">
                     <label for="rutCorreo">Rut o correo electrónico</label>
-                    <input name="rutCorreo" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20254784-1 o correo@dominio.cl" required>
+                    <input id="rutCorreo" name="rutCorreo" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20254784-1 o correo@dominio.cl" required>
                 </div>
                 <div class="flex flex-col">
                     <label for="loClave">Contraseña</label>
                     <div class="flex flex-row">
-                        <input id="claveInput5" name="loClave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********" required>
-                        <button id="cambioClave5" class="absolute right-0" type="button" onclick="cambioClaveLoginError();">
-                            <i id="iconoClave5" class="fa-solid fa-eye text-xl -translate-x-7 translate-y-1.5"></i>
+                        <input id="claveInput4" name="loClave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********" required>
+                        <button id="cambioClave4" class="absolute right-0" type="button" onclick="cambioClaveLogin();">
+                            <i id="iconoClave4" class="fa-solid fa-eye text-xl -translate-x-7 translate-y-1.5"></i>
                         </button>
                     </div>
                 </div>
@@ -230,7 +268,7 @@
             </form>
         </section>
     </dialog>
-    
+
     <dialog id="signinDialog" class="h-max border-2 border-solid border-border bg-blue-100" style="width: calc(500px - 10vw);">
         <div class="grid">
             <button class="ml-[95%]  w-min" onclick="closeDia();">
@@ -245,47 +283,32 @@
             <form action="/registrar" method="post" class="grid p-2 gap-2">
                 <div class="">
                     <label for="paName">Nombre</label>
-                    <input id="paName" name="nombre" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ingresa tu nombre" value="<%= valoresValidos.nombre %>" required>
+                    <input id="paName" name="nombre" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ingresa tu nombre" required>
                 </div>
                 <div class="">
                     <label for="paLName">Apellidos</label>
-                    <input id="paLName" name="apellido" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ingresa tus apellidos" value="<%= valoresValidos.apellidos %>"required>
+                    <input id="paLName" name="apellido" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ingresa tus apellidos" required>
                 </div>
                 <div class="">
                     <label for="paRut">Rut</label>
-                    <input id="paRut" name="rut" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20545267-1" required value="<%= valoresValidos.rut %>">
-                    <%if(errores.rut){%>
-                        <p id="errorMensajeRut" class="text-red-600 text-sm font-semibold"><%= errores.rut%></p>
-                    <% } else{%>
-                        <p id="errorMensajeRut" class="text-red text-sm hidden"></p>
-                    <% } %>
+                    <input id="paRut" name="rut" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20545267-1" required>
                 </div>
                 <div class="">
                     <label for="DoB">Fecha de nacimiento</label>
-                    <input id="DoB" name="fecnac" type="date" class="m-auto w-full border-border rounded-md border-2" value="<%= valoresValidos.fecNac %>" required>
-                    <%if(errores.fecNac){%>
-                        <p id="errorMensajeFecNac" class="text-red-600 text-sm font-semibold"><%= errores.fecNac%></p>
-                    <% } else {%>
-                        <p id="errorMensajeFecNac" class="text-red text-sm hidden"></p>
-                    <% } %>
+                    <input id="DoB" name="fecnac" type="date" class="m-auto w-full border-border rounded-md border-2" required>
                 </div>
                 <div class="">
                     <label for="paEmail">Correo Electronico</label>
-                    <input id="paEmail" name="correo" type="email" class="m-auto w-full border-border rounded-md border-2" placeholder="correo@dominio.cl" value="<%= valoresValidos.correo %>" required>
+                    <input id="paEmail" name="correo" type="email" class="m-auto w-full border-border rounded-md border-2" placeholder="correo@dominio.cl" required>
                 </div>
                 <div class="flex flex-col">
                     <label for="paPassword">Contraseña</label>
                     <div class="flex flex-row">
-                        <input id="claveInput6" name="clave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********" value="<%= valoresValidos.clave %>" required>
-                        <button id="cambioClave6" class="absolute right-0" type="button" onclick="cambioClaveSigInError();">
-                            <i id="iconoClave6" class="fa-solid fa-eye text-xl -translate-x-7 translate-y-1.5"></i>
+                        <input id="claveInput3" name="clave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********" required>
+                        <button id="cambioClave3" class="absolute right-0" type="button" onclick="cambioClaveSigIn();">
+                            <i id="iconoClave3" class="fa-solid fa-eye text-xl -translate-x-7 translate-y-1.5"></i>
                         </button>
                     </div>
-                    <%if(errores.clave){%>
-                        <p id="errorMensajeClavee" class="text-red-600 text-sm font-semibold flex flex-col"><%= errores.clave %></p>
-                    <% } else {%>
-                        <p id="errorMensajeClavee" class="text-red text-sm hidden"></p>
-                    <% } %>
                 </div>
                 <div class="flex flex-col">
                     <label for="paGender">Género (opcional)</label>
@@ -297,12 +320,7 @@
                 </div>
                 <div class="">
                     <label for="paPhone">Teléfono</label>
-                    <input id="paPhone" name="telefono" type="tel" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej:958472045" value="<%= valoresValidos.telefono %>" required>
-                    <%if(errores.telefono){%>
-                        <p id="errorMensajeTelefono" class="text-red-600 text-sm font-semibold"><%= errores.telefono %></p>
-                    <% } else{%>
-                        <p id="errorMensajeTelefono" class="text-red text-sm hidden"></p>
-                    <% } %>
+                    <input id="paPhone" name="telefono" type="tel" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej:958472045" required>
                 </div>
                 <div class="text-center bg-blue-500 object-cover w-1/2 m-auto rounded-md mt-3">
                     <button type="submit" class="text-text rounded-md p-1.5 hover:bg-blue-600 w-full m-auto">Registrarse</button>
@@ -333,7 +351,7 @@
                 <button form="reserva" type="submit" class="text-text rounded-md p-1.5 hover:bg-blue-600 w-full m-auto">Buscar disponibilidad</button>
             </div>
         </form>
-    </dialog>
+    </dialog>   
     <dialog id="anulaHoraUnoDialog" class="h-[31.5rem] border-2 border-solid border-border w-96 p-4 bg-blue-100">
         <div class="grid">
             <button class="ml-[95%] w-min" onclick="closeDia();">
@@ -356,12 +374,15 @@
                         </button>
                     </div>
                 </div>
+                <div class="border-2 border-green-800 bg-green-300 mt-4 flex flex-row">
+                    <i class="fa-solid fa-triangle-exclamation text-lg ml-1"></i><p class="ml-1.5 mt-0.5">RECUERDA que puedes anular tu cita médica con una antelación minima de 48 horas</p>
+                </div>
                 <div class="text-center bg-blue-500 object-cover w-1/2 m-auto rounded-md mt-3">
                     <button type="submit" class="text-text rounded-md p-1.5 hover:bg-blue-600 w-full m-auto">Acceder</button>
                 </div>
             </form>
         </div>
-    </dialog> 
+    </dialog>
     <dialog id="historialMedUnoDialog" class="h-[31.5rem] border-2 border-solid border-border w-96 p-4 bg-blue-100 max-sm:w-[90%]">
         <div class="grid">
             <button class="ml-[95%] w-min" onclick="closeDia();">
@@ -390,14 +411,45 @@
             </form>
         </div>
     </dialog>
+    <dialog id="historialMedDosDialog" class="h-[47.25rem] border-2 border-solid border-border w-[50%] p-4 max-lg:w-4/5">
+        <% const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]; %>
+        <% const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]; %>
+            <button id="cerrarHistorialMedDos" class="ml-[95%] w-min">
+                <i class="fa-solid fa-x"></i>
+            </button>
+            <h1 class="m-auto text-center text-3xl font-bold">Tu historial médico</h1>
+        <div class="flex flex-col mt-10 ">
+            <% if (resultados2.rows.length === 0){ %>
+                <div class="h-48 flex items-center justify-center text-center border-2 bg-blue-500 mt-40 w-48 rounded-xl mx-auto">
+                    <p class="text-3xl text-center text-text font-bold">No tiene historial médico</p>
+                </div>
+            <% } else { %> 
+            <table class="border border-border">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2 border border-border bg-blue-700 text-text">Profesional</th>
+                        <th class="px-4 py-2 border border-border bg-blue-700 text-text">Especialidad</th>
+                        <th class="px-4 py-2 border border-border bg-blue-700 text-text">Descripcion</th>
+                        <th class="px-4 py-2 border border-border bg-blue-700 text-text">Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <% resultados2.rows.forEach(resultado => {%>
+                    <% const dia = resultado.cita_dis_fecha; %>
+                    <% const mes = resultado.cita_dis_fecha; %>
+                    <tr>
+                        <td class="px-4 py-2 border border-border bg-blue-600 text-text"><%= resultado.prof_nombres %>  <%= resultado.prof_apellidos %></td>
+                        <td class="px-4 py-2 border border-border  bg-blue-600 text-text"><%= resultado.espe_nombre %></td>
+                        <td class="px-4 py-2 border border-border  bg-blue-600 text-text"><%= resultado.cita_detalle %></td>
+                        <td class="px-4 py-2 border border-border  bg-blue-600 text-text"><%= diasSemana[dia.getDay()]%> <%= resultado.cita_dis_fecha.getDate()%> de <%= meses[mes.getMonth()]%> <%= resultado.cita_dis_fecha.getFullYear()%></td>
+                    </tr>
+            <% });%>
+                </tbody>
+            <% } %>
+            </table>
+        </div>
+    </dialog>
     <script src="script.js"></script>
     <script src="database.js"></script>
-    <script>
-        // Abre el diálogo de inicio de sesión automáticamente
-        document.addEventListener('DOMContentLoaded', function () {
-          const signInDialog = document.getElementById('signinDialog');
-          signInDialog.showModal();
-        });    
-    </script>
 </body>
 </html>

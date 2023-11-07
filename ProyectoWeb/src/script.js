@@ -164,6 +164,7 @@
     const errorMensajeRut = document.getElementById("errorMensajeRut");
     const errorMensajeFecNac = document.getElementById("errorMensajeFecNac");
     const errorMensajeClavee = document.getElementById("errorMensajeClavee");
+    const errorMensajeCorreo = document.getElementById("errorMensajeCorreo");
     const errorMensajeTelefono = document.getElementById("errorMensajeTelefono");
 
     loginDialog.close();
@@ -200,6 +201,9 @@
     }
     if (errorMensajeClavee) {
       errorMensajeClavee.textContent = "";
+    }
+    if (errorMensajeCorreo) {
+      errorMensajeCorreo.textContent = "";
     }
     if (errorMensajeTelefono) {
       errorMensajeTelefono.textContent = "";
@@ -367,7 +371,7 @@ function agregarCitaMedica(){
 
     reservaTresDialogUsuario.addEventListener("click", lightDismiss);
   });
-
+  /*
   document.addEventListener('DOMContentLoaded', function() {
     const dialog = document.getElementById('reservaTresDialogInvitado');
 
@@ -377,7 +381,9 @@ function agregarCitaMedica(){
     };
 
     reservaTresDialogInvitado.addEventListener("click", lightDismiss);
-  });
+  });*/
+
+
 
   document.addEventListener('DOMContentLoaded', function() {
     const dialog = document.getElementById('sinResultadosDialog');
@@ -529,14 +535,27 @@ function agregarCitaMedica(){
     const reservaDosDialog = document.getElementById("reservaDosDialog");
     const registroExitosoDialog = document.getElementById("registroExitoso");
 
-    loginDialog.close();
-    signinDialog.close();
-    reservaUnoDialog.close();
-    anulaHoraUnoDialog.close();
-    historialMedUnoDialog.close();
-    reservaDosDialog.close();
-    registroExitosoDialog.close();
-
+    if(loginDialog != 'null'){
+      loginDialog.close();
+    }
+    if(signinDialog != 'null'){
+      signinDialog.close();
+    }
+    if(reservaUnoDialog != 'null'){
+      reservaUnoDialog.close();
+    }
+    if(anulaHoraUnoDialog != 'null'){
+      anulaHoraUnoDialog.close();
+    }
+    if(historialMedUnoDialog != 'null'){
+      historialMedUnoDialog.close();
+    }
+    if(reservaDosDialog != 'null'){
+      reservaDosDialog.close();
+    }
+    if(registroExitosoDialog != 'null'){
+      registroExitosoDialog.close();
+    }
   }
 
   function closeDialogHistorialMedProf() {

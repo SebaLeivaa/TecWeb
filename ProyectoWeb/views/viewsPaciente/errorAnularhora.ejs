@@ -20,7 +20,7 @@
             </div>
             <div class="flex items-end gap-x-10 justify-end mr-2 text-text mb-1 max-xl:col-start-2 max-xl:col-end-4 max-xl:row-start-1 max-xl:row-end-2 max-md:w-full max-xl:justify-end max-sm:gap-2">
                 <% if (user && user.paci_nombre && user.paci_apellido) { %>
-                    <button class="hover:text-primary" onclick="loginButton();" disabled>
+                    <button class="" onclick="loginButton();" disabled>
                       <i class="fa-solid fa-user"></i> <%= user.paci_nombre.toUpperCase() %> <%= user.paci_apellido.toUpperCase() %>
                     </button>
                     <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="logout();">Cerrar sesión</button>
@@ -30,7 +30,7 @@
                         <i class="fa-solid fa-user"></i> Iniciar sesión
                     </button>
                     <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="signinButton();">Registrarse</button>
-                <% } %> 
+                <% } %>
             </div>
         </nav>
     </header>
@@ -38,16 +38,16 @@
         <section class="h-screen flex justify-center items-center max-sm:mt-24">
             <div class="grid w-full gap-20 max-sm:gap-2">
                 <div class="grid grid-cols-2 gap-20 max-sm:gap-2 max-md:gap-8 max-sm:grid-cols-1 max-sm:m-auto">
-                    <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 ml-auto hover:bg-text hover:text-primary max-sm:w-80 max-md:w-72" onclick="reservaUno();">
-                        <figure class="w-60 h-56 flex justify-center max-sm:h-36">
-                            <i class="fa-solid fa-clock text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
+                   <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 ml-auto hover:bg-text hover:text-primary max-sm:w-80 max-md:w-72" onclick="reservaUno();">
+                    <figure class="w-60 h-56 flex justify-center max-sm:h-36">
+                        <i class="fa-solid fa-clock text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
                         </figure>
                         <figcaption class="h-20 flex">
                             <div class="mt-1">
                                 <p class="text-3xl">Reserva de horas</p>
                             </div>
                         </figcaption>
-                    </button>
+                                        </button>
                     <% if (user) { %>
                         <form action="/historialMedConsultaLogin" method="post">
                             <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80 max-md:w-72">
@@ -72,7 +72,7 @@
                             </div>
                         </figcaption>
                     </button> 
-                    <% } %>
+                    <% } %> 
                 </div>
                 <div>
                     <% if (user) { %>
@@ -351,7 +351,7 @@
                 <button form="reserva" type="submit" class="text-text rounded-md p-1.5 hover:bg-blue-600 w-full m-auto">Buscar disponibilidad</button>
             </div>
         </form>
-    </dialog>
+    </dialog>   
     <dialog id="anulaHoraUnoDialog" class="h-[31.5rem] border-2 border-solid border-border w-96 p-4 bg-blue-100">
         <div class="grid">
             <button class="ml-[95%] w-min" onclick="closeDia();">
@@ -363,7 +363,12 @@
             <form action="/anularHoraConsulta" method="post" class="gap-10 grid p-2">
                 <div class="">
                     <label for="rut">Rut</label>
-                    <input name="rut" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20254784-1" required>
+                    <input id="correoAnularHora" name="rut" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20254784-1" value="<%= rutValido.rut %>" required>
+                    <% if(error === 'Esta cuenta no existe') {%>
+                        <p id="errorMensajeCorreoAnulaHora" class="text-red-600 text-sm font-semibold">Estos datos no existen en nuestro registros</p>
+                    <% } else{%>
+                        <p id="errorMensajeCorreoAnulaHora" class="text-red text-sm hidden"></p>
+                    <%}%>
                 </div>
                 <div class="flex flex-col">
                     <label for="clave">Contraseña</label>
@@ -373,6 +378,14 @@
                             <i id="iconoClave7" class="fa-solid fa-eye text-xl -translate-x-7 translate-y-1.5"></i>
                         </button>
                     </div>
+                    <% if(error === 'Contraseña incorrecta') {%>
+                        <p id="errorMensajeClaveAnulaHora" class="text-red-600 text-sm font-semibold">Contraseña incorrecta</p>
+                    <% } else{%>
+                        <p id="errorMensajeClaveAnulaHora" class="text-red text-sm hidden"></p>
+                    <%}%>
+                </div>
+                <div class="border-2 border-green-800 bg-green-300 mt-4 flex flex-row">
+                    <i class="fa-solid fa-triangle-exclamation text-lg ml-1"></i><p class="ml-1.5 mt-0.5">RECUERDA que puedes anular tu cita médica con una antelación minima de 48 horas</p>
                 </div>
                 <div class="text-center bg-blue-500 object-cover w-1/2 m-auto rounded-md mt-3">
                     <button type="submit" class="text-text rounded-md p-1.5 hover:bg-blue-600 w-full m-auto">Acceder</button>
@@ -410,5 +423,11 @@
     </dialog>
     <script src="script.js"></script>
     <script src="database.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const anulaHoraUnoDialog = document.getElementById('anulaHoraUnoDialog');
+          anulaHoraUnoDialog.showModal();
+        });    
+    </script>
 </body>
 </html>

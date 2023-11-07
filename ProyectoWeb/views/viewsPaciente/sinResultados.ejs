@@ -19,17 +19,25 @@
                 <a class="hover:text-primary" href="#contacto">Contacto</a>
             </div>
             <div class="flex items-end gap-x-10 justify-end mr-2 text-text mb-1 max-xl:col-start-2 max-xl:col-end-4 max-xl:row-start-1 max-xl:row-end-2 max-md:w-full max-xl:justify-end max-sm:gap-2">
-                <button class="hover:text-primary" onclick="loginButton();">
-                    <i class="fa-solid fa-user"></i> Iniciar sesión
-                </button>
-                <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="signinButton();">Registrarse</button>
+                <% if (user && user.paci_nombre && user.paci_apellido) { %>
+                    <button class="" onclick="loginButton();" disabled>
+                      <i class="fa-solid fa-user"></i> <%= user.paci_nombre.toUpperCase() %> <%= user.paci_apellido.toUpperCase() %>
+                    </button>
+                    <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="logout();">Cerrar sesión</button>
+                <% } else { %>
+                    <!-- Botón para usuarios no autenticados -->
+                    <button class="hover:text-primary" onclick="loginButton();">
+                        <i class="fa-solid fa-user"></i> Iniciar sesión
+                    </button>
+                    <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="signinButton();">Registrarse</button>
+                <% } %> 
             </div>
         </nav>
     </header>
     <main class="grid gap-10">
         <section class="h-screen flex justify-center items-center max-sm:mt-24">
             <div class="grid w-full gap-20 max-sm:gap-2">
-            <div class="grid grid-cols-2 gap-20 max-sm:gap-2 max-md:gap-8 max-sm:grid-cols-1 max-sm:m-auto">
+                <div class="grid grid-cols-2 gap-20 max-sm:gap-2 max-md:gap-8 max-sm:grid-cols-1 max-sm:m-auto">
                 <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 ml-auto hover:bg-text hover:text-primary max-sm:w-80 max-md:w-72" onclick="reservaUno();">
                     <figure class="w-60 h-56 flex justify-center max-sm:h-36">
                         <i class="fa-solid fa-clock text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
@@ -40,6 +48,20 @@
                         </div>
                     </figcaption>
                 </button>
+                <% if (user) { %>
+                    <form action="/historialMedConsultaLogin" method="post">
+                        <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80 max-md:w-72">
+                            <figure class="w-60 h-56 flex justify-center max-sm:h-36">
+                                <i class="fa-solid fa-notes-medical text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
+                            </figure>
+                            <figcaption class="h-20 flex">
+                                <div class="mt-1">
+                                    <p class="text-3xl">Tu historial médico</p>
+                                </div>
+                            </figcaption>
+                        </button>
+                    </form> 
+                <% } else { %>
                 <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80 max-md:w-72" onclick="historialMedUno();">
                     <figure class="w-60 h-56 flex justify-center max-sm:h-36">
                         <i class="fa-solid fa-notes-medical text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
@@ -49,21 +71,37 @@
                             <p class="text-3xl">Tu historial médico</p>
                         </div>
                     </figcaption>
-                </button>
-                </div>
-                <div>
-                    <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80" onclick="anulaHoraUno();">
-                    <figure class="w-60 h-56 flex justify-center max-sm:h-36">
-                        <i class="fa-solid fa-x text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
-                    </figure>
-                    <figcaption class="h-20 flex">
-                        <div class="mt-1">
-                            <p class="text-3xl">Anulación de horas</p>
-                        </div>
-                    </figcaption>
-                </button>
+                </button> 
+                <% } %>
             </div>
-</div>
+                <div>
+                    <% if (user) { %>
+                        <form action="/anularHoraConsultaLogin" method="post">
+                            <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80">
+                                <figure class="w-60 h-56 flex justify-center max-sm:h-36">
+                                    <i class="fa-solid fa-x text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
+                                </figure>
+                                <figcaption class="h-20 flex">
+                                    <div class="mt-1">
+                                        <p class="text-3xl">Anulación de horas</p>
+                                    </div>
+                                </figcaption>
+                            </button>
+                        </form>
+                    <% } else { %>
+                        <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80" onclick="anulaHoraUno();">
+                            <figure class="w-60 h-56 flex justify-center max-sm:h-36">
+                                <i class="fa-solid fa-x text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
+                            </figure>
+                            <figcaption class="h-20 flex">
+                                <div class="mt-1">
+                                    <p class="text-3xl">Anulación de horas</p>
+                                </div>
+                            </figcaption>
+                        </button>
+                    <% } %>
+                </div>
+            </div>
         </section>
         <section class="flex flex-col h-max gap-10 mx-auto mb-16">
             <h1 class="text-4xl text-center my-0">Nuestras especialidades</h1>
@@ -207,7 +245,7 @@
             <form action="/signIn" method="post" class="gap-10 grid p-2">
                 <div class="">
                     <label for="rutCorreo">Rut o correo electrónico</label>
-                    <input name="rutCorreo" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20254784-1 o correo@dominio.cl" required>
+                    <input id="rutCorreo" name="rutCorreo" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20254784-1 o correo@dominio.cl" required>
                 </div>
                 <div class="flex flex-col">
                     <label for="loClave">Contraseña</label>
@@ -307,12 +345,61 @@
                     <option value="4">Hematología</option>
                     <option value="5">Kinesiología</option>
                     <option value="6">Cardiología</option>
-                                </select>
+                </select>
             </div>
             <div class="text-center bg-blue-500 object-cover w-1/2 m-auto rounded-md mt-3">
                 <button form="reserva" type="submit" class="text-text rounded-md p-1.5 hover:bg-blue-600 w-full m-auto">Buscar disponibilidad</button>
             </div>
         </form>
+    </dialog> 
+    <dialog id="sinResultadosDialog" class="h-2/3 border-2 border-solid border-border w-2/3 p-4 bg-blue-100">
+        <div class="flex flex-col">
+            <div class="flex justify-end">
+                <button id="cerrarSinResultados">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+            <div>
+                <h1 class="text-center text-3xl">Reserva tu hora</h1>
+            </div>
+        </div>
+        <div class="flex flex-row h-[90%]">
+            <div class="flex flex-col mt-auto  w-3/5 h-1/2">
+                <h1 class="font-bold text-2xl">NO HAY HORAS DISPONIBLES PARA ESTA ESPECIALIDAD</h1>
+            </div>
+            <div class="w-1/5 flex justify-start flex-col fixed top-56 right-1/4 bottom-0">
+                <div class="h-2/5 grid m-20 bg-blue-500 w-full border-solid rounded-xl text-text mt-36">
+                    <div class="flex flex-row justify-center h-20 gap-x-10">
+                            <button id="prev-month" class="w-1/6">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </button>
+                            <p class="text-xl mt-6 w-2/3 text-center" id="month-year"></p>
+                            <button id="next-month" class="w-1/6">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                    </div>
+                    <div class="flex flex-col h-full mb-52">
+                        <div class="grid grid-cols-7 text-s ml-4">
+                            <span>Lun</span>
+                            <span>Mar</span>
+                            <span>Mie</span>
+                            <span>Jue</span>
+                            <span>Vie</span>
+                            <span>Sab</span>
+                            <span>Dom</span>
+                        </div>
+                        <form id="div-calendar" action="/actualizarFechas" method="post" class="grid grid-cols-7 text-s mt-4 ml-4">
+                        </form>
+                        <div class="text-blue-800 invisible" id="horas-disponibles">
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center flex-row text-center -mt-16 gap-2">
+                    <i class="fa-solid fa-circle text-blue-800 mt-1.5"></i>
+                    <h1 class="font-bold">Dias con horas disponibles</h1>
+                </div>
+            </div>
+        </div>    
     </dialog>
     <dialog id="anulaHoraUnoDialog" class="h-[31.5rem] border-2 border-solid border-border w-96 p-4 bg-blue-100">
         <div class="grid">
@@ -345,19 +432,6 @@
             </form>
         </div>
     </dialog>
-    <dialog id="registroExitoso" class="flex flex-col h-2/3 border-2 border-solid border-border w-1/4 p-4">
-        <div class="">
-            <button class="ml-72 w-min" onclick="closeDia();">
-                <i class="fa-solid fa-x"></i>
-            </button>
-        </div>
-        <div class="w-full h-full">
-            <i class="fa-solid fa-circle-check text-9xl mt-20 flex justify-center items-center text-center" style="color: #80ff00;"></i>
-        </div>
-        <div class="flex text-center mb-10">
-            <p class="text-3xl">Se ha registrado exitosamente.</p>
-        </div>
-    </dialog>   
     <dialog id="historialMedUnoDialog" class="h-[31.5rem] border-2 border-solid border-border w-96 p-4 bg-blue-100 max-sm:w-[90%]">
         <div class="grid">
             <button class="ml-[95%] w-min" onclick="closeDia();">
@@ -385,8 +459,9 @@
                 </div>
             </form>
         </div>
-    </dialog>
+    </dialog> 
     <script src="script.js"></script>
     <script src="database.js"></script>
+    <script src="calendario.js"></script>
 </body>
 </html>

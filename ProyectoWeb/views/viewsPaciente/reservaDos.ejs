@@ -20,13 +20,15 @@
             </div>
             <div class="flex items-end gap-x-10 justify-end mr-2 text-text mb-1 max-xl:col-start-2 max-xl:col-end-4 max-xl:row-start-1 max-xl:row-end-2 max-md:w-full max-xl:justify-end max-sm:gap-2">
                 <% if (user && user.paci_nombre && user.paci_apellido) { %>
-                    <button class="hover:text-primary" onclick="loginButton();" disabled>
+                    <button class="" onclick="loginButton();" disabled>
                       <i class="fa-solid fa-user"></i> <%= user.paci_nombre.toUpperCase() %> <%= user.paci_apellido.toUpperCase() %>
                     </button>
                     <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="logout();">Cerrar sesión</button>
                 <% } else { %>
                     <!-- Botón para usuarios no autenticados -->
-                    <button class="hover:text-primary" onclick="loginButton();"><i class="fa-solid fa-user"></i> Iniciar sesión</button>
+                    <button class="hover:text-primary" onclick="loginButton();">
+                        <i class="fa-solid fa-user"></i> Iniciar sesión
+                    </button>
                     <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="signinButton();">Registrarse</button>
                 <% } %>                
             </div>
@@ -48,12 +50,12 @@
                 </button>
                 <% if (user) { %>
                     <form action="/historialMedConsultaLogin" method="post">
-                        <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-64 max-md:w-72">
-                            <figure class="w-60 h-56 flex justify-center max-sm:w-52">
-                                <i class="fa-solid fa-notes-medical text-9xl p-14"></i>
+                        <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80 max-md:w-72">
+                            <figure class="w-60 h-56 flex justify-center max-sm:h-36">
+                                <i class="fa-solid fa-notes-medical text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
                             </figure>
-                            <figcaption class="h-20 flex items-start m-auto">
-                                <div>
+                            <figcaption class="h-20 flex">
+                                <div class="mt-1">
                                     <p class="text-3xl">Tu historial médico</p>
                                 </div>
                             </figcaption>
@@ -75,12 +77,12 @@
             <div>
                 <% if (user) { %>
                     <form action="/anularHoraConsultaLogin" method="post">
-                        <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary">
-                            <figure class="w-60 h-56 flex justify-center">
-                                <i class="fa-solid fa-x text-9xl p-14"></i>
+                        <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80">
+                            <figure class="w-60 h-56 flex justify-center max-sm:h-36">
+                                <i class="fa-solid fa-x text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
                             </figure>
-                            <figcaption class="h-20 flex items-start m-auto">
-                                <div >
+                            <figcaption class="h-20 flex">
+                                <div class="mt-1">
                                     <p class="text-3xl">Anulación de horas</p>
                                 </div>
                             </figcaption>
@@ -243,7 +245,7 @@
             <form action="/signIn" method="post" class="gap-10 grid p-2">
                 <div class="">
                     <label for="rutCorreo">Rut o correo electrónico</label>
-                    <input name="rutCorreo" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20254784-1 o correo@dominio.cl" required>
+                    <input id="rutCorreo" name="rutCorreo" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20254784-1 o correo@dominio.cl" required>
                 </div>
                 <div class="flex flex-col">
                     <label for="loClave">Contraseña</label>
@@ -352,11 +354,11 @@
     </dialog> 
     <dialog id="reservaDosDialog" class="h-2/3 border-2 border-solid border-border w-2/3 p-4 3xl:w-2/3 3xl:h-3/4 max-lg:w-[90%] bg-blue-100">
         <div name="XyTitulo" class="flex flex-col">
-            <div class="flex justify-end">
-                <button id="cerrarReservaDos">
+            <div class="relative">
+                <button class="absolute top-0 right-0" id="cerrarReservaDos">
                     <i class="fa-solid fa-x"></i>
                 </button>
-            </div>
+            </div>            
             <div>
                 <h1 class="text-center text-3xl">Reserva tu hora</h1>
             </div>
@@ -498,6 +500,9 @@
                             <i id="iconoClave7" class="fa-solid fa-eye text-xl -translate-x-7 translate-y-1.5"></i>
                         </button>
                     </div>
+                </div>
+                <div class="border-2 border-green-800 bg-green-300 mt-4 flex flex-row">
+                    <i class="fa-solid fa-triangle-exclamation text-lg ml-1"></i><p class="ml-1.5 mt-0.5">RECUERDA que puedes anular tu cita médica con una antelación minima de 48 horas</p>
                 </div>
                 <div class="text-center bg-blue-500 object-cover w-1/2 m-auto rounded-md mt-3">
                     <button type="submit" class="text-text rounded-md p-1.5 hover:bg-blue-600 w-full m-auto">Acceder</button>

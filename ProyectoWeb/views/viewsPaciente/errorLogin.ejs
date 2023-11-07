@@ -52,16 +52,16 @@
                     </button> 
                 </div>
                 <div>
-                    <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80" onclick="anulaHoraUno();">
-                        <figure class="w-60 h-56 flex justify-center max-sm:h-36">
-                            <i class="fa-solid fa-x text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
-                        </figure>
-                        <figcaption class="h-20 flex">
-                            <div class="mt-1">
-                                <p class="text-3xl">Anulación de horas</p>
-                            </div>
-                        </figcaption>
-                    </button>
+                        <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80" onclick="anulaHoraUno();">
+                            <figure class="w-60 h-56 flex justify-center max-sm:h-36">
+                                <i class="fa-solid fa-x text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
+                            </figure>
+                            <figcaption class="h-20 flex">
+                                <div class="mt-1">
+                                    <p class="text-3xl">Anulación de horas</p>
+                                </div>
+                            </figcaption>
+                        </button>
                 </div>
             </div>
         </section>
@@ -207,12 +207,7 @@
             <form action="/signIn" method="post" class="gap-10 grid p-2">
                 <div class="">
                     <label for="rutCorreo">Rut o correo electrónico</label>
-                    <input id="rutCorreo" name="rutCorreo" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20254784-1 o correo@dominio.cl" value="<%= correoRutValido.correoRut %>" required>
-                    <% if(error === 'Esta cuenta no existe') {%>
-                        <p id="errorMensajeCorreo" class="text-red-600 text-sm font-semibold">Esta cuenta no existe</p>
-                    <% } else{%>
-                        <p id="errorMensajeCorreo" class="text-red text-sm hidden"></p>
-                    <%}%>
+                    <input id="rutCorreo" name="rutCorreo" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20254784-1 o correo@dominio.cl" required>
                 </div>
                 <div class="flex flex-col">
                     <label for="loClave">Contraseña</label>
@@ -222,11 +217,6 @@
                             <i id="iconoClave5" class="fa-solid fa-eye text-xl -translate-x-7 translate-y-1.5"></i>
                         </button>
                     </div>
-                    <% if(error === 'Contraseña incorrecta') {%>
-                        <p id="errorMensajeClave" class="text-red-600 text-sm font-semibold">Contraseña incorrecta</p>
-                    <% } else{%>
-                        <p id="errorMensajeClave" class="text-red text-sm hidden"></p>
-                    <%}%>
                 </div>
                 <div class="p-2 grid grid-cols-2" style="font-size: small;">
                     <button class="hover:text-blue-600 text-blue-500 w-max m-auto"><ins>Olvide mi contraseña</ins></button>
@@ -240,7 +230,7 @@
             </form>
         </section>
     </dialog>
-
+    
     <dialog id="signinDialog" class="h-max border-2 border-solid border-border bg-blue-100" style="width: calc(500px - 10vw);">
         <div class="grid">
             <button class="ml-[95%]  w-min" onclick="closeDia();">
@@ -255,32 +245,52 @@
             <form action="/registrar" method="post" class="grid p-2 gap-2">
                 <div class="">
                     <label for="paName">Nombre</label>
-                    <input id="paName" name="nombre" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ingresa tu nombre" required>
+                    <input id="paName" name="nombre" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ingresa tu nombre" value="<%= valoresValidos.nombre %>" required>
                 </div>
                 <div class="">
                     <label for="paLName">Apellidos</label>
-                    <input id="paLName" name="apellido" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ingresa tus apellidos" required>
+                    <input id="paLName" name="apellido" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ingresa tus apellidos" value="<%= valoresValidos.apellidos %>"required>
                 </div>
                 <div class="">
                     <label for="paRut">Rut</label>
-                    <input id="paRut" name="rut" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20545267-1" required>
+                    <input id="paRut" name="rut" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20545267-1" required value="<%= valoresValidos.rut %>">
+                    <%if(errores.rut){%>
+                        <p id="errorMensajeRut" class="text-red-600 text-sm font-semibold"><%= errores.rut%></p>
+                    <% } else{%>
+                        <p id="errorMensajeRut" class="text-red text-sm hidden"></p>
+                    <% } %>
                 </div>
                 <div class="">
                     <label for="DoB">Fecha de nacimiento</label>
-                    <input id="DoB" name="fecnac" type="date" class="m-auto w-full border-border rounded-md border-2" required>
+                    <input id="DoB" name="fecnac" type="date" class="m-auto w-full border-border rounded-md border-2" value="<%= valoresValidos.fecNac %>" required>
+                    <%if(errores.fecNac){%>
+                        <p id="errorMensajeFecNac" class="text-red-600 text-sm font-semibold"><%= errores.fecNac%></p>
+                    <% } else {%>
+                        <p id="errorMensajeFecNac" class="text-red text-sm hidden"></p>
+                    <% } %>
                 </div>
                 <div class="">
                     <label for="paEmail">Correo Electronico</label>
-                    <input id="paEmail" name="correo" type="email" class="m-auto w-full border-border rounded-md border-2" placeholder="correo@dominio.cl" required>
+                    <input id="paEmail" name="correo" type="email" class="m-auto w-full border-border rounded-md border-2" placeholder="correo@dominio.cl" value="<%= valoresValidos.correo %>" required>
+                    <%if(errores.correo){%>
+                        <p id="errorMensajeCorreo" class="text-red-600 text-sm font-semibold"><%= errores.correo%></p>
+                    <% } else {%>
+                        <p id="errorMensajeCorreo" class="text-red text-sm hidden"></p>
+                    <% } %>
                 </div>
                 <div class="flex flex-col">
                     <label for="paPassword">Contraseña</label>
                     <div class="flex flex-row">
-                        <input id="claveInput6" name="clave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********" required>
+                        <input id="claveInput6" name="clave" type="password" class="m-auto w-full border-border rounded-md border-2" placeholder="********" value="<%= valoresValidos.clave %>" required>
                         <button id="cambioClave6" class="absolute right-0" type="button" onclick="cambioClaveSigInError();">
                             <i id="iconoClave6" class="fa-solid fa-eye text-xl -translate-x-7 translate-y-1.5"></i>
                         </button>
                     </div>
+                    <%if(errores.clave){%>
+                        <p id="errorMensajeClavee" class="text-red-600 text-sm font-semibold flex flex-col"><%= errores.clave %></p>
+                    <% } else {%>
+                        <p id="errorMensajeClavee" class="text-red text-sm hidden"></p>
+                    <% } %>
                 </div>
                 <div class="flex flex-col">
                     <label for="paGender">Género (opcional)</label>
@@ -292,7 +302,12 @@
                 </div>
                 <div class="">
                     <label for="paPhone">Teléfono</label>
-                    <input id="paPhone" name="telefono" type="tel" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej:958472045" required>
+                    <input id="paPhone" name="telefono" type="tel" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej:958472045" value="<%= valoresValidos.telefono %>" required>
+                    <%if(errores.telefono){%>
+                        <p id="errorMensajeTelefono" class="text-red-600 text-sm font-semibold"><%= errores.telefono %></p>
+                    <% } else{%>
+                        <p id="errorMensajeTelefono" class="text-red text-sm hidden"></p>
+                    <% } %>
                 </div>
                 <div class="text-center bg-blue-500 object-cover w-1/2 m-auto rounded-md mt-3">
                     <button type="submit" class="text-text rounded-md p-1.5 hover:bg-blue-600 w-full m-auto">Registrarse</button>
@@ -323,7 +338,7 @@
                 <button form="reserva" type="submit" class="text-text rounded-md p-1.5 hover:bg-blue-600 w-full m-auto">Buscar disponibilidad</button>
             </div>
         </form>
-    </dialog> 
+    </dialog>
     <dialog id="anulaHoraUnoDialog" class="h-[31.5rem] border-2 border-solid border-border w-96 p-4 bg-blue-100">
         <div class="grid">
             <button class="ml-[95%] w-min" onclick="closeDia();">
@@ -346,12 +361,15 @@
                         </button>
                     </div>
                 </div>
+                <div class="border-2 border-green-800 bg-green-300 mt-4 flex flex-row">
+                    <i class="fa-solid fa-triangle-exclamation text-lg ml-1"></i><p class="ml-1.5 mt-0.5">RECUERDA que puedes anular tu cita médica con una antelación minima de 48 horas</p>
+                </div>
                 <div class="text-center bg-blue-500 object-cover w-1/2 m-auto rounded-md mt-3">
                     <button type="submit" class="text-text rounded-md p-1.5 hover:bg-blue-600 w-full m-auto">Acceder</button>
                 </div>
             </form>
         </div>
-    </dialog>
+    </dialog> 
     <dialog id="historialMedUnoDialog" class="h-[31.5rem] border-2 border-solid border-border w-96 p-4 bg-blue-100 max-sm:w-[90%]">
         <div class="grid">
             <button class="ml-[95%] w-min" onclick="closeDia();">
@@ -379,14 +397,14 @@
                 </div>
             </form>
         </div>
-    </dialog>  
+    </dialog>
     <script src="script.js"></script>
     <script src="database.js"></script>
     <script>
         // Abre el diálogo de inicio de sesión automáticamente
         document.addEventListener('DOMContentLoaded', function () {
-          const loginDialog = document.getElementById('loginDialog');
-          loginDialog.showModal();
+          const signInDialog = document.getElementById('signinDialog');
+          signInDialog.showModal();
         });    
     </script>
 </body>

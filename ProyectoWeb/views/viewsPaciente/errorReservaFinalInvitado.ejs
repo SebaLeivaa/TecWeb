@@ -1,3 +1,9 @@
+<% const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]; %>
+<% const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]; %>
+<% const dia = new Date(resultados[0].cita_dis_fecha).getDate(); %>
+<% const nombreDia = new Date(resultados[0].cita_dis_fecha).getDay(); %>
+<% const mes = new Date(resultados[0].cita_dis_fecha).getMonth(); %>
+<% const anio = new Date(resultados[0].cita_dis_fecha).getFullYear(); %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -11,7 +17,7 @@
 <body class="bg-secondary">
     <header class="bg-blue-900 fixed z-20 top-0 left-0 right-0">
         <nav class="grid grid-cols-3 h-full max-xl:grid-cols-2 gap-y-1">
-                <img class="h-20 rounded-md w-64 mx-auto my-1 max-xl:w-max max-xl:m-2 max-sm:h-16" src="./img/logoClinica.png">
+            <img class="h-20 rounded-md w-64 mx-auto my-1 max-xl:w-max max-xl:m-2 max-sm:h-16" src="./img/logoClinica.png">
             <div class="flex flex-row gap-10 items-end mb-1 text-text max-xl:col-start-1 max-xl:col-end-3 text-center m-auto max-sm:gap-4">
                 <a class="hover:text-primary" href="#"> <b><ins>Inicio<ins/></b> </a> 
                 <a class="hover:text-primary" href="especialidades.html">Especialidades</a>
@@ -19,27 +25,49 @@
                 <a class="hover:text-primary" href="#contacto">Contacto</a>
             </div>
             <div class="flex items-end gap-x-10 justify-end mr-2 text-text mb-1 max-xl:col-start-2 max-xl:col-end-4 max-xl:row-start-1 max-xl:row-end-2 max-md:w-full max-xl:justify-end max-sm:gap-2">
-                <button class="hover:text-primary" onclick="loginButton();">
-                    <i class="fa-solid fa-user"></i> Iniciar sesión
-                </button>
-                <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="signinButton();">Registrarse</button>
+                <% if (user && user.paci_nombre && user.paci_apellido) { %>
+                    <button class="" onclick="loginButton();" disabled>
+                      <i class="fa-solid fa-user"></i> <%= user.paci_nombre.toUpperCase() %> <%= user.paci_apellido.toUpperCase() %>
+                    </button>
+                    <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="logout();">Cerrar sesión</button>
+                <% } else { %>
+                    <!-- Botón para usuarios no autenticados -->
+                    <button class="hover:text-primary" onclick="loginButton();">
+                        <i class="fa-solid fa-user"></i> Iniciar sesión
+                    </button>
+                    <button class="bg-secondary w-40 rounded-md p-1.5 hover:bg-primary" onclick="signinButton();">Registrarse</button>
+                <% } %> 
             </div>
         </nav>
     </header>
     <main class="grid gap-10">
         <section class="h-screen flex justify-center items-center max-sm:mt-24">
             <div class="grid w-full gap-20 max-sm:gap-2">
-            <div class="grid grid-cols-2 gap-20 max-sm:gap-2 max-md:gap-8 max-sm:grid-cols-1 max-sm:m-auto">
+                <div class="grid grid-cols-2 gap-20 max-sm:gap-2 max-md:gap-8 max-sm:grid-cols-1 max-sm:m-auto">
                 <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 ml-auto hover:bg-text hover:text-primary max-sm:w-80 max-md:w-72" onclick="reservaUno();">
                     <figure class="w-60 h-56 flex justify-center max-sm:h-36">
                         <i class="fa-solid fa-clock text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
-                    </figure>
-                    <figcaption class="h-20 flex">
-                        <div class="mt-1">
-                            <p class="text-3xl">Reserva de horas</p>
-                        </div>
-                    </figcaption>
-                </button>
+                        </figure>
+                        <figcaption class="h-20 flex">
+                            <div class="mt-1">
+                                <p class="text-3xl">Reserva de horas</p>
+                            </div>
+                        </figcaption>
+                                    </button>
+                <% if (user) { %>
+                    <form action="/historialMedConsultaLogin" method="post">
+                        <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80 max-md:w-72">
+                            <figure class="w-60 h-56 flex justify-center max-sm:h-36">
+                                <i class="fa-solid fa-notes-medical text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
+                            </figure>
+                            <figcaption class="h-20 flex">
+                                <div class="mt-1">
+                                    <p class="text-3xl">Tu historial médico</p>
+                                </div>
+                            </figcaption>
+                        </button>
+                    </form> 
+                <% } else { %>
                 <button class="flex flex-col justify-center items-center border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80 max-md:w-72" onclick="historialMedUno();">
                     <figure class="w-60 h-56 flex justify-center max-sm:h-36">
                         <i class="fa-solid fa-notes-medical text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
@@ -49,21 +77,37 @@
                             <p class="text-3xl">Tu historial médico</p>
                         </div>
                     </figcaption>
-                </button>
-                </div>
-                <div>
-                    <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80" onclick="anulaHoraUno();">
-                    <figure class="w-60 h-56 flex justify-center max-sm:h-36">
-                        <i class="fa-solid fa-x text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
-                    </figure>
-                    <figcaption class="h-20 flex">
-                        <div class="mt-1">
-                            <p class="text-3xl">Anulación de horas</p>
-                        </div>
-                    </figcaption>
-                </button>
+                </button> 
+                <% } %>
             </div>
-</div>
+                <div>
+                    <% if (user) { %>
+                        <form action="/anularHoraConsultaLogin" method="post">
+                            <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80">
+                                <figure class="w-60 h-56 flex justify-center max-sm:h-36">
+                                    <i class="fa-solid fa-x text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
+                                </figure>
+                                <figcaption class="h-20 flex">
+                                    <div class="mt-1">
+                                        <p class="text-3xl">Anulación de horas</p>
+                                    </div>
+                                </figcaption>
+                            </button>
+                        </form>
+                    <% } else { %>
+                        <button class="flex flex-col justify-center items-center m-auto col-start-1 col-end-3 border-2 border-border rounded-3xl bg-primary text-text w-96 hover:bg-text hover:text-primary max-sm:w-80" onclick="anulaHoraUno();">
+                            <figure class="w-60 h-56 flex justify-center max-sm:h-36">
+                                <i class="fa-solid fa-x text-9xl p-14 max-sm:text-8xl max-sm:p-8"></i>
+                            </figure>
+                            <figcaption class="h-20 flex">
+                                <div class="mt-1">
+                                    <p class="text-3xl">Anulación de horas</p>
+                                </div>
+                            </figcaption>
+                        </button>
+                    <% } %>
+                </div>
+            </div>
         </section>
         <section class="flex flex-col h-max gap-10 mx-auto mb-16">
             <h1 class="text-4xl text-center my-0">Nuestras especialidades</h1>
@@ -165,7 +209,7 @@
             <section class="border-dashed border-r-2 w-full border-border">
                 <div class="flex flex-col gap-10 text-center justify-center items-center">
                 <h1 class="text-3xl max-sm:hidden">Contáctenos</h1>
-<h1 class="text-3xl hidden max-sm:block">Contact.</h1>
+                <h1 class="text-3xl hidden max-sm:block">Contact.</h1>
                 <div class="text-start">
                     <p class="text-2xl max-sm:lg">Call Center</p>
                     <i class="fa-solid fa-phone flex gap-x-1 mt-2">
@@ -207,7 +251,7 @@
             <form action="/signIn" method="post" class="gap-10 grid p-2">
                 <div class="">
                     <label for="rutCorreo">Rut o correo electrónico</label>
-                    <input name="rutCorreo" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20254784-1 o correo@dominio.cl" required>
+                    <input id="rutCorreo" name="rutCorreo" type="text" class="m-auto w-full border-border rounded-md border-2" placeholder="Ej: 20254784-1 o correo@dominio.cl" required>
                 </div>
                 <div class="flex flex-col">
                     <label for="loClave">Contraseña</label>
@@ -307,13 +351,192 @@
                     <option value="4">Hematología</option>
                     <option value="5">Kinesiología</option>
                     <option value="6">Cardiología</option>
-                                </select>
+                </select>
             </div>
             <div class="text-center bg-blue-500 object-cover w-1/2 m-auto rounded-md mt-3">
                 <button form="reserva" type="submit" class="text-text rounded-md p-1.5 hover:bg-blue-600 w-full m-auto">Buscar disponibilidad</button>
             </div>
         </form>
+    </dialog> 
+    <dialog id="reservaTresDialogUsuario" class="h-[42rem] w-2/3 border-2 border-solid border-border p-4 bg-blue-100 max-md:w-[90%]">
+        <div class="flex flex-col">
+            <div class="flex justify-end">
+                <button id="cerrarReservaTresUsuario">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+        </div>
+        <div class="flex flex-row w-full h-full max-sm:gap-3">
+            <div class="flex flex-col mt-6 space-y-9 w-2/5">
+                <div>
+                    <h1 class="text-start text-3xl">Reserva tu hora</h1>
+                </div>
+                <div>
+                    <img src="../img/default.png" alt="<%=resultados[0].prof_nombres%> <%=resultados[0].prof_apellidos%>">
+                </div>
+                <div>
+                    <h1 class="font-semibold"><%=resultados[0].prof_nombres%> <%=resultados[0].prof_apellidos%></h1>
+                </div>
+                <div>
+                    <h1 class="font-semibold"><%=resultados[0].espe_nombre%></h1>
+                </div>
+                <div>
+                    <h1 class="font-semibold">
+                        <%= diasSemana[nombreDia]%> <%= dia%> de <%= meses[mes]%> <%=anio%>
+                    </h1>
+                </div>
+                <div class="w-24 h-9">
+                    <p class="text-text rounded-md p-1.5 bg-blue-500 hover:bg-blue-600 m-auto text-center">
+                        <%=new Date(resultados[0].cita_dis_fecha).getHours().toString().padStart(2, '0') %>:<%= new Date(resultados[0].cita_dis_fecha).getMinutes().toString().padStart(2, '0') %>
+                    </p>
+                </div>
+            </div>
+            <div class="flex flex-col w-3/5 max-h-max">
+                <div class="flex flex-row w-full h-20">
+                    <button id="miCuenta" class="text-text text-lg rounded-full p-1.5 bg-blue-500 hover:bg-blue-600 m-auto text-center w-36 h-12 max-lg:text-base select-none" onclick="reservaUsuario()" disabled>
+                        Con mi cuenta
+                    </buttoN>
+                    <button id="invitado" class="p-1.5  m-auto text-center text-lg w-36 h-12 font-semibold max-lg:text-base select-none" onclick="reservaInvitado()">
+                        Como invitado
+                    </button>
+                </div>
+                <form class="flex flex-col space-y-8 w-full h-full" action="/confirmarHoraUsuario" method="post">
+                    <div class="flex flex-col ml-28 mt-12 max-lg:ml-0">
+                        <label>Rut o correo electrónico</label>
+                        <input type="text" name="correoRut" class="w-1/2 border-border rounded-xl border-2 max-lg:w-full" placeholder="Ej: 20254784-1 o correo@dominio.cl" required>
+                    </div>
+                    <div class="flex flex-col ml-28 max-lg:ml-0">
+                        <label>Contraseña</label>
+                        <div>
+                            <input id="claveInput" type="password" name="claveUsuario" class="w-1/2 border-border rounded-xl border-2 max-lg:w-full" placeholder="********" required>
+                            <button id="cambioClave" class="fixed -translate-x-9 translate-y-2" type="button">
+                                <i id="iconoClave" class="fa-solid fa-eye text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="w-full h-12 translate-y-24 place-content-center">
+                        <button class="flex justify-center text-text font-semibold text-lg bg-blue-500 hover:bg-blue-600 m-auto w-1/2 h-full rounded-xl p-2.5 max-lg:w-full" type="submit">
+                            Confirmar reserva <i class="fa-solid mt-1.5 ml-2 fa-check font-semibold"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>    
     </dialog>
+    <dialog id="reservaTresDialogInvitado" class="h-[42rem] w-2/3 border-2 border-solid border-border p-4 max-md:w-[90%] bg-blue-100">
+        <div class="flex flex-col">
+            <div class="flex justify-end">
+                <button id="cerrarReservaTresInvitado">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+        </div>
+        <div class="flex flex-row max-sm:gap-3">
+            <div class="flex flex-col mt-6 space-y-9 w-2/5">
+                <div>
+                    <h1 class="text-start text-3xl max-lg:text-2xl">Reserva tu hora</h1>
+                </div>
+                <div>
+                    <img src="../img/default.png" alt="<%=resultados[0].prof_nombres%> <%=resultados[0].prof_apellidos%>">
+                </div>
+                <div>
+                    <h1 class="font-semibold"><%=resultados[0].prof_nombres%> <%=resultados[0].prof_apellidos%></h1>
+                </div>
+                <div>
+                    <h1 class="font-semibold"><%=resultados[0].espe_nombre%></h1>
+                </div>
+                <div>
+                    <h1 class="font-semibold">
+                        <%= diasSemana[nombreDia]%> <%= dia%> de <%= meses[mes]%> <%=anio%>
+                    </h1>
+                </div>
+                <div class="w-24 h-9">
+                    <p class="text-text rounded-md p-1.5 bg-blue-500 hover:bg-blue-600 m-auto text-center">
+                        <%=new Date(resultados[0].cita_dis_fecha).getHours().toString().padStart(2, '0') %>:<%= new Date(resultados[0].cita_dis_fecha).getMinutes().toString().padStart(2, '0') %>
+                    </p>
+                </div>
+            </div>
+            <div class="flex flex-col w-3/5 max-h-max">
+                <div class="flex flex-row w-full h-20">
+                    <button id="miCuenta" class="p-1.5  m-auto text-center text-lg w-36 h-12 font-semibold max-lg:text-base select-none" onclick="reservaUsuario()">
+                        Con mi cuenta
+                    </button>
+                    <button id="invitado" class="text-text text-lg rounded-full p-1.5 bg-blue-500 hover:bg-blue-600 m-auto text-center w-36 h-12 max-lg:text-base select-none" onclick="reservaInvitado()" disabled>
+                        Como invitado
+                    </button>
+                </div>
+                <div class="w-full h-full">
+                    <form class="grid grid-cols-2 gap-x-16 w-full h-full max-lg:gap-x-2" action="/confirmarHoraInvitado" method="post">
+                        <div class="flex flex-col">
+                            <label>Rut</label>
+                            <input type="text" class="w-full border-border rounded-xl border-2" name="rut" placeholder="Ej:20545257-1" value="<%= valoresValidos.rut %>" required>
+                            <%if(errores.rut){%>
+                                <p id="errorMensajeRut" class="text-red-600 text-sm font-semibold"><%= errores.rut%></p>
+                            <% } else{%>
+                                <p id="errorMensajeRut" class="text-red text-sm hidden"></p>
+                            <% } %>
+                        </div>
+                        <div class="flex flex-col">
+                            <label>Nombre</label>
+                            <input type="text" class="w-full border-border rounded-xl border-2" name="nombre" placeholder="Ingresa tu nombre" value="<%= valoresValidos.nombre %>" required>
+                        </div>
+                        <div class="flex flex-col">
+                            <label>Apellidos</label>
+                            <input type="text" class="w-full border-border rounded-xl border-2" name="apellidos" placeholder="Ingresa tus apellidos" value="<%= valoresValidos.apellidos %>" required>
+                        </div>
+                        <div class="flex flex-col">
+                            <label>Fecha de nacimiento</label>
+                            <input type="date" class="w-full border-border rounded-xl border-2" name="fechaNac" placeholder="DD-MM-AAAA" value="<%= valoresValidos.fecNac %>" required>
+                        </div>
+                        <div class="flex flex-col">
+                            <label>Correo electrónico</label>
+                            <input type="email" class="w-full border-border rounded-xl border-2" name="correo" placeholder="correo@dominio.cl" value="<%= valoresValidos.correo %>" required>
+                            <%if(errores.correo){%>
+                                <p id="errorMensajeCorreo" class="text-red-600 text-sm font-semibold"><%= errores.correo%></p>
+                            <% } else {%>
+                                <p id="errorMensajeCorreo" class="text-red text-sm hidden"></p>
+                            <% } %>
+                        </div>
+                        <div class="flex flex-col">
+                            <label>Género (opcional)</label>
+                            <select name="genero" class="w-full border-border rounded-xl border-2">
+                                <option value="M">Masculino</option>
+                                <option value="F">Femenino</option>
+                                <option value="O">Otro</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col">
+                            <label>Teléfono</label>
+                            <input type="text" class="w-full border-border rounded-xl border-2" name="telefono" placeholder="Ej:958412574" value="<%= valoresValidos.telefono %>" required>
+                            <%if(errores.telefono){%>
+                                <p id="errorMensajeTelefono" class="text-red-600 text-sm font-semibold"><%= errores.telefono %></p>
+                            <% } else{%>
+                                <p id="errorMensajeTelefono" class="text-red text-sm hidden"></p>
+                            <% } %>
+                        </div>
+                        <div class="flex flex-col">
+                            <label>Contraseña</label>
+                            <div class="flex flex-row">
+                                <input id="claveInput2" class="w-full border-border rounded-xl border-2" type="password" name="clave" placeholder="********" value="<%= valoresValidos.clave %>" required>
+                                <button id="cambioClave2" class="absolute right-0" type="button">
+                                <i id="iconoClave2" class="fa-solid fa-eye text-xl -translate-x-7 translate-y-1.5"></i>
+                                </button>
+                            </div>
+                            <%if(errores.clave){%>
+                                <p id="errorMensajeClavee" class="text-red-600 text-sm font-semibold flex flex-col"><%= errores.clave %></p>
+                            <% } else {%>
+                                <p id="errorMensajeClavee" class="text-red text-sm hidden"></p>
+                            <% } %>
+                        </div>
+                        <div class="w-full h-12 translate-y-8 col-span-2 place-content-center">
+                            <button class="flex justify-center text-text font-semibold text-lg bg-blue-500 hover:bg-blue-600 m-auto w-1/2 h-full rounded-xl p-2.5 max-lg:w-full" type="submit">
+                                Confirmar reserva <i class="fa-solid mt-1.5 ml-2 fa-check font-semibold"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>    
+    </dialog> 
     <dialog id="anulaHoraUnoDialog" class="h-[31.5rem] border-2 border-solid border-border w-96 p-4 bg-blue-100">
         <div class="grid">
             <button class="ml-[95%] w-min" onclick="closeDia();">
@@ -344,20 +567,7 @@
                 </div>
             </form>
         </div>
-    </dialog>
-    <dialog id="registroExitoso" class="flex flex-col h-2/3 border-2 border-solid border-border w-1/4 p-4">
-        <div class="">
-            <button class="ml-72 w-min" onclick="closeDia();">
-                <i class="fa-solid fa-x"></i>
-            </button>
-        </div>
-        <div class="w-full h-full">
-            <i class="fa-solid fa-circle-check text-9xl mt-20 flex justify-center items-center text-center" style="color: #80ff00;"></i>
-        </div>
-        <div class="flex text-center mb-10">
-            <p class="text-3xl">Se ha registrado exitosamente.</p>
-        </div>
-    </dialog>   
+    </dialog>  
     <dialog id="historialMedUnoDialog" class="h-[31.5rem] border-2 border-solid border-border w-96 p-4 bg-blue-100 max-sm:w-[90%]">
         <div class="grid">
             <button class="ml-[95%] w-min" onclick="closeDia();">
@@ -388,5 +598,17 @@
     </dialog>
     <script src="script.js"></script>
     <script src="database.js"></script>
-</body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const dialog = document.getElementById('reservaTresDialogInvitado');
+
+        dialog.showModal();
+        const lightDismiss = ({ target: reservaTresDialogInvitado }) => {
+        if (reservaTresDialogInvitado.nodeName === "DIALOG") reservaTresDialogInvitado.close("dismiss");
+        };
+
+        reservaTresDialogInvitado.addEventListener("click", lightDismiss);
+        });
+    </script>
+    </body>
 </html>
